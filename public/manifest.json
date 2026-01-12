@@ -1,11 +1,11 @@
 {
-  "name": "Ted Thoughts.",
-  "short_name": "tedawf.com",
+  "name": "Sahil Bansal",
+  "short_name": "Sahil",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  "description": "My personal site to showcase my developer work and opinions.",
+  "description": "DevOps Engineer portfolio showcasing skills, projects, and certifications.",
   "icons": [
     {
       "src": "/icon-192.png",

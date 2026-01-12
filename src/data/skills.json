@@ -1,0 +1,169 @@
+{
+    "categories": [
+        {
+            "name": "Cloud & Infrastructure",
+            "skills": [
+                {
+                    "name": "AWS",
+                    "level": 95,
+                    "description": "ECS, Lambda, RDS, S3, IAM, VPC, CloudFront, Route 53"
+                },
+                {
+                    "name": "Kubernetes",
+                    "level": 75,
+                    "description": "Container orchestration, deployments, services"
+                },
+                {
+                    "name": "Docker",
+                    "level": 90,
+                    "description": "Containerization, multi-stage builds, optimization"
+                }
+            ]
+        },
+        {
+            "name": "Infrastructure as Code",
+            "skills": [
+                {
+                    "name": "Terraform",
+                    "level": 95,
+                    "description": "Multi-cloud IaC, state management, modules"
+                },
+                {
+                    "name": "AWS CloudFormation",
+                    "level": 80,
+                    "description": "Stack management, nested stacks"
+                }
+            ]
+        },
+        {
+            "name": "CI/CD & Automation",
+            "skills": [
+                {
+                    "name": "GitHub Actions",
+                    "level": 90,
+                    "description": "Workflow automation, custom actions"
+                },
+                {
+                    "name": "Jenkins",
+                    "level": 75,
+                    "description": "Pipeline automation, plugins"
+                },
+                {
+                    "name": "AWS CodeBuild",
+                    "level": 80,
+                    "description": "Build automation, integration"
+                }
+            ]
+        },
+        {
+            "name": "Observability & Monitoring",
+            "skills": [
+                {
+                    "name": "Prometheus",
+                    "level": 80,
+                    "description": "Metrics collection, alerting"
+                },
+                {
+                    "name": "Grafana",
+                    "level": 80,
+                    "description": "Dashboards, visualization"
+                },
+                {
+                    "name": "AWS CloudWatch",
+                    "level": 90,
+                    "description": "Logs, metrics, alarms"
+                }
+            ]
+        },
+        {
+            "name": "Data Engineering",
+            "skills": [
+                {
+                    "name": "Dagster",
+                    "level": 80,
+                    "description": "Data orchestration, pipelines"
+                },
+                {
+                    "name": "DLT",
+                    "level": 70,
+                    "description": "Data loading tool"
+                },
+                {
+                    "name": "DBT",
+                    "level": 70,
+                    "description": "Data transformation"
+                },
+                {
+                    "name": "ClickHouse",
+                    "level": 85,
+                    "description": "Real-time analytics database"
+                }
+            ]
+        },
+        {
+            "name": "Databases",
+            "skills": [
+                {
+                    "name": "PostgreSQL",
+                    "level": 80,
+                    "description": "Relational database management"
+                },
+                {
+                    "name": "MySQL",
+                    "level": 85,
+                    "description": "Database administration"
+                },
+                {
+                    "name": "MongoDB",
+                    "level": 90,
+                    "description": "NoSQL database"
+                }
+            ]
+        },
+        {
+            "name": "Programming & Scripting",
+            "skills": [
+                {
+                    "name": "Python",
+                    "level": 85,
+                    "description": "Automation, scripting, data processing"
+                },
+                {
+                    "name": "Bash",
+                    "level": 75,
+                    "description": "Shell scripting, automation"
+                },
+                {
+                    "name": "HCL",
+                    "level": 90,
+                    "description": "Terraform configuration"
+                },
+                {
+                    "name": "YAML",
+                    "level": 90,
+                    "description": "Configuration management"
+                }
+            ]
+        },
+        {
+            "name": "Security & DevSecOps",
+            "skills": [
+                {
+                    "name": "IAM",
+                    "level": 85,
+                    "description": "Identity and access management"
+                },
+                {
+                    "name": "Auth0",
+                    "level": 95,
+                    "description": "Authentication and authorization"
+                },
+                {
+                    "name": "DevSecOps",
+                    "level": 90,
+                    "description": "Security in CI/CD pipelines"
+                }
+            ]
+        }
+    ]
+}

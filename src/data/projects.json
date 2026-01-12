@@ -1,130 +1,83 @@
 {
   "projects": [
     {
-      "name": "TT4D",
-      "description": "Generate winning combinations, view past results, and analyze lottery trends all in one place",
-      "image": "/img/tt4d.png",
+      "name": "Multi-Tenant Merchant Platform",
+      "description": "Architected a 99.99% available multi-tenant FTP ingress platform using SFTP-gateway with automated cloud provisioning on AWS",
+      "image": "/img/merchant_project.png",
       "tags": [
-        "Python",
-        "FastAPI",
-        "Docker",
-        "Fly.io",
-        "NextJS",
-        "PostgreSQL",
-        "TailwindCSS",
-        "BS4"
+        "AWS",
+        "SFTP",
+        "Terraform",
+        "High Availability",
+        "Multi-Tenant"
       ],
-      "links": [
-        {
-          "name": "Website",
-          "href": "https://huatnumbers.com",
-          "icon": "globe"
-        },
-        {
-          "name": "Source",
-          "href": "https://github.com/tedawf/tt4d",
-          "icon": "github"
-        },
-        {
-          "name": "Source (UI)",
-          "href": "https://github.com/tedawf/tt4d-web",
-          "icon": "github"
-        }
-      ]
+      "links": []
     },
     {
-      "name": "Tradingview Telegram Alerts",
-      "description": "Real-time trading alerts with chart snapshots sent to Telegram, designed to keep traders informed and responsive to market changes",
-      "image": "/img/tv-tele-alerts.png",
+      "name": "Real-Time Data Pipeline",
+      "description": "Built a real-time data lakehouse (ELT) using Dagster, DLT, and ClickHouse, reducing query latency from minutes to milliseconds",
+      "image": "/img/data_pipeline.png",
       "tags": [
-        "Python",
-        "FastAPI",
-        "Docker",
-        "Fly.io",
-        "Selenium",
-        "Telegram Bot API"
+        "Dagster",
+        "DLT",
+        "ClickHouse",
+        "ELT",
+        "Data Engineering",
+        "Python"
       ],
-      "links": [
-        {
-          "name": "Source",
-          "href": "https://github.com/tedawf/tradingview-telegram-alerts",
-          "icon": "github"
-        }
-      ]
+      "links": []
     },
     {
-      "name": "NFTVue",
-      "description": "Non-Fungible Tokens (NFTs) Gallery Viewer website that allows users to connect their crypto wallets to view and verify their tokens",
-      "href": "https://nftvue.vercel.app",
-      "image": "/img/nftvue.png",
+      "name": "Infrastructure as Code Migration",
+      "description": "Led ClickOps to Terraform transformation for all AWS assets, reducing time-to-recovery by 40% and enabling infrastructure versioning",
+      "image": "/img/IAC_migration.png",
       "tags": [
-        "NextJS",
-        "TailwindCSS",
-        "MetaMask",
-        "WalletConnect",
-        "Web3",
-        "NFTScan",
-        "HashKey DID"
+        "Terraform",
+        "AWS",
+        "IaC",
+        "CloudFormation",
+        "DevOps"
       ],
-      "links": [
-        {
-          "name": "Website",
-          "href": "https://nftvue.vercel.app",
-          "icon": "globe"
-        }
-      ]
+      "links": []
     },
     {
-      "name": "Portfolio 2023 (Outdated)",
-      "description": "Simple markdown portfolio made with Astro 🚀",
-      "href": "https://tedawf-dot-com.netlify.app",
-      "image": "/img/old-portfolio.png",
-      "tags": ["Astro", "TailwindCSS", "Netlify", "SEO"],
-      "links": [
-        {
-          "name": "Website",
-          "href": "https://tedawf-dot-com.netlify.app",
-          "icon": "globe"
-        },
-        {
-          "name": "Source",
-          "href": "https://github.com/tedawf/portfolio-2023",
-          "icon": "github"
-        }
-      ]
+      "name": "CI/CD Pipeline Optimization",
+      "description": "Redesigned GitHub Actions pipelines with semantic versioning and parallelized testing, increasing engineering velocity by 30%",
+      "image": "/img/cicd_optimize.png",
+      "tags": [
+        "GitHub Actions",
+        "CI/CD",
+        "DevOps",
+        "Automation",
+        "Testing"
+      ],
+      "links": []
     },
     {
-      "name": "Rapid Ride Fight (Final Year)",
-      "description": "3D capture-the-flag, multiplayer boat fighting, with smart AI and water graphics",
-      "href": "https://games.digipen.edu/games/rapid-ride-fight",
-      "image": "/img/rrf.png",
-      "tags": ["C/C++", "OpenGL", "Custom Game Engine", "3D"],
-      "links": [
-        {
-          "name": "Gameplay",
-          "href": "https://www.youtube.com/watch?v=bge3fiypg5U",
-          "icon": "youtube"
-        },
-        {
-          "name": "Trailer",
-          "href": "https://www.youtube.com/watch?v=PNAO-aI1Daw",
-          "icon": "youtube"
-        }
-      ]
+      "name": "Observability & Monitoring Platform",
+      "description": "Implemented service-level observability with Prometheus and Grafana for improved incident triage and SLI monitoring",
+      "image": "/img/monitoring.png",
+      "tags": [
+        "Prometheus",
+        "Grafana",
+        "Monitoring",
+        "Alerting",
+        "SLI"
+      ],
+      "links": []
     },
     {
-      "name": "Glowing Under (2nd Year)",
-      "description": "2D platformer with a focus on puzzle-solving, no-death exploration and storytelling",
-      "href": "https://games.digipen.edu/games/glowing-under",
-      "image": "/img/gu.png",
-      "tags": ["C/C++", "OpenGL", "Custom Game Engine", "2D"],
-      "links": [
-        {
-          "name": "Trailer",
-          "href": "https://www.youtube.com/watch?v=u6RYwBZlSfg",
-          "icon": "youtube"
-        }
-      ]
+      "name": "Auth0 Tenant Migration",
+      "description": "Executed zero-downtime Auth0 tenant migration for 1,000+ users with least-privilege IAM policies via AWS SSO",
+      "image": "/img/auth0_tenant.png",
+      "tags": [
+        "Auth0",
+        "AWS SSO",
+        "IAM",
+        "Security",
+        "Zero Downtime"
+      ],
+      "links": []
     }
   ]
 }

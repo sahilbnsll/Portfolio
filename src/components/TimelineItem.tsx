@@ -1,5 +1,8 @@
+"use client";
+
 import { Experience } from "@/lib/schemas";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import { Badge } from "./ui/Badge";
 import Icon from "./Icon";
@@ -12,27 +15,39 @@ export default function TimelineItem({ experience }: Props) {
   const { name, href, logo, positions } = experience;
 
   return (
-    <li className="relative ml-10 py-4">
+    <motion.li
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4 }}
+      className="group relative ml-10 py-4"
+    >
       <Link
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="absolute -left-16 top-4 flex items-center justify-center rounded-full bg-white"
+        className="absolute -left-16 top-4 flex items-center justify-center rounded-full bg-white transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg"
       >
-        <Avatar className="size-12 border">
+        <Avatar className="size-12 border transition-all duration-300 ease-out group-hover:border-primary/60">
           <AvatarImage
             src={logo}
             alt={name}
             loading="lazy"
             decoding="async"
-            className="bg-background object-contain"
+            className="bg-background object-contain transition-all duration-300 ease-out group-hover:scale-105"
           />
           <AvatarFallback>{name[0]}</AvatarFallback>
         </Avatar>
       </Link>
       <div className="flex flex-1 flex-col justify-start gap-2">
-        <Link href={href} target="_blank" rel="noreferrer" className="w-fit">
-          <h2 className="text-base font-semibold leading-none">{name}</h2>
+        <Link
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="w-fit"
+        >
+          <h2 className="text-base font-semibold leading-none">
+            {name}
+          </h2>
         </Link>
         <div className="flex flex-col gap-2">
           {positions.map((position) => (
@@ -63,7 +78,7 @@ export default function TimelineItem({ experience }: Props) {
                 <div className="mt-2 flex flex-row flex-wrap items-start gap-2">
                   {position.links.map((link) => (
                     <Link href={link.href} key={link.href}>
-                      <Badge title={link.name} className="flex gap-2">
+                      <Badge title={link.name} className="flex gap-2 transition-all duration-300 hover:scale-105 hover:bg-primary/20">
                         <Icon
                           name={link.icon}
                           aria-hidden="true"
@@ -79,6 +94,6 @@ export default function TimelineItem({ experience }: Props) {
           ))}
         </div>
       </div>
-    </li>
+    </motion.li>
   );
 }

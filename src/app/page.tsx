@@ -1,12 +1,12 @@
+"use client";
+
 import Experience from "@/components/Experience";
 import LinkWithIcon from "@/components/LinkWithIcon";
-import Posts from "@/components/Posts";
-import PostsSkeleton from "@/components/PostsSkeleton";
-import Projects from "@/components/Projects";
 import Socials from "@/components/Socials";
 import SwipeCards from "@/components/SwipeCards";
+import SkillsSection from "@/components/SkillsSection";
+import CertificationsSection from "@/components/CertificationsSection";
 import { Button } from "@/components/ui/Button";
-import { getPosts } from "@/lib/posts";
 import {
   ArrowDown,
   ArrowDownRight,
@@ -14,36 +14,73 @@ import {
   FileDown,
 } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
+import { motion } from "framer-motion";
 
 import homeContent from "@/data/home.json";
 
-const TED_BIRTH_YEAR = 1997;
+const SAHIL_BIRTH_DATE = new Date(2002, 7, 24); // August 24, 2002
 const LIMIT = 2; // max show 2
 
-async function RecentPosts() {
-  const posts = (await getPosts())
-    .filter((post) => !post.draft)
-    .slice(0, LIMIT);
-  return <Posts posts={posts} />;
-}
-
 export default function Home() {
-  const currentAge = new Date().getFullYear() - TED_BIRTH_YEAR;
+  const today = new Date();
+  let currentAge = today.getFullYear() - SAHIL_BIRTH_DATE.getFullYear();
+
+  // Adjust age if birthday hasn't occurred yet this year
+  const hasHadBirthdayThisYear =
+    today.getMonth() > SAHIL_BIRTH_DATE.getMonth() ||
+    (today.getMonth() === SAHIL_BIRTH_DATE.getMonth() &&
+      today.getDate() >= SAHIL_BIRTH_DATE.getDate());
+
+  if (!hasHadBirthdayThisYear) {
+    currentAge--;
+  }
+
+  // Animation variants
+  const fadeInUp = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5 }
+  };
+
+  const staggerContainer = {
+    animate: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
 
   return (
     <article className="mt-8 flex flex-col gap-16 pb-16">
-      <section className="flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between">
-        <SwipeCards className="md:mr-8" />
+      <motion.section
+        initial="initial"
+        animate="animate"
+        variants={staggerContainer}
+        className="flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between"
+      >
+        <motion.div variants={fadeInUp}>
+          <SwipeCards className="md:mr-8" />
+        </motion.div>
 
-        <div className="flex max-w-[320px] flex-col sm:max-w-full">
+        <motion.div variants={fadeInUp} className="flex max-w-[320px] flex-col sm:max-w-full">
           <h1 className="title text-balance text-4xl sm:text-5xl">
             {homeContent.introduction.greeting}
           </h1>
 
           <p className="mt-2 whitespace-nowrap text-sm font-medium sm:text-base">
-            {currentAge}yo software engineer from Singapore 🇸🇬
+            {currentAge}yo DevOps engineer from India 🇮🇳
           </p>
+
+          {/* Available for work badge */}
+          <div className="mt-3 flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1.5 text-sm font-medium text-green-600 dark:text-green-400">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex size-2 rounded-full bg-green-500"></span>
+              </span>
+              Available for work
+            </div>
+          </div>
 
           <p className="mt-4 max-w-sm text-balance text-sm sm:text-base">
             {homeContent.introduction.description}
@@ -72,46 +109,43 @@ export default function Home() {
           </p>
 
           <section className="mt-6 flex flex-wrap items-center gap-4">
-            <Link href="/resume.pdf" target="_blank">
-              <Button variant="outline">
-                <span className="font-semibold">Resume</span>
-                <FileDown className="ml-2 size-5" />
+            <Link href="/Sahil_Bansal_Resume.pdf" download>
+              <Button>
+                <FileDown className="mr-2 size-4" />
+                <span className="font-semibold">Download Resume</span>
               </Button>
             </Link>
             <Socials />
           </section>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
-      <Experience />
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <Experience />
+      </motion.div>
 
-      <section className="flex flex-col gap-8">
-        <div className="flex justify-between">
-          <h2 className="title text-2xl sm:text-3xl">featured projects</h2>
-          <LinkWithIcon
-            href="/projects"
-            position="right"
-            icon={<ArrowRightIcon className="size-5" />}
-            text="view more"
-          />
-        </div>
-        <Projects limit={LIMIT} />
-      </section>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <SkillsSection />
+      </motion.div>
 
-      <section className="flex flex-col gap-8">
-        <div className="flex justify-between">
-          <h2 className="title text-3xl">recent posts</h2>
-          <LinkWithIcon
-            href="/blog"
-            position="right"
-            icon={<ArrowRightIcon className="size-5" />}
-            text="view more"
-          />
-        </div>
-        <Suspense fallback={<PostsSkeleton rows={LIMIT} />}>
-          <RecentPosts />
-        </Suspense>
-      </section>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <CertificationsSection />
+      </motion.div>
     </article>
   );
 }

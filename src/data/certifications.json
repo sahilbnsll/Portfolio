@@ -1,0 +1,28 @@
+{
+    "certifications": [
+        {
+            "name": "DevOps on AWS Specialization",
+            "organization": "Amazon Web Services (AWS)",
+            "issueDate": "February 2024",
+            "credentialId": "LF56PF27EJDY",
+            "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/LF56PF27EJDY",
+            "logo": "/img/aws.png"
+        },
+        {
+            "name": "Postman API Fundamentals Student Expert",
+            "organization": "Postman",
+            "issueDate": "July 2024",
+            "credentialId": "66a32c7bb1bbd519a44e70c0",
+            "credentialUrl": "https://api.badgr.io/public/assertions/X2ceMM37RqugIm-X52dVgQ",
+            "logo": "/img/postman.png"
+        },
+        {
+            "name": "Agile with Atlassian Jira",
+            "organization": "Atlassian",
+            "issueDate": "January 2024",
+            "credentialId": "93BY9N49MRUA",
+            "credentialUrl": "https://www.coursera.org/account/accomplishments/records/93BY9N49MRUA",
+            "logo": "/img/atlassian.png"
+        }
+    ]
+}

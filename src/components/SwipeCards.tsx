@@ -90,7 +90,7 @@ const Card = ({
 
   return (
     <motion.div
-      className="absolute h-[233px] w-[175px] origin-bottom overflow-hidden rounded-lg bg-white hover:cursor-grab active:cursor-grabbing"
+      className="group absolute h-[233px] w-[175px] origin-bottom overflow-hidden rounded-lg bg-white transition-all duration-300 ease-out hover:cursor-grab active:cursor-grabbing"
       style={{
         gridRow: 1,
         gridColumn: 1,
@@ -105,6 +105,16 @@ const Card = ({
         // Ensure the top card is always the largest paint candidate.
         scale: isFront ? 1 : Math.max(0.85, 0.94 - depth * 0.04),
       }}
+      whileHover={
+        isFront
+          ? {
+            scale: 1.05,
+            boxShadow:
+              "0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4)",
+            transition: { duration: 0.3, ease: "easeOut" },
+          }
+          : undefined
+      }
       drag={isFront ? "x" : false}
       dragConstraints={{
         left: -150,
@@ -117,7 +127,7 @@ const Card = ({
       {isFront ? (
         <ImageWithSkeleton
           src={url}
-          alt="Photo of Ted"
+          alt="Photo of Sahil"
           width={175}
           height={233}
           sizes="175px"
@@ -157,18 +167,18 @@ type Card = {
 const cardData: Card[] = [
   {
     id: 1,
-    url: "/img/ted-2018.jpg",
+    url: "/img/sahil1.jpeg",
   },
   {
     id: 2,
-    url: "/img/ted-2021.jpg",
+    url: "/img/sahil2.jpeg",
   },
   {
     id: 3,
-    url: "/img/ted-2024.jpg",
+    url: "/img/sahil3.jpeg",
   },
   {
     id: 4,
-    url: "/img/ted-2025.jpg",
+    url: "/img/sahil4.jpeg",
   },
 ];

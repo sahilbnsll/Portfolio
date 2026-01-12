@@ -3,19 +3,13 @@
     {
       "path": "/",
       "name": "home",
-      "description": "Portfolio overview, recent projects, and blog highlights",
+      "description": "Portfolio overview and recent projects",
       "showInNav": true
     },
     {
       "path": "/projects",
       "name": "projects",
       "description": "Portfolio projects showcase",
-      "showInNav": true
-    },
-    {
-      "path": "/blog",
-      "name": "blog",
-      "description": "Blog posts and project updates",
       "showInNav": true
     },
     {
@@ -31,17 +25,17 @@
       "showInNav": false
     },
     {
-      "path": "/resume.pdf",
+      "path": "/Sahil_Bansal_Resume.pdf",
       "name": "resume",
-      "description": "Ted's resume CV in pdf format",
+      "description": "Sahil's resume CV in pdf format",
       "showInNav": false
     }
   ],
   "externalLinks": [
     {
-      "path": "https://www.instagram.com/gomugomu.cat",
-      "name": "instagram",
-      "description": "Ted Lead for escalations (joke reference to cat's account)",
+      "path": "https://linkedin.com/in/sahilbansal24",
+      "name": "linkedin",
+      "description": "Sahil's LinkedIn profile",
       "isExternal": true
     }
   ]

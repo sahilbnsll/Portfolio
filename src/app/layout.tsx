@@ -4,6 +4,7 @@ import Providers from "@/components/Providers";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,8 +19,8 @@ const calistoga = Calistoga({
 });
 
 export const metadata: Metadata = {
-  title: "Ted Thoughts.",
-  description: "My personal site to showcase my developer work and opinions.",
+  title: "Sahil Bansal - DevOps Engineer",
+  description: "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems.",
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -56,6 +57,7 @@ export default function RootLayout({
           </div>
           <Footer />
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
