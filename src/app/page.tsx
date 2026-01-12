@@ -109,12 +109,12 @@ export default function Home() {
           </p>
 
           <section className="mt-6 flex flex-wrap items-center gap-4">
-            <Link href="/Sahil_Bansal_Resume.pdf" download>
+            <a href="/Sahil_Bansal_Resume.pdf" download="Sahil_Bansal_Resume.pdf">
               <Button>
                 <FileDown className="mr-2 size-4" />
                 <span className="font-semibold">Download Resume</span>
               </Button>
-            </Link>
+            </a>
             <Socials />
           </section>
         </motion.div>
