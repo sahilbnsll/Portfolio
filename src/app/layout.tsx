@@ -21,13 +21,7 @@ const calistoga = Calistoga({
 export const metadata: Metadata = {
   title: "Sahil Bansal - DevOps Engineer",
   description: "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems.",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
+
   manifest: "/manifest.json",
 };
 
