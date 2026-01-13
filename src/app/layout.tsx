@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Providers from "@/components/Providers";
+import ScrollToTop from "@/components/ScrollToTop";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
@@ -50,6 +51,7 @@ export default function RootLayout({
             <main className="grow">{children}</main>
           </div>
           <Footer />
+          <ScrollToTop />
         </Providers>
         <Analytics />
       </body>

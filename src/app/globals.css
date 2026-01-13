@@ -72,6 +72,18 @@
     --sh-keyword: #f47067;
     --sh-string: #0fa295;
   }
+  
+  /* Reduced Motion Support for Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer base {

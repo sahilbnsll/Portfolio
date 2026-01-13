@@ -15,10 +15,10 @@ export default function Experience() {
         <TabsTrigger value="education">Education</TabsTrigger>
       </TabsList>
       <TabsContent value="work">
-        <Timeline experience={career}></Timeline>
+        <Timeline experience={career} type="work"></Timeline>
       </TabsContent>
       <TabsContent value="education">
-        <Timeline experience={education}></Timeline>
+        <Timeline experience={education} type="education"></Timeline>
       </TabsContent>
     </Tabs>
   );

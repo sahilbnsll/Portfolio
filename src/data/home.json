@@ -1,6 +1,6 @@
 {
   "introduction": {
-    "greeting": "hi, sahil here. 👋",
+    "greeting": "hi, sahil here.",
     "description": "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems. I build scalable and secure cloud infrastructure.",
     "chatPrompt": "For Q&A, start a chat with Sahil Support",
     "escalation": {

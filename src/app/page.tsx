@@ -6,6 +6,7 @@ import Socials from "@/components/Socials";
 import SwipeCards from "@/components/SwipeCards";
 import SkillsSection from "@/components/SkillsSection";
 import CertificationsSection from "@/components/CertificationsSection";
+import AvailableForWorkBadge from "@/components/AvailableForWorkBadge";
 import { Button } from "@/components/ui/Button";
 import {
   ArrowDown,
@@ -64,7 +65,26 @@ export default function Home() {
 
         <motion.div variants={fadeInUp} className="flex max-w-[320px] flex-col sm:max-w-full">
           <h1 className="title text-balance text-4xl sm:text-5xl">
-            {homeContent.introduction.greeting}
+            {homeContent.introduction.greeting}{" "}
+            <motion.span
+              className="inline-block origin-[70%_70%] cursor-pointer"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1]
+              }}
+              whileHover={{
+                rotate: [0, 14, -8, 14, -4, 10, 0],
+                transition: {
+                  duration: 0.6,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              👋
+            </motion.span>
           </h1>
 
           <p className="mt-2 whitespace-nowrap text-sm font-medium sm:text-base">
@@ -73,13 +93,7 @@ export default function Home() {
 
           {/* Available for work badge */}
           <div className="mt-3 flex items-center gap-2">
-            <div className="flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1.5 text-sm font-medium text-green-600 dark:text-green-400">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex size-2 rounded-full bg-green-500"></span>
-              </span>
-              Available for work
-            </div>
+            <AvailableForWorkBadge />
           </div>
 
           <p className="mt-4 max-w-sm text-balance text-sm sm:text-base">
@@ -110,8 +124,10 @@ export default function Home() {
 
           <section className="mt-6 flex flex-wrap items-center gap-4">
             <a href="/Sahil_Bansal_Resume.pdf" download="Sahil_Bansal_Resume.pdf">
-              <Button>
-                <FileDown className="mr-2 size-4" />
+              <Button className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/30">
+                {/* Neon glow background on hover */}
+                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/0 via-purple-500/0 to-blue-500/0 opacity-0 transition-all duration-300 group-hover:from-primary/20 group-hover:via-purple-500/20 group-hover:to-blue-500/20 group-hover:opacity-100" />
+                <FileDown className="mr-2 size-4 transition-all duration-300 group-hover:scale-110" />
                 <span className="font-semibold">Download Resume</span>
               </Button>
             </a>

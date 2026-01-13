@@ -4,10 +4,12 @@ import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/Button";
+import { useSound } from "@/hooks/useSound";
 
 export default function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const playClick = useSound("/sounds/click.mp3", 0.25);
 
   useEffect(() => {
     setMounted(true);
@@ -22,6 +24,7 @@ export default function ThemeToggle() {
       size="icon"
       variant="ghost"
       onClick={() => {
+        playClick();
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
       }}
     >
