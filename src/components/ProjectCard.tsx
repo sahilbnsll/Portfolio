@@ -20,11 +20,11 @@ export function ProjectCard({ project }: Props) {
   const { name, href, description, image, tags, links } = project;
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-lg">
+    <Card className="flex flex-col overflow-hidden transition-shadow duration-500 hover:shadow-lg">
       <CardHeader className="p-0">
         {image && (
           <Link href={href || image} className="group relative overflow-hidden block">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 transition-opacity duration-300 group-hover:from-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 transition-opacity duration-500 group-hover:from-black/40" />
             <ImageWithSkeleton
               src={image}
               alt={name}
@@ -33,13 +33,13 @@ export function ProjectCard({ project }: Props) {
               sizes="(max-width: 640px) calc(100vw - 4rem), 344px"
               quality={75}
               containerClassName="h-48 w-full"
-              className="h-48 w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+              className="h-48 w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </Link>
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-2 pt-6">
-        <CardTitle className="transition-colors duration-200 group-hover:text-primary">{name}</CardTitle>
+        <CardTitle className="transition-colors duration-500 group-hover:text-primary">{name}</CardTitle>
         <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert leading-relaxed">
           {description}
         </Markdown>

@@ -26,17 +26,28 @@ export default function Header() {
             {navLinks.map((nav, id) => {
               const isActive = pathname === nav.href;
               return (
-                <li key={id} className="link relative">
+                <li key={id} className="link relative group">
                   <Link
                     href={nav.href}
                     title={nav.title}
-                    className={`transition-colors duration-300 ${isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`relative inline-block transition-colors duration-500 ${isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                   >
-                    {nav.name}
+                    <span className="relative z-10">{nav.name}</span>
+                    {/* 3D white underline with depth effect on hover */}
+                    {!isActive && (
+                      <>
+                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white transition-all duration-500 ease-out group-hover:w-full"
+                          style={{ transform: 'translateY(2px)' }} />
+                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/50 blur-[2px] transition-all duration-500 ease-out group-hover:w-full"
+                          style={{ transform: 'translateY(3px)' }} />
+                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/30 blur-[4px] transition-all duration-500 ease-out group-hover:w-full"
+                          style={{ transform: 'translateY(4px)' }} />
+                      </>
+                    )}
                   </Link>
-                  {/* Active indicator */}
+                  {/* Active indicator - pure white */}
                   {isActive && (
-                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-purple-500 to-blue-500 animate-in fade-in slide-in-from-bottom-2 duration-300" />
+                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white animate-in fade-in slide-in-from-bottom-2 duration-300" />
                   )}
                 </li>
               );

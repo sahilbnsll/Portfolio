@@ -33,21 +33,21 @@ export default function TimelineItem({ experience, type = "work" }: Props) {
       className="group relative ml-10 py-4"
     >
       {/* Neon glow background on hover */}
-      <div className={`absolute inset-0 -z-10 rounded-lg bg-gradient-to-r from-${colors.from}/0 via-${colors.via}/0 to-${colors.to}/0 opacity-0 transition-all duration-300 group-hover:from-${colors.from}/5 group-hover:via-${colors.via}/5 group-hover:to-${colors.to}/5 group-hover:opacity-100`} />
+      <div className={`absolute inset-0 -z-10 rounded-lg bg-gradient-to-r from-${colors.from}/0 via-${colors.via}/0 to-${colors.to}/0 opacity-0 transition-all duration-500 group-hover:from-${colors.from}/5 group-hover:via-${colors.via}/5 group-hover:to-${colors.to}/5 group-hover:opacity-100`} />
 
       <Link
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="absolute -left-16 top-4 flex items-center justify-center rounded-full bg-white transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg"
+        className="absolute -left-16 top-4 flex items-center justify-center rounded-full bg-white transition-all duration-500 ease-out hover:scale-110 hover:shadow-lg"
       >
-        <Avatar className={`size-12 border transition-all duration-300 ease-out group-hover:border-${colors.from}/60 group-hover:shadow-lg group-hover:shadow-${colors.from}/30`}>
+        <Avatar className={`size-12 border transition-all duration-500 ease-out group-hover:border-${colors.from}/60 group-hover:shadow-lg group-hover:shadow-${colors.from}/30`}>
           <AvatarImage
             src={logo}
             alt={name}
             loading="lazy"
             decoding="async"
-            className="bg-background object-contain transition-all duration-300 ease-out group-hover:scale-105"
+            className="bg-background object-contain transition-all duration-500 ease-out group-hover:scale-105"
           />
           <AvatarFallback>{name[0]}</AvatarFallback>
         </Avatar>
@@ -59,7 +59,7 @@ export default function TimelineItem({ experience, type = "work" }: Props) {
           rel="noreferrer"
           className="w-fit"
         >
-          <h2 className={`text-base font-semibold leading-none transition-all duration-300 group-hover:text-${colors.from} group-hover:drop-shadow-[0_0_8px_rgba(251,146,60,0.3)]`}>
+          <h2 className={`text-base font-semibold leading-none transition-all duration-500 group-hover:text-${colors.from} group-hover:drop-shadow-[0_0_8px_rgba(251,146,60,0.3)]`}>
             {name}
           </h2>
         </Link>
@@ -92,7 +92,7 @@ export default function TimelineItem({ experience, type = "work" }: Props) {
                 <div className="mt-2 flex flex-row flex-wrap items-start gap-2">
                   {position.links.map((link) => (
                     <Link href={link.href} key={link.href}>
-                      <Badge title={link.name} className={`flex gap-2 transition-all duration-300 hover:scale-105 hover:bg-${colors.from}/20 hover:shadow-md hover:shadow-${colors.from}/20`}>
+                      <Badge title={link.name} className={`flex gap-2 transition-all duration-500 hover:scale-105 hover:bg-${colors.from}/20 hover:shadow-md hover:shadow-${colors.from}/20`}>
                         <Icon
                           name={link.icon}
                           aria-hidden="true"

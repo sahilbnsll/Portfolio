@@ -65,7 +65,18 @@ export default function Home() {
 
         <motion.div variants={fadeInUp} className="flex max-w-[320px] flex-col sm:max-w-full">
           <h1 className="title text-balance text-4xl sm:text-5xl">
-            {homeContent.introduction.greeting}{" "}
+            hi,{" "}
+            <span className="group relative inline-block cursor-pointer">
+              <span className="relative z-10 px-1">sahil here</span>
+              {/* 3D highlight background effect */}
+              <span className="absolute inset-0 scale-x-0 bg-orange-500/80 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                style={{ transformOrigin: 'left' }} />
+              <span className="absolute inset-0 scale-x-0 bg-orange-500/40 blur-[2px] transition-transform duration-500 ease-out group-hover:scale-x-100"
+                style={{ transformOrigin: 'left', transform: 'scaleX(0) translateY(2px)' }} />
+              <span className="absolute inset-0 scale-x-0 bg-orange-500/20 blur-[4px] transition-transform duration-500 ease-out group-hover:scale-x-100"
+                style={{ transformOrigin: 'left', transform: 'scaleX(0) translateY(4px)' }} />
+            </span>
+            .{" "}
             <motion.span
               className="inline-block origin-[70%_70%] cursor-pointer"
               initial={{ rotate: 0 }}
@@ -78,8 +89,9 @@ export default function Home() {
               whileHover={{
                 rotate: [0, 14, -8, 14, -4, 10, 0],
                 transition: {
-                  duration: 0.6,
-                  ease: "easeInOut"
+                  duration: 2,
+                  ease: "easeInOut",
+                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1]
                 }
               }}
             >
