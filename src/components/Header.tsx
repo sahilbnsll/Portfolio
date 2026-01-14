@@ -36,18 +36,18 @@ export default function Header() {
                     {/* 3D white underline with depth effect on hover */}
                     {!isActive && (
                       <>
-                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white transition-all duration-500 ease-out group-hover:w-full"
+                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black dark:bg-white transition-all duration-500 ease-out group-hover:w-full"
                           style={{ transform: 'translateY(2px)' }} />
-                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/50 blur-[2px] transition-all duration-500 ease-out group-hover:w-full"
+                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black/50 dark:bg-white/50 blur-[2px] transition-all duration-500 ease-out group-hover:w-full"
                           style={{ transform: 'translateY(3px)' }} />
-                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white/30 blur-[4px] transition-all duration-500 ease-out group-hover:w-full"
+                        <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black/30 dark:bg-white/30 blur-[4px] transition-all duration-500 ease-out group-hover:w-full"
                           style={{ transform: 'translateY(4px)' }} />
                       </>
                     )}
                   </Link>
                   {/* Active indicator - pure white */}
                   {isActive && (
-                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white animate-in fade-in slide-in-from-bottom-2 duration-300" />
+                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-black dark:bg-white animate-in fade-in slide-in-from-bottom-2 duration-300" />
                   )}
                 </li>
               );
