@@ -11,6 +11,7 @@ import AboutMe from "@/components/AboutMe";
 import StatsOverview from "@/components/StatsOverview";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import SkillDependenciesGraph from "@/components/SkillDependenciesGraph";
+import CharacterReveal from "@/components/CharacterReveal";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import { Button } from "@/components/ui/Button";
 import {
@@ -70,7 +71,10 @@ export default function Home() {
 
         <motion.div variants={fadeInUp} className="flex max-w-[320px] flex-col sm:max-w-full">
           <h1 className="title text-balance text-4xl sm:text-5xl">
-            hi, sahil here.
+            <CharacterReveal 
+              text="hi, sahil here. " 
+              delay={0.1}
+            />
             <motion.span
               className="inline-block origin-[70%_70%] cursor-pointer ml-2"
               initial={{ rotate: 0 }}

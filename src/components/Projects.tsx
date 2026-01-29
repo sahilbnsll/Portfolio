@@ -18,15 +18,15 @@ export default function Projects({ limit }: Props) {
   }
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Load filter from localStorage on mount
+  // Initialize client-side state from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("projectFilter");
     if (stored && stored !== "all") {
       setSelectedCategory(stored);
     }
-    setMounted(true);
+    setIsClient(true);
   }, []);
 
   // Persist filter selection to localStorage
@@ -75,6 +75,10 @@ export default function Projects({ limit }: Props) {
       },
     },
   };
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <motion.section
