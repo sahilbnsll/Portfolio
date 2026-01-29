@@ -173,16 +173,20 @@ export default function SkillDependenciesGraph() {
           }) as any
       );
 
-    // Add labels as multi-line tspans so text stays inside nodes
+    // Add labels as text elements with tspans
     const labels = svg
-      .selectAll("g.label")
+      .selectAll("text.label")
       .data(nodes as any)
       .enter()
-      .append("g")
+      .append("text")
       .attr("class", "label")
       .attr("pointer-events", "none")
+      .attr("text-anchor", "middle")
+      .attr("font-size", "11px")
+      .attr("font-weight", 600)
+      .attr("fill", "#fff")
       .each(function (d: any) {
-        const g = d3.select(this as any);
+        const g = d3.select(this);
         const words = String(d.id).split(" ");
         // If label is short keep single line, otherwise split in two lines
         const lines = words.length <= 2 ? [d.id] : [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")];
@@ -191,10 +195,6 @@ export default function SkillDependenciesGraph() {
           g.append("tspan")
             .attr("x", 0)
             .attr("dy", i === 0 ? (lines.length === 1 ? "0.3em" : "-0.4em") : "1.1em")
-            .attr("text-anchor", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", 600)
-            .attr("fill", "#fff")
             .text(line);
         });
       });

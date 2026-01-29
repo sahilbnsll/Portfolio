@@ -71,33 +71,42 @@ export default function Home() {
         </motion.div>
 
         <motion.div variants={fadeInUp} className="flex max-w-[320px] flex-col sm:max-w-full">
-          <h1 className="title text-balance text-4xl sm:text-5xl">
-            <CharacterReveal 
-              text="hi, sahil here. " 
-              delay={0.1}
+          <div className="relative">
+            {/* Background highlight effect */}
+            <motion.div
+              className="absolute inset-0 -z-10 rounded-lg bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 blur-xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
             />
-            <motion.span
-              className="inline-block origin-[70%_70%] cursor-pointer"
-              initial={{ rotate: 0 }}
-              animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
-                delay: 0.5
-              }}
-              whileHover={{
-                rotate: [0, 14, -8, 14, -4, 10, 0],
-                transition: {
+            <h1 className="title text-balance text-4xl sm:text-5xl">
+              <CharacterReveal 
+                text="infrastructure that scales automatically." 
+                delay={0.1}
+              />
+              <motion.span
+                className="inline-block origin-[70%_70%] cursor-pointer ml-2"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
+                transition={{
                   duration: 2,
                   ease: "easeInOut",
-                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1]
-                }
-              }}
-            >
-              👋
-            </motion.span>
-          </h1>
+                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+                  delay: 0.5
+                }}
+                whileHover={{
+                  rotate: [0, 14, -8, 14, -4, 10, 0],
+                  transition: {
+                    duration: 2,
+                    ease: "easeInOut",
+                    times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1]
+                  }
+                }}
+              >
+                ✨
+              </motion.span>
+            </h1>
+          </div>
 
           <p className="mt-2 whitespace-nowrap text-sm font-medium sm:text-base">
             <AnimatedNumber target={currentAge} />yo DevOps engineer from India 🇮🇳

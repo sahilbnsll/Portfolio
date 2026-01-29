@@ -59,14 +59,14 @@ export default function FeaturedProject({
         {image && (
           <motion.div
             variants={itemVariants}
-            className="relative h-64 md:h-auto overflow-hidden group"
+            className="relative h-72 md:h-full overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10" />
             <ImageWithSkeleton
               src={image}
               alt={name}
               width={600}
-              height={400}
+              height={500}
               priority
               sizes="(max-width: 768px) 100vw, 50vw"
               quality={85}

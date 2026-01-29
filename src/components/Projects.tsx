@@ -91,7 +91,7 @@ export default function Projects({ limit }: Props) {
         </span>
         <div className="flex flex-wrap gap-2">
           {categories.map((cat) => {
-            const isActive = selectedCategory === cat || (cat === "All" && !selectedCategory);
+            const isActive = cat === "All" ? !selectedCategory : selectedCategory === cat;
             return (
               <button
                 key={cat}
@@ -131,7 +131,18 @@ export default function Projects({ limit }: Props) {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
         {mounted && filtered.length > 0 ? (
           filtered.map((project, id) => (
-            <motion.div key={`${project.name}-${id}`} variants={itemVariants}>
+            <motion.div 
+              key={`${project.name}-${id}`} 
+              variants={itemVariants}
+              className="group relative"
+            >
+              {/* Spotlight glow effect on hover */}
+              <motion.div
+                className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-accent/0 via-accent/20 to-accent/0 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100 -z-10"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
               <ProjectCard project={project} />
             </motion.div>
           ))

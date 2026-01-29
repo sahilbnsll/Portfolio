@@ -151,14 +151,18 @@ export default function ArchitectureVisualization() {
         d3.select(this).transition().duration(300).attr("r", function(this: any, d: any) { return +d3.select(this).attr('r') / 1.15; }).attr("opacity", 0.8);
       });
 
-    // Add labels as tspans to keep text inside nodes
+    // Add labels as text elements with tspans to keep text inside nodes
     const labels = svg.append("g")
-      .selectAll("g.label")
+      .selectAll("text.label")
       .data(nodes)
       .enter()
-      .append("g")
+      .append("text")
       .attr("class", "label")
       .attr("pointer-events", "none")
+      .attr("text-anchor", "middle")
+      .attr("font-size", "11px")
+      .attr("font-weight", 500)
+      .attr("fill", "white")
       .each(function(d: any) {
         const g = d3.select(this as any);
         const words = String(d.label).split(" ");
@@ -167,10 +171,6 @@ export default function ArchitectureVisualization() {
           g.append("tspan")
             .attr("x", 0)
             .attr("dy", i === 0 ? (lines.length === 1 ? "0.3em" : "-0.4em") : "1.1em")
-            .attr("text-anchor", "middle")
-            .attr("font-size", "11px")
-            .attr("font-weight", 500)
-            .attr("fill", "white")
             .text(line);
         });
       });

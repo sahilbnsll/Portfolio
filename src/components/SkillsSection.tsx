@@ -148,6 +148,18 @@ export default function SkillsSection() {
                             <p className="mt-1 text-center text-xs text-muted-foreground transition-all duration-300 group-hover:text-primary/80">
                                 {category.skills.length} skills
                             </p>
+
+                            {/* Skill Preview - appears on hover */}
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              whileHover={{ opacity: 1, height: "auto" }}
+                              transition={{ duration: 0.2 }}
+                              className="mt-3 overflow-hidden border-t border-border/30 pt-3 text-center text-xs text-muted-foreground"
+                            >
+                              <p className="line-clamp-2 text-accent font-medium">
+                                {category.skills.slice(0, 3).join(" • ")}
+                              </p>
+                            </motion.div>
                         </motion.button>
                     );
                 })}
