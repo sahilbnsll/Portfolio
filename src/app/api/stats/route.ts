@@ -141,11 +141,12 @@ export async function GET(request: NextRequest) {
     const monthPageviewTrend = entries.map((e) => e.total || 0);
 
     // Calculate delta
+    const previousEntry = weekEntries.length > 1 ? weekEntries[weekEntries.length - 2] : null;
+    const previousDevices = previousEntry?.devices || 0;
     const todayDelta =
-      weekEntries.length > 1 && weekEntries[weekEntries.length - 2]?.devices
+      previousDevices > 0
         ? Math.round(
-            (((visitorsToday - weekEntries[weekEntries.length - 2].devices) /
-              weekEntries[weekEntries.length - 2].devices) * 100)
+            (((visitorsToday - previousDevices) / previousDevices) * 100)
           )
         : 0;
 
