@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ChatToggle from "./ChatToggle";
 import ThemeToggle from "./ThemeToggle";
+import VisitStats from "./VisitStats";
 
 import routesData from "@/data/routes.json";
 
@@ -54,6 +55,7 @@ export default function Header() {
             })}
           </ul>
           <div className="flex gap-2 sm:gap-4">
+            <VisitStats />
             <ChatToggle />
             <ThemeToggle />
           </div>
