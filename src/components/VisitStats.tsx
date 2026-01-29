@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "./ui/Button";
-import { CalendarDays, CalendarRange, CalendarCheck, BarChart3, X } from "lucide-react";
+import { CalendarDays, CalendarRange, CalendarCheck, BarChart3, X, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -123,7 +123,6 @@ export default function VisitStats() {
   };
 
   const fetchStats = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch("/api/stats");
       if (response.ok) {
@@ -146,21 +145,35 @@ export default function VisitStats() {
       }
     } catch (error) {
       console.error("Failed to fetch stats:", error);
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const refetch = async () => {
+    setIsLoading(true);
+    await fetchStats();
+    setIsLoading(false);
   };
 
   useEffect(() => {
     setIsMounted(true);
+    // Fetch stats on initial mount for first page load
+    fetchStats();
   }, []);
 
   useEffect(() => {
     if (isOpen) {
-      fetchStats();
+      refetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  // Refetch when switching between visitors and pageviews tabs
+  useEffect(() => {
+    if (isOpen) {
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeMetric]);
 
   // Animate on stats change
   useEffect(() => {
@@ -265,16 +278,33 @@ export default function VisitStats() {
                   <span className="sr-only">Close</span>
                 </button>
 
-                <div className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground dark:text-white">
-                  <BarChart3 className="size-5 text-[hsl(var(--chart-1))]" />
-                  Visit Statistics
+                <div className="flex items-center justify-start gap-3">
+                  <div className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground dark:text-white">
+                    <BarChart3 className="size-5 text-[hsl(var(--chart-1))]" />
+                    Visit Statistics
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={refetch}
+                    disabled={isLoading}
+                    title="Refresh stats"
+                    className="size-8"
+                  >
+                    <RefreshCw
+                      className={`size-4 ${isLoading ? "animate-spin" : ""}`}
+                    />
+                  </Button>
                 </div>
 
                 {/* Top summary row as interactive buttons: Visitors / Page Views */}
                 <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <button
                     type="button"
-                    onClick={() => setActiveMetric("visitors")}
+                    onClick={() => {
+                      refetch();
+                      setActiveMetric("visitors");
+                    }}
                     className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${
                       activeMetric === "visitors"
                         ? "border border-border bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-1))] dark:via-[hsl(var(--chart-2))] dark:to-[hsl(var(--chart-3))]"
@@ -317,7 +347,10 @@ export default function VisitStats() {
 
                   <button
                     type="button"
-                    onClick={() => setActiveMetric("pageviews")}
+                    onClick={() => {
+                      refetch();
+                      setActiveMetric("pageviews");
+                    }}
                     className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${
                       activeMetric === "pageviews"
                         ? "border border-border bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-4))] dark:via-[hsl(var(--chart-5))] dark:to-[hsl(var(--chart-1))]"

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const revalidate = 0;
+
 interface VercelTimeSeriesEntry {
   key: string;
   total?: number;
