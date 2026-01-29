@@ -35,17 +35,6 @@ export default function Timeline({ experience, type = "work" }: Props) {
     },
   };
 
-  const lineVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
-    },
-  };
-
   return (
     <Card>
       <CardContent className="p-0">
@@ -53,9 +42,9 @@ export default function Timeline({ experience, type = "work" }: Props) {
           {/* Animated vertical line */}
           <motion.div
             className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-accent via-accent to-transparent"
-            variants={lineVariants}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true, amount: 0.1 }}
           />
           <motion.ul
