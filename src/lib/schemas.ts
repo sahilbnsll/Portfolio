@@ -26,6 +26,7 @@ const project = z.object({
   href: z.string().url().optional(),
   image: z.string().optional(),
   tags: z.array(z.string()),
+  category: z.enum(["Infrastructure & DevOps", "CI/CD", "Security", "Data & Analytics"]).optional(),
   links: z.array(iconLink),
 });
 export const projectSchema = z.object({ projects: z.array(project) });

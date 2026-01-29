@@ -1,12 +1,12 @@
 {
   "introduction": {
-    "greeting": "hi, sahil here.",
-    "description": "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems. I build scalable and secure cloud infrastructure.",
-    "chatPrompt": "For Q&A, start a chat with Sahil Support",
+    "greeting": "infrastructure that scales automatically.",
+    "description": "I build cloud systems that don't break at 3am. From zero-downtime migrations to cost-optimized infrastructure. I obsess over reliability, automation, and giving teams the confidence to deploy. Currently architecting scalable infrastructure at Buyogo AG.",
+    "chatPrompt": "Questions about DevOps, reliability cloud infrastructure? Let's chat.",
     "escalation": {
-      "text": "For any escalations, please find my",
-      "linkText": "contact info",
-      "suffix": "instead."
+      "text": "For anything else, let's",
+      "linkText": "connect directly",
+      "suffix": "."
     }
   },
   "escalationLink": {

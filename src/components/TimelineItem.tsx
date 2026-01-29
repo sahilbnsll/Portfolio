@@ -21,15 +21,7 @@ export default function TimelineItem({ experience, type = "work" }: Props) {
     : { from: "emerald-500", via: "green-500", to: "teal-500" };
 
   return (
-    <motion.li
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{
-        duration: 0.5,
-        type: "spring",
-        stiffness: 300,
-        damping: 25
-      }}
+    <div
       className="group relative ml-10 py-4"
     >
       {/* Neon glow background on hover */}
@@ -108,6 +100,6 @@ export default function TimelineItem({ experience, type = "work" }: Props) {
           ))}
         </div>
       </div>
-    </motion.li>
+    </div>
   );
 }

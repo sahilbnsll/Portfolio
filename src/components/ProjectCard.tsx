@@ -16,8 +16,15 @@ interface Props {
   project: Project;
 }
 
+const categoryColors: Record<string, string> = {
+  "Infrastructure & DevOps": "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  "CI/CD": "bg-green-500/10 text-green-600 dark:text-green-400",
+  "Security": "bg-red-500/10 text-red-600 dark:text-red-400",
+  "Data & Analytics": "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+};
+
 export function ProjectCard({ project }: Props) {
-  const { name, href, description, image, tags, links } = project;
+  const { name, href, description, image, tags, category, links } = project;
 
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow duration-500 hover:shadow-lg">
@@ -39,7 +46,17 @@ export function ProjectCard({ project }: Props) {
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-2 pt-6">
-        <CardTitle className="transition-colors duration-500 group-hover:text-primary">{name}</CardTitle>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="transition-colors duration-500 group-hover:text-primary">{name}</CardTitle>
+          {category && (
+            <Badge
+              className={`whitespace-nowrap text-xs px-2 py-0.5 ${categoryColors[category] || "bg-gray-500/10 text-gray-600 dark:text-gray-400"}`}
+              variant="secondary"
+            >
+              {category}
+            </Badge>
+          )}
+        </div>
         <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert leading-relaxed">
           {description}
         </Markdown>

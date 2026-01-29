@@ -3,7 +3,7 @@
 import { Button } from "./ui/Button";
 import { CalendarDays, CalendarRange, CalendarCheck, BarChart3, X, RefreshCw } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Sparkline from "./ui/Sparkline";
 import StatDelta from "./ui/StatDelta";
@@ -61,28 +61,24 @@ export default function VisitStats() {
     month: null,
   });
 
-  const animateCount = (key: keyof typeof displayStats, to: number) => {
+  const animateCount = useCallback((key: keyof typeof displayStats, to: number) => {
     const start = displayStats[key];
-    console.log(`animateCount('${key}', ${to}) - starting from ${start}`);
     let frame = 0;
     const duration = 600;
     const steps = 24;
-    
-    // Clear existing animation for this key
+
     if (animRefsVisitors.current[key]) {
       clearInterval(animRefsVisitors.current[key]!);
     }
-    
+
     animRefsVisitors.current[key] = setInterval(() => {
       frame++;
       const value = Math.round(start + ((to - start) * frame) / steps);
-      console.log(`${key}: frame ${frame}/${steps} = ${value}`);
       setDisplayStats((prev) => ({
         ...prev,
         [key]: value,
       }));
       if (frame >= steps) {
-        console.log(`${key}: animation complete, setting to ${to}`);
         setDisplayStats((prev) => ({ ...prev, [key]: to }));
         if (animRefsVisitors.current[key]) {
           clearInterval(animRefsVisitors.current[key]!);
@@ -90,20 +86,18 @@ export default function VisitStats() {
         }
       }
     }, duration / steps);
-  };
+  }, [displayStats]);
 
-  const animateCountPV = (key: keyof typeof displayPVs, to: number) => {
+  const animateCountPV = useCallback((key: keyof typeof displayPVs, to: number) => {
     const start = displayPVs[key];
-    console.log(`animateCountPV('${key}', ${to}) - starting from ${start}`);
     let frame = 0;
     const duration = 600;
     const steps = 24;
-    
-    // Clear existing animation for this key
+
     if (animRefsPV.current[key]) {
       clearInterval(animRefsPV.current[key]!);
     }
-    
+
     animRefsPV.current[key] = setInterval(() => {
       frame++;
       const value = Math.round(start + ((to - start) * frame) / steps);
@@ -112,7 +106,6 @@ export default function VisitStats() {
         [key]: value,
       }));
       if (frame >= steps) {
-        console.log(`${key}: pageview animation complete, setting to ${to}`);
         setDisplayPVs((prev) => ({ ...prev, [key]: to }));
         if (animRefsPV.current[key]) {
           clearInterval(animRefsPV.current[key]!);
@@ -120,60 +113,45 @@ export default function VisitStats() {
         }
       }
     }, duration / steps);
-  };
+  }, [displayPVs]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch("/api/stats");
       if (response.ok) {
         const data = await response.json();
         console.log("Stats fetched from API:", data);
         setStats(data);
-        // Animate all counters immediately
-        setTimeout(() => {
-          console.log("Starting animation with:", { today: data.today, week: data.week, month: data.month });
-          animateCount("today", data.today);
-          animateCount("week", data.week);
-          animateCount("month", data.month);
-          // animate pageviews
-          if (data.pageViews) {
-            animateCountPV("today", data.pageViews.today);
-            animateCountPV("week", data.pageViews.week);
-            animateCountPV("month", data.pageViews.month);
-          }
-        }, 0);
       }
     } catch (error) {
       console.error("Failed to fetch stats:", error);
     }
-  };
+  }, []);
 
-  const refetch = async () => {
+  const refetch = useCallback(async () => {
     setIsLoading(true);
     await fetchStats();
     setIsLoading(false);
-  };
+  }, [fetchStats]);
 
   useEffect(() => {
     setIsMounted(true);
     // Fetch stats on initial mount for first page load
     fetchStats();
-  }, []);
+  }, [fetchStats]);
 
   useEffect(() => {
     if (isOpen) {
       refetch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, refetch]);
 
   // Refetch when switching between visitors and pageviews tabs
   useEffect(() => {
     if (isOpen) {
       refetch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeMetric]);
+  }, [activeMetric, isOpen, refetch]);
 
   // Animate on stats change
   useEffect(() => {
@@ -189,8 +167,7 @@ export default function VisitStats() {
         animateCountPV("month", stats.pageViews.month);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stats.today, stats.week, stats.month]);
+  }, [stats.today, stats.week, stats.month, isLoading, animateCount, animateCountPV, displayStats, stats.pageViews]);
 
   const visitorsTotal = displayStats.month;
   const pageViewsTotal = displayPVs.month;
@@ -272,7 +249,7 @@ export default function VisitStats() {
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-md text-white/80 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-md text-foreground/70 hover:bg-foreground/10 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/30"
                 >
                   <X className="size-4" />
                   <span className="sr-only">Close</span>

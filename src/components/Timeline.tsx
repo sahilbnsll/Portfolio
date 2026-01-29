@@ -1,6 +1,9 @@
+"use client";
+
 import { Experience } from "@/lib/schemas";
 import TimelineItem from "./TimelineItem";
 import { Card, CardContent } from "./ui/Card";
+import { motion } from "framer-motion";
 
 interface Props {
   experience: Experience[];
@@ -8,14 +11,48 @@ interface Props {
 }
 
 export default function Timeline({ experience, type = "work" }: Props) {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+         type: "spring" as const,
+        damping: 12,
+        stiffness: 100,
+      },
+    },
+  };
+
   return (
     <Card>
       <CardContent className="p-0">
-        <ul className="ml-10 border-l">
+        <motion.ul
+          className="ml-10 border-l"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
           {experience.map((exp, id) => (
-            <TimelineItem key={id} experience={exp} type={type} />
+            <li key={id}>
+              <motion.div variants={itemVariants}>
+                <TimelineItem experience={exp} type={type} />
+              </motion.div>
+            </li>
           ))}
-        </ul>
+        </motion.ul>
       </CardContent>
     </Card>
   );

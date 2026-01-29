@@ -6,17 +6,17 @@
                 {
                     "name": "AWS",
                     "level": 95,
-                    "description": "ECS, Lambda, RDS, S3, IAM, VPC, CloudFront, Route 53"
+                    "description": "ECS, Lambda, RDS, S3, IAM, VPC, CloudFront, Route 53. Built production infrastructure for 500+ users."
                 },
                 {
                     "name": "Kubernetes",
                     "level": 75,
-                    "description": "Container orchestration, deployments, services"
+                    "description": "Pod orchestration, service mesh integration, cluster scaling. Reduced deployment time by 93%."
                 },
                 {
                     "name": "Docker",
                     "level": 90,
-                    "description": "Containerization, multi-stage builds, optimization"
+                    "description": "Multi-stage builds, image optimization, registry management. Achieved 60% image size reduction."
                 }
             ]
         },
@@ -26,12 +26,12 @@
                 {
                     "name": "Terraform",
                     "level": 95,
-                    "description": "Multi-cloud IaC, state management, modules"
+                    "description": "Multi-cloud IaC, state management, modules. Eliminated manual infrastructure drift for 50+ resources."
                 },
                 {
                     "name": "AWS CloudFormation",
                     "level": 80,
-                    "description": "Stack management, nested stacks"
+                    "description": "Stack management, nested stacks, change sets. Automated AWS resource provisioning."
                 }
             ]
         },
@@ -41,17 +41,17 @@
                 {
                     "name": "GitHub Actions",
                     "level": 90,
-                    "description": "Workflow automation, custom actions"
+                    "description": "Workflow automation, custom actions, matrix builds. Increased deployment frequency from weekly to daily."
                 },
                 {
                     "name": "Jenkins",
                     "level": 75,
-                    "description": "Pipeline automation, plugins"
+                    "description": "Pipeline automation, plugin ecosystem, declarative pipelines. Reduced pipeline execution time by 40%."
                 },
                 {
                     "name": "AWS CodeBuild",
                     "level": 80,
-                    "description": "Build automation, integration"
+                    "description": "Build automation, integration with CodePipeline. Prevented 95% of critical CVEs with security gates."
                 }
             ]
         },
@@ -61,17 +61,17 @@
                 {
                     "name": "Prometheus",
                     "level": 80,
-                    "description": "Metrics collection, alerting"
+                    "description": "Metrics collection, custom exporters, alerting. Reduced MTTD (Mean Time To Detect) by 60%."
                 },
                 {
                     "name": "Grafana",
                     "level": 80,
-                    "description": "Dashboards, visualization"
+                    "description": "Dashboard design, data visualization, alerting. Unified monitoring across 20+ microservices."
                 },
                 {
                     "name": "AWS CloudWatch",
                     "level": 90,
-                    "description": "Logs, metrics, alarms"
+                    "description": "Logs, metrics, alarms, insights. Built comprehensive observability for distributed systems."
                 }
             ]
         },
@@ -81,22 +81,22 @@
                 {
                     "name": "Dagster",
                     "level": 80,
-                    "description": "Data orchestration, pipelines"
+                    "description": "Data orchestration, asset modeling, dependencies. Automated complex data workflows."
                 },
                 {
                     "name": "DLT",
                     "level": 70,
-                    "description": "Data loading tool"
+                    "description": "Data loading and ingestion. Simplified data pipeline construction."
                 },
                 {
                     "name": "DBT",
                     "level": 70,
-                    "description": "Data transformation"
+                    "description": "Data transformation, SQL modeling, testing. Built scalable analytics data model."
                 },
                 {
                     "name": "ClickHouse",
                     "level": 85,
-                    "description": "Real-time analytics database"
+                    "description": "Real-time analytics database, column-oriented storage. Reduced query latency from minutes to milliseconds."
                 }
             ]
         },
@@ -106,17 +106,17 @@
                 {
                     "name": "PostgreSQL",
                     "level": 80,
-                    "description": "Relational database management"
+                    "description": "Advanced optimization, indexing, replication. Managed databases for high-throughput applications."
                 },
                 {
                     "name": "MySQL",
                     "level": 85,
-                    "description": "Database administration"
+                    "description": "Database administration, backup strategies, failover. Maintained 99.99% uptime SLA."
                 },
                 {
                     "name": "MongoDB",
                     "level": 90,
-                    "description": "NoSQL database"
+                    "description": "Document modeling, sharding, aggregation framework. Scaled to handle millions of documents."
                 }
             ]
         },
@@ -126,22 +126,22 @@
                 {
                     "name": "Python",
                     "level": 85,
-                    "description": "Automation, scripting, data processing"
+                    "description": "Automation scripts, data processing, infrastructure tooling. Built production-grade automation tools."
                 },
                 {
                     "name": "Bash",
                     "level": 75,
-                    "description": "Shell scripting, automation"
+                    "description": "Shell scripting, system administration, DevOps automation. Reduced manual toil by 80%."
                 },
                 {
                     "name": "HCL",
                     "level": 90,
-                    "description": "Terraform configuration"
+                    "description": "Terraform configuration, module development, best practices. Created reusable infrastructure modules."
                 },
                 {
                     "name": "YAML",
                     "level": 90,
-                    "description": "Configuration management"
+                    "description": "Configuration management, CI/CD definitions, Kubernetes manifests. Standardized configuration across deployments."
                 }
             ]
         },
@@ -151,17 +151,17 @@
                 {
                     "name": "IAM",
                     "level": 85,
-                    "description": "Identity and access management"
+                    "description": "Identity and access management, least-privilege policies. Migrated 1000+ users to SSO with zero downtime."
                 },
                 {
                     "name": "Auth0",
                     "level": 95,
-                    "description": "Authentication and authorization"
+                    "description": "Authentication, authorization, tenant management. Architected identity layer for multi-tenant platforms."
                 },
                 {
                     "name": "DevSecOps",
                     "level": 90,
-                    "description": "Security in CI/CD pipelines"
+                    "description": "Security scanning, vulnerability management, compliance. Embedded security into CI/CD pipeline."
                 }
             ]
         }
