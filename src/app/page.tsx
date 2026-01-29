@@ -13,6 +13,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import SkillDependenciesGraph from "@/components/SkillDependenciesGraph";
 import ArchitectureVisualization from "@/components/ArchitectureVisualization";
 import CharacterReveal from "@/components/CharacterReveal";
+import AnimatedNumber from "@/components/AnimatedNumber";
 import { Button } from "@/components/ui/Button";
 import {
   ArrowDown,
@@ -99,7 +100,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-2 whitespace-nowrap text-sm font-medium sm:text-base">
-            {currentAge}yo DevOps engineer from India 🇮🇳
+            <AnimatedNumber target={currentAge} />yo DevOps engineer from India 🇮🇳
           </p>
 
           {/* Available for work badge */}

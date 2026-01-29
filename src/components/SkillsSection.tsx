@@ -84,7 +84,7 @@ export default function SkillsSection() {
     return (
         <section className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-                <h2 className="title text-2xl sm:text-3xl">Skills & Expertise</h2>
+                <h2 className="section-title">Skills & Expertise</h2>
                 <p className="text-sm text-muted-foreground sm:text-base">
                     Technologies and tools I work with
                 </p>

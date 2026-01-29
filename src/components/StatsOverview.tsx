@@ -2,29 +2,35 @@
 
 import { motion } from "framer-motion";
 import { DollarSign, Zap, Users, Shield } from "lucide-react";
+import AnimatedNumber from "./AnimatedNumber";
 
 const stats = [
   {
     icon: DollarSign,
-    label: "$40k+",
+    value: 40,
+    suffix: "k+",
     description: "AWS cost savings optimized",
     color: "text-green-500"
   },
   {
     icon: Zap,
-    label: "40%",
+    value: 40,
+    suffix: "%",
     description: "Faster deployments",
     color: "text-yellow-500"
   },
   {
     icon: Users,
-    label: "500+",
+    value: 500,
+    suffix: "+",
     description: "Users & merchants served",
     color: "text-blue-500"
   },
   {
     icon: Shield,
-    label: "99.99%",
+    value: 99.99,
+    decimals: 2,
+    suffix: "%",
     description: "Uptime achieved",
     color: "text-purple-500"
   }
@@ -69,7 +75,13 @@ export default function StatsOverview() {
           >
             <div className="flex items-center gap-2">
               <Icon className={`size-5 ${stat.color}`} />
-              <span className="text-xl font-bold sm:text-2xl">{stat.label}</span>
+              <span className="text-xl font-bold sm:text-2xl">
+                <AnimatedNumber 
+                  target={stat.value} 
+                  decimals={stat.decimals || 0}
+                  suffix={stat.suffix}
+                />
+              </span>
             </div>
             <p className="text-xs text-muted-foreground sm:text-sm">
               {stat.description}
