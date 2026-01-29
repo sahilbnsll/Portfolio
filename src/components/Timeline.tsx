@@ -36,12 +36,12 @@ export default function Timeline({ experience, type = "work" }: Props) {
   };
 
   const lineVariants = {
-    hidden: { scaleY: 0, originY: 0 },
+    hidden: { opacity: 0 },
     visible: {
-      scaleY: 1,
+      opacity: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   };
