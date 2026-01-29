@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
     timeseriesUrl.searchParams.set("to", toDate);
     timeseriesUrl.searchParams.set("environment", "production");
     timeseriesUrl.searchParams.set("filter", "{}");
+    timeseriesUrl.searchParams.set("tz", "Asia/Calcutta"); // Add timezone parameter
 
     console.log("Request URL:", timeseriesUrl.toString());
 
