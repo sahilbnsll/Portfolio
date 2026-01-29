@@ -11,8 +11,6 @@ import AboutMe from "@/components/AboutMe";
 import StatsOverview from "@/components/StatsOverview";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import SkillDependenciesGraph from "@/components/SkillDependenciesGraph";
-import ArchitectureVisualization from "@/components/ArchitectureVisualization";
-import CharacterReveal from "@/components/CharacterReveal";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import { Button } from "@/components/ui/Button";
 import {
@@ -71,42 +69,30 @@ export default function Home() {
         </motion.div>
 
         <motion.div variants={fadeInUp} className="flex max-w-[320px] flex-col sm:max-w-full">
-          <div className="relative">
-            {/* Background highlight effect */}
-            <motion.div
-              className="absolute inset-0 -z-10 rounded-lg bg-gradient-to-r from-primary/0 via-accent/20 to-primary/0 blur-xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            />
-            <h1 className="title text-balance text-4xl sm:text-5xl">
-              <CharacterReveal 
-                text="infrastructure that scales automatically." 
-                delay={0.1}
-              />
-              <motion.span
-                className="inline-block origin-[70%_70%] cursor-pointer ml-2"
-                initial={{ rotate: 0 }}
-                animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
-                transition={{
+          <h1 className="title text-balance text-4xl sm:text-5xl">
+            hi, sahil here.
+            <motion.span
+              className="inline-block origin-[70%_70%] cursor-pointer ml-2"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+                delay: 0.5
+              }}
+              whileHover={{
+                rotate: [0, 14, -8, 14, -4, 10, 0],
+                transition: {
                   duration: 2,
                   ease: "easeInOut",
-                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
-                  delay: 0.5
-                }}
-                whileHover={{
-                  rotate: [0, 14, -8, 14, -4, 10, 0],
-                  transition: {
-                    duration: 2,
-                    ease: "easeInOut",
-                    times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1]
-                  }
-                }}
-              >
-                ✨
-              </motion.span>
-            </h1>
-          </div>
+                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1]
+                }
+              }}
+            >
+              👋
+            </motion.span>
+          </h1>
 
           <p className="mt-2 whitespace-nowrap text-sm font-medium sm:text-base">
             <AnimatedNumber target={currentAge} />yo DevOps engineer from India 🇮🇳
@@ -186,15 +172,6 @@ export default function Home() {
         transition={{ duration: 0.6 }}
       >
         <SkillDependenciesGraph />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <ArchitectureVisualization />
       </motion.div>
 
       <motion.div

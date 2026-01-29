@@ -129,7 +129,7 @@ export default function Projects({ limit }: Props) {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
-        {mounted && filtered.length > 0 ? (
+        {filtered.length > 0 ? (
           filtered.map((project, id) => (
             <motion.div 
               key={`${project.name}-${id}`} 
