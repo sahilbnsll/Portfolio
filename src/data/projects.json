@@ -12,6 +12,7 @@
         "High Availability",
         "Multi-Tenant"
       ],
+      "href": "/projects/merchant-platform",
       "links": []
     },
     {
@@ -27,6 +28,7 @@
         "Data Engineering",
         "Python"
       ],
+      "href": "/projects/data-pipeline",
       "links": []
     },
     {

@@ -20,7 +20,7 @@ export default async function ProjectPage() {
         description={featuredProject.description}
         image={featuredProject.image}
         tags={featuredProject.tags}
-        href={featuredProject.links?.[0]?.href}
+        href={`/projects/merchant-platform`}
       />
 
       <Projects />
