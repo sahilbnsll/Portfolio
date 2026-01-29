@@ -37,14 +37,15 @@ export default function Sparkline({
   interactive = false,
   onActiveIndexChange,
 }: SparklineProps) {
+  // Initialize state BEFORE any early returns
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
   if (!data || data.length === 0) return null;
   const { points, coords } = buildPoints(data, width, height);
   const secondary =
     data2 && data2.length === data.length
       ? buildPoints(data2, width, height)
       : null;
-
-  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
   const segmentWidth = data.length > 1 ? width / data.length : width;
 

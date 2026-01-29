@@ -42,7 +42,6 @@ export async function GET(request: NextRequest) {
     const now = new Date();
     const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    // Format dates for API (ISO format)
     const fromDate = last30Days.toISOString();
     const toDate = now.toISOString();
 
@@ -54,7 +53,7 @@ export async function GET(request: NextRequest) {
       tokenProvided: !!apiToken,
     });
 
-    // Build URL with query parameters
+    // Build URL
     const timeseriesUrl = new URL("https://vercel.com/api/web-analytics/timeseries");
     timeseriesUrl.searchParams.set("projectId", projectId);
     if (teamId) {
@@ -67,7 +66,7 @@ export async function GET(request: NextRequest) {
 
     console.log("Request URL:", timeseriesUrl.toString());
 
-    // Fetch data from Vercel API
+    // Fetch data
     const response = await fetch(timeseriesUrl.toString(), { headers });
 
     console.log("Response status:", response.status);
@@ -82,47 +81,47 @@ export async function GET(request: NextRequest) {
     }
 
     const data = (await response.json()) as VercelAnalyticsResponse;
-    console.log("API response received, groups count:", data.data?.groups?.all?.length || 0);
+    console.log("API response received:", JSON.stringify(data, null, 2).substring(0, 1000));
 
-    // Parse the analytics entries
-    const entries: VercelTimeSeriesEntry[] = data.data?.groups?.all || [];
-
-    if (!Array.isArray(entries)) {
-      throw new Error("Invalid response format: expected array in data.groups.all");
+    // Parse entries - with careful null checking
+    let entries: VercelTimeSeriesEntry[] = [];
+    
+    if (data?.data?.groups?.all && Array.isArray(data.data.groups.all)) {
+      entries = data.data.groups.all;
     }
 
-    console.log("Total entries:", entries.length);
+    console.log("Total entries parsed:", entries.length);
     if (entries.length > 0) {
-      console.log("First entry:", entries[0]);
-      console.log("Last entry:", entries[entries.length - 1]);
+      console.log("First entry:", JSON.stringify(entries[0]));
+      console.log("Last entry:", JSON.stringify(entries[entries.length - 1]));
+      console.log("Last 5 entries:", JSON.stringify(entries.slice(-5), null, 2));
     }
 
-    // Calculate today's date string (YYYY-MM-DD)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayDateStr = today.toISOString().split("T")[0];
+    // Get today's date string in YYYY-MM-DD format
+    const todayDate = new Date();
+    const todayStr = todayDate.toISOString().split("T")[0];
 
-    console.log("Today date string:", todayDateStr);
+    console.log("Today date string:", todayStr);
+    console.log("All entries:", JSON.stringify(entries.map((e) => ({ key: e.key, devices: e.devices, total: e.total })), null, 2));
 
-    // Get today's data - use the last entry as today (most recent data)
-    const todayEntry = entries[entries.length - 1];
-    const visitorsToday = todayEntry?.devices || 0; // devices = unique visitors
-    const pageViewsToday = todayEntry?.total || 0; // total = page views
+    // Find today's exact entry
+    const todayEntry = entries.find((e) => e.key === todayStr);
+    
+    const visitorsToday = todayEntry?.devices || 0;
+    const pageViewsToday = todayEntry?.total || 0;
 
-    console.log("Today entry:", todayEntry, "Visitors today:", visitorsToday, "Page views:", pageViewsToday);
+    console.log("Today entry found:", { key: todayEntry?.key, devices: visitorsToday, total: pageViewsToday });
 
-    // Get week data (last 7 days) - use the last 7 entries as week
+    // Get week data (last 7)
     const weekEntries = entries.slice(-7);
     const visitorsWeek = weekEntries.reduce((sum, entry) => sum + (entry.devices || 0), 0);
     const pageViewsWeek = weekEntries.reduce((sum, entry) => sum + (entry.total || 0), 0);
 
-    console.log("Week entries count:", weekEntries.length, "Visitors week:", visitorsWeek, "Page views:", pageViewsWeek);
+    console.log("Week entries:", weekEntries.length, "Visitors week:", visitorsWeek, "Page views week:", pageViewsWeek);
 
-    // Get month data (all entries)
+    // Get month data (all)
     const visitorsMonth = entries.reduce((sum, entry) => sum + (entry.devices || 0), 0);
     const pageViewsMonth = entries.reduce((sum, entry) => sum + (entry.total || 0), 0);
-
-    console.log("Month entries count:", entries.length, "Visitors month:", visitorsMonth, "Page views:", pageViewsMonth);
 
     console.log("Calculated totals:", {
       today: visitorsToday,
@@ -131,12 +130,9 @@ export async function GET(request: NextRequest) {
       weekPageViews: pageViewsWeek,
       month: visitorsMonth,
       monthPageViews: pageViewsMonth,
-      todayEntry,
-      weekEntriesCount: weekEntries.length,
-      allEntriesCount: entries.length,
     });
 
-    // Create trend arrays - visitors = devices, pageviews = total
+    // Create trends
     const todayTrend = [visitorsToday];
     const todayPageviewTrend = [pageViewsToday];
     const weekTrend = weekEntries.map((e) => e.devices || 0);
@@ -144,11 +140,11 @@ export async function GET(request: NextRequest) {
     const monthTrend = entries.map((e) => e.devices || 0);
     const monthPageviewTrend = entries.map((e) => e.total || 0);
 
-    // Calculate deltas
+    // Calculate delta
     const todayDelta =
       weekEntries.length > 1 && weekEntries[weekEntries.length - 2]?.devices
         ? Math.round(
-            (((visitorsToday - weekEntries[weekEntries.length - 2].devices) / 
+            (((visitorsToday - weekEntries[weekEntries.length - 2].devices) /
               weekEntries[weekEntries.length - 2].devices) * 100)
           )
         : 0;

@@ -50,43 +50,74 @@ export default function VisitStats() {
   // For animated counters
   const [displayStats, setDisplayStats] = useState({ today: 0, week: 0, month: 0 });
   const [displayPVs, setDisplayPVs] = useState({ today: 0, week: 0, month: 0 });
-  const animRef = useRef<NodeJS.Timeout | null>(null);
-  const animRefPV = useRef<NodeJS.Timeout | null>(null);
+  const animRefsVisitors = useRef<{ [key: string]: NodeJS.Timeout | null }>({
+    today: null,
+    week: null,
+    month: null,
+  });
+  const animRefsPV = useRef<{ [key: string]: NodeJS.Timeout | null }>({
+    today: null,
+    week: null,
+    month: null,
+  });
 
   const animateCount = (key: keyof typeof displayStats, to: number) => {
-    let start = displayStats[key];
+    const start = displayStats[key];
+    console.log(`animateCount('${key}', ${to}) - starting from ${start}`);
     let frame = 0;
     const duration = 600;
     const steps = 24;
-    if (animRef.current) clearInterval(animRef.current);
-    animRef.current = setInterval(() => {
+    
+    // Clear existing animation for this key
+    if (animRefsVisitors.current[key]) {
+      clearInterval(animRefsVisitors.current[key]!);
+    }
+    
+    animRefsVisitors.current[key] = setInterval(() => {
       frame++;
+      const value = Math.round(start + ((to - start) * frame) / steps);
+      console.log(`${key}: frame ${frame}/${steps} = ${value}`);
       setDisplayStats((prev) => ({
         ...prev,
-        [key]: Math.round(start + ((to - start) * frame) / steps),
+        [key]: value,
       }));
       if (frame >= steps) {
+        console.log(`${key}: animation complete, setting to ${to}`);
         setDisplayStats((prev) => ({ ...prev, [key]: to }));
-        if (animRef.current) clearInterval(animRef.current);
+        if (animRefsVisitors.current[key]) {
+          clearInterval(animRefsVisitors.current[key]!);
+          animRefsVisitors.current[key] = null;
+        }
       }
     }, duration / steps);
   };
 
   const animateCountPV = (key: keyof typeof displayPVs, to: number) => {
-    let start = displayPVs[key];
+    const start = displayPVs[key];
+    console.log(`animateCountPV('${key}', ${to}) - starting from ${start}`);
     let frame = 0;
     const duration = 600;
     const steps = 24;
-    if (animRefPV.current) clearInterval(animRefPV.current);
-    animRefPV.current = setInterval(() => {
+    
+    // Clear existing animation for this key
+    if (animRefsPV.current[key]) {
+      clearInterval(animRefsPV.current[key]!);
+    }
+    
+    animRefsPV.current[key] = setInterval(() => {
       frame++;
+      const value = Math.round(start + ((to - start) * frame) / steps);
       setDisplayPVs((prev) => ({
         ...prev,
-        [key]: Math.round(start + ((to - start) * frame) / steps),
+        [key]: value,
       }));
       if (frame >= steps) {
+        console.log(`${key}: pageview animation complete, setting to ${to}`);
         setDisplayPVs((prev) => ({ ...prev, [key]: to }));
-        if (animRefPV.current) clearInterval(animRefPV.current);
+        if (animRefsPV.current[key]) {
+          clearInterval(animRefsPV.current[key]!);
+          animRefsPV.current[key] = null;
+        }
       }
     }, duration / steps);
   };
@@ -97,17 +128,21 @@ export default function VisitStats() {
       const response = await fetch("/api/stats");
       if (response.ok) {
         const data = await response.json();
+        console.log("Stats fetched from API:", data);
         setStats(data);
-        // Animate all counters
-        animateCount("today", data.today);
-        animateCount("week", data.week);
-        animateCount("month", data.month);
-        // animate pageviews
-        if (data.pageViews) {
-          animateCountPV("today", data.pageViews.today);
-          animateCountPV("week", data.pageViews.week);
-          animateCountPV("month", data.pageViews.month);
-        }
+        // Animate all counters immediately
+        setTimeout(() => {
+          console.log("Starting animation with:", { today: data.today, week: data.week, month: data.month });
+          animateCount("today", data.today);
+          animateCount("week", data.week);
+          animateCount("month", data.month);
+          // animate pageviews
+          if (data.pageViews) {
+            animateCountPV("today", data.pageViews.today);
+            animateCountPV("week", data.pageViews.week);
+            animateCountPV("month", data.pageViews.month);
+          }
+        }, 0);
       }
     } catch (error) {
       console.error("Failed to fetch stats:", error);
@@ -121,7 +156,7 @@ export default function VisitStats() {
   }, []);
 
   useEffect(() => {
-    if (isOpen && stats.today === 0) {
+    if (isOpen) {
       fetchStats();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,7 +164,9 @@ export default function VisitStats() {
 
   // Animate on stats change
   useEffect(() => {
+    console.log("useEffect triggered - stats:", { today: stats.today, week: stats.week, month: stats.month, displayStats });
     if (!isLoading) {
+      console.log("Calling animateCount with:", { today: stats.today, week: stats.week, month: stats.month });
       animateCount("today", stats.today);
       animateCount("week", stats.week);
       animateCount("month", stats.month);
