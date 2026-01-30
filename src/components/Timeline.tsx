@@ -38,31 +38,21 @@ export default function Timeline({ experience, type = "work" }: Props) {
   return (
     <Card>
       <CardContent className="p-0">
-        <div className="relative">
-          {/* Animated vertical line */}
-          <motion.div
-            className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-accent via-accent to-transparent"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.1 }}
-          />
-          <motion.ul
-            className="ml-10 border-l border-transparent"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-          >
-            {experience.map((exp, id) => (
-              <li key={id}>
-                <motion.div variants={itemVariants}>
-                  <TimelineItem experience={exp} type={type} />
-                </motion.div>
-              </li>
-            ))}
-          </motion.ul>
-        </div>
+        <motion.ul
+          className="relative ml-10 border-l"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          {experience.map((exp, id) => (
+            <li key={id}>
+              <motion.div variants={itemVariants}>
+                <TimelineItem experience={exp} type={type} />
+              </motion.div>
+            </li>
+          ))}
+        </motion.ul>
       </CardContent>
     </Card>
   );

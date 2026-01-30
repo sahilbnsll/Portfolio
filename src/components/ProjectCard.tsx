@@ -24,13 +24,13 @@ const categoryColors: Record<string, string> = {
 };
 
 export function ProjectCard({ project }: Props) {
-  const { name, href, description, image, tags, category, links } = project;
+  const { name, description, image, tags, category, links } = project;
 
   return (
     <Card className="flex flex-col overflow-hidden transition-shadow duration-500 hover:shadow-lg">
       <CardHeader className="p-0">
         {image && (
-          <Link href={href || image} className="group relative overflow-hidden block">
+          <div className="group relative overflow-hidden block">
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 transition-opacity duration-500 group-hover:from-black/40" />
             <ImageWithSkeleton
               src={image}
@@ -42,7 +42,7 @@ export function ProjectCard({ project }: Props) {
               containerClassName="h-48 w-full"
               className="h-48 w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
             />
-          </Link>
+          </div>
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-2 pt-6">

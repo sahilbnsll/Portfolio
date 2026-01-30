@@ -1,6 +1,6 @@
 import { Message } from "ai";
 import { Bot, Loader2 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatPrompts from "./ChatPrompts";
 
@@ -11,7 +11,7 @@ interface ChatMessagesProps {
   onPromptClick?: (prompt: string) => void;
 }
 
-export default function ChatMessages({
+export default memo(function ChatMessages({
   messages,
   error,
   isLoading,
@@ -23,13 +23,9 @@ export default function ChatMessages({
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (scrollRef.current) {
-      const scrollOptions: ScrollToOptions = {
-        top: scrollRef.current.scrollHeight,
-        behavior: "smooth",
-      };
-      scrollRef.current.scrollTo(scrollOptions);
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages.length]);
 
   return (
     <div
@@ -80,4 +76,4 @@ export default function ChatMessages({
       )}
     </div>
   );
-}
+});

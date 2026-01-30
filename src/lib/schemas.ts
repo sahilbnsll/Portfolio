@@ -23,7 +23,6 @@ export type IconLink = z.infer<typeof iconLink>;
 const project = z.object({
   name: z.string(),
   description: z.string(),
-  href: z.string().optional(),
   image: z.string().optional(),
   tags: z.array(z.string()),
   category: z.enum(["Infrastructure & DevOps", "CI/CD", "Security", "Data & Analytics"]).optional(),

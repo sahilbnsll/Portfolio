@@ -1,5 +1,6 @@
 import { useChatbot } from "@/contexts/ChatContext";
-import { Suspense, lazy, useCallback, useState } from "react";
+import { Suspense, lazy, useCallback, useState, memo } from "react";
+import { Bot, ChevronDown, ChevronUp } from "lucide-react";
 import ChatHeader from "./ChatHeader";
 import {
   Accordion,
@@ -73,23 +74,37 @@ export default function Chat() {
       >
         <AccordionItem
           value="item-1"
-          className="fixed bottom-4 right-4 w-[320px] rounded-lg border bg-background shadow-lg shadow-black/10 sm:bottom-8 sm:right-8 sm:w-96 dark:shadow-black/30"
+          className={`fixed bottom-4 right-4 shadow-2xl overflow-hidden transition-all duration-700 ease-in-out ${
+            isExpanded
+              ? "w-96 rounded-2xl border border-white/20 bg-gradient-to-br from-background to-background/95 opacity-100 dark:border-white/10"
+              : "w-16 h-16 rounded-full border border-border/50 bg-background/50 hover:bg-accent/10 hover:scale-110 hover:shadow-lg cursor-pointer"
+          }`}
         >
-          <AccordionTrigger className="border-b px-6">
-            <ChatHeader />
+          <AccordionTrigger
+            className={`group flex items-center justify-center transition-all duration-500 ${
+              isExpanded
+                ? "border-b px-6 py-4 text-left hover:bg-secondary/30 w-full"
+                : "p-0 h-16 w-16 rounded-full"
+            }`}
+          >
+            {isExpanded ? (
+              <div className="flex w-full items-center justify-between">
+                <ChatHeader />
+                <ChevronDown className="size-5 text-muted-foreground" />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center">
+                <Bot className="size-6 text-foreground" />
+                <ChevronUp className="size-4 text-foreground" />
+              </div>
+            )}
           </AccordionTrigger>
           <AccordionContent
             forceMount={hasOpened ? true : undefined}
             className="p-0"
           >
-            {hasOpened && (
-              <div
-                className={
-                  isExpanded
-                    ? "flex max-h-[400px] min-h-[350px] flex-col justify-between rounded-b-lg sm:max-h-[500px] sm:min-h-[400px]"
-                    : "hidden"
-                }
-              >
+            {hasOpened && isExpanded && (
+              <div className="flex max-h-[400px] min-h-[380px] flex-col justify-between rounded-b-lg">
                 <Suspense fallback={<ChatPanelFallback />}>
                   <ChatPanel isExpanded={isExpanded} />
                 </Suspense>

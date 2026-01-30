@@ -1,31 +1,24 @@
 {
   "testimonials": [
     {
-      "name": "Alex Chen",
-      "title": "Engineering Manager at Buyogo AG",
-      "quote": "Sahil transformed our infrastructure from a scaling bottleneck into a competitive advantage. His focus on observability and automation reduced our incident response time by 60%.",
-      "avatar": "AC",
+      "name": "Manhal Rahman",
+      "title": "DevOps Engineer at Buyogo AG",
+      "quote": "I worked with Sahil at Buyogo. He is an exceptional engineer who takes the lead of delivering features and owning them at an exceptional quality, along with his versatility of helping across the engineering org. He is well talented with Java, Terraform and AWS.",
+      "avatar": "MR",
       "rating": 5
     },
     {
-      "name": "Priya Sharma",
-      "title": "CTO at previous startup",
-      "quote": "In 6 months, Sahil reduced our AWS costs by $40k annually while improving reliability. His IaC approach made our infrastructure reproducible and maintainable.",
-      "avatar": "PS",
+      "name": "Taylan Kutay",
+      "title": "CEO at previous startup",
+      "quote": "I’ve worked closely with Sahil and found him to be a reliable, impact-driven DevOps engineer. He took strong ownership of cloud and infrastructure challenges, improved system reliability, and drove meaningful automation and cost optimizations in AWS. Sahil’s technical depth and proactive mindset made him someone I could trust with critical systems.",
+      "avatar": "TK",
       "rating": 5
     },
     {
-      "name": "Marcus Johnson",
-      "title": "Senior Developer at FinTech Company",
-      "quote": "Working with Sahil on the Auth0 migration was seamless. Zero downtime for 1000+ users, and the new SSO system is far more secure. Incredible attention to detail.",
-      "avatar": "MJ",
-      "rating": 5
-    },
-    {
-      "name": "Deepak Patel",
-      "title": "DevOps Lead at Capgemini",
-      "quote": "Sahil brought fresh perspective to our CI/CD pipelines. His refactoring increased success rates by 15% and his mentorship elevated the whole team's capabilities.",
-      "avatar": "DP",
+      "name": "Taylan Kutay",
+      "title": "CEO at previous startup",
+      "quote": "I’ve worked closely with Sahil and found him to be a reliable, impact-driven DevOps engineer. He took strong ownership of cloud and infrastructure challenges, improved system reliability, and drove meaningful automation and cost optimizations in AWS. Sahil’s technical depth and proactive mindset made him someone I could trust with critical systems.",
+      "avatar": "TK",
       "rating": 5
     }
   ]

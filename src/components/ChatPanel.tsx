@@ -102,10 +102,13 @@ export default function ChatPanel({ isExpanded }: ChatPanelProps) {
   } = useChat({ fetch: chatFetch });
 
   useEffect(() => {
-    if (messages.length === 0) {
-      chatIdRef.current = null;
-    }
-  }, [messages]);
+    // Cleanup on unmount - only clear chat ID when expanding/collapsing
+    return () => {
+      if (!isExpanded) {
+        chatIdRef.current = null;
+      }
+    };
+  }, [isExpanded]);
 
   const handleClearChat = () => {
     chatIdRef.current = null;

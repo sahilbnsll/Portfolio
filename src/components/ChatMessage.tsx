@@ -1,17 +1,50 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Message } from "ai";
 import { Bot } from "lucide-react";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import { memo, useState, useEffect } from "react";
 
 interface ChatMessageProps {
   message: Message;
 }
 
-export default function ChatMessage({
-  message: { role, content },
+export default memo(function ChatMessage({
+  message: { role, content, id },
 }: ChatMessageProps) {
   const isBot = role === "assistant";
+  const [displayedContent, setDisplayedContent] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    if (!isBot) {
+      setDisplayedContent(content);
+      setIsComplete(true);
+      return;
+    }
+
+    // Reset state for new message
+    setDisplayedContent("");
+    setIsComplete(false);
+    let index = 0;
+    const speed = 15; // Slightly slower for better readability
+
+    const interval = setInterval(() => {
+      if (index < content.length) {
+        setDisplayedContent(content.slice(0, index + 1));
+        index++;
+      } else {
+        setIsComplete(true);
+        clearInterval(interval);
+      }
+    }, speed);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [id, isBot, content]);
 
   return (
     <div
@@ -47,9 +80,12 @@ export default function ChatMessage({
             ),
           }}
         >
-          {content}
+          {displayedContent}
         </Markdown>
+        {!isComplete && isBot && (
+          <span className="animate-pulse inline-block ml-0.5">▚</span>
+        )}
       </div>
     </div>
   );
-}
+});

@@ -205,9 +205,27 @@ export default function SkillsSection() {
                                     >
                                         <div className="flex items-center justify-between mb-1.5">
                                             <span className="text-sm font-medium">{skill.name}</span>
-                                            <span className="text-xs text-muted-foreground">{skill.level}%</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs text-muted-foreground font-semibold">{skill.level}%</span>
+                                                {/* Star rating visualization */}
+                                                <div className="flex gap-0.5">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <motion.div
+                                                            key={i}
+                                                            initial={{ opacity: 0, scale: 0 }}
+                                                            animate={{ opacity: 1, scale: 1 }}
+                                                            transition={{ delay: idx * 0.03 + i * 0.05 }}
+                                                            className={`h-3 w-3 rounded-full transition-all ${
+                                                                i < Math.round(skill.level / 20)
+                                                                    ? "bg-gradient-to-r from-yellow-400 to-orange-400 shadow-md shadow-orange-300/50"
+                                                                    : "bg-muted"
+                                                            }`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="mb-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
+                                        <div className="mb-2 h-2 overflow-hidden rounded-full bg-muted">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 animate={{ width: `${skill.level}%` }}
@@ -218,10 +236,10 @@ export default function SkillsSection() {
                                                     stiffness: 100,
                                                     damping: 15
                                                 }}
-                                                className="h-full rounded-full bg-gradient-to-r from-primary via-purple-500 to-blue-500"
+                                                className="h-full rounded-full bg-gradient-to-r from-primary via-purple-500 to-blue-500 shadow-lg shadow-primary/50"
                                             />
                                         </div>
-                                        <p className="text-xs text-muted-foreground">{skill.description}</p>
+                                        <p className="text-xs text-muted-foreground leading-relaxed">{skill.description}</p>
                                     </motion.div>
                                 ))}
                             </div>
