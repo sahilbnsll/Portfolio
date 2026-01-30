@@ -7,6 +7,7 @@ import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import MainContentProvider from "@/components/MainContentProvider"; // Import the new component
 
 const inter = Inter({
   subsets: ["latin"],
@@ -48,7 +49,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           <div className="mx-auto flex max-w-3xl flex-col px-8">
-            <main className="grow">{children}</main>
+            <MainContentProvider>{children}</MainContentProvider> {/* Use the new component here */}
           </div>
           <Footer />
           <ScrollToTop />

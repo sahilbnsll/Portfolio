@@ -5,7 +5,8 @@ import { ThemeProvider, useTheme } from "next-themes";
 import React, { useEffect } from "react";
 import { Toaster } from "sonner";
 import Chat from "./Chat";
-import ErrorBoundary from "./ErrorBoundary"; // Import the new ErrorBoundary
+import ErrorBoundary from "./ErrorBoundary"; // Import the ErrorBoundary
+import ClientOnly from "./ClientOnly"; // Import the new ClientOnly component
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -16,10 +17,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       {/* <ThemeColorUpdater /> */}
-      <ErrorBoundary> {/* Wrap children with ErrorBoundary */}
+      <ErrorBoundary>
         <ChatProvider>
           {children}
-          <Chat />
+          <ClientOnly> {/* Wrap Chat with ClientOnly */}
+            <Chat />
+          </ClientOnly>
         </ChatProvider>
       </ErrorBoundary>
       <ToastProvider />
