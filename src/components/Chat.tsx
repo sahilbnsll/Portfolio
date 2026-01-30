@@ -1,6 +1,6 @@
 import { useChatbot } from "@/contexts/ChatContext";
-import { Suspense, lazy, useCallback, useState, memo } from "react";
-import { Bot, ChevronDown, ChevronUp } from "lucide-react";
+import { Suspense, lazy, useCallback, useState } from "react";
+import { Bot } from "lucide-react";
 import ChatHeader from "./ChatHeader";
 import {
   Accordion,
@@ -74,7 +74,7 @@ export default function Chat() {
       >
         <AccordionItem
           value="item-1"
-          className={`fixed bottom-4 right-4 shadow-2xl overflow-hidden transition-all duration-700 ease-in-out ${
+          className={`fixed bottom-4 right-4 overflow-hidden transition-all duration-700 ease-in-out ${
             isExpanded
               ? "w-96 rounded-2xl border border-white/20 bg-gradient-to-br from-background to-background/95 opacity-100 dark:border-white/10"
               : "w-16 h-16 rounded-full border border-border/50 bg-background/50 hover:bg-accent/10 hover:scale-110 hover:shadow-lg cursor-pointer"
@@ -87,17 +87,7 @@ export default function Chat() {
                 : "p-0 h-16 w-16 rounded-full"
             }`}
           >
-            {isExpanded ? (
-              <div className="flex w-full items-center justify-between">
-                <ChatHeader />
-                <ChevronDown className="size-5 text-muted-foreground" />
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center">
-                <Bot className="size-6 text-foreground" />
-                <ChevronUp className="size-4 text-foreground" />
-              </div>
-            )}
+            {isExpanded ? <ChatHeader /> : <Bot className="size-6 text-foreground" />}
           </AccordionTrigger>
           <AccordionContent
             forceMount={hasOpened ? true : undefined}

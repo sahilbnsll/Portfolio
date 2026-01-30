@@ -58,7 +58,7 @@ export default function AboutMe() {
           <div className="flex flex-col gap-2 flex-1">
             <h3 className="font-semibold text-foreground">My Journey</h3>
             <p>
-              I fell in love with DevOps when I realized deployments were the invisible bottleneck. Teams shipped code, but getting it to production safely and reliably? That&apos;s where the real problem lived. I became obsessed with removing that friction—building systems where infrastructure gets out of the way so engineers can focus on shipping.
+              I fell in love with DevOps when I realized deployments were the invisible bottleneck. Teams shipped code, but getting it to production safely and reliably? That&apos;s where the real problem lived. I became obsessed with removing that friction building systems where infrastructure gets out of the way so engineers can focus on shipping.
             </p>
           </div>
         </motion.div>
