@@ -167,18 +167,34 @@ type Card = {
 const cardData: Card[] = [
   {
     id: 1,
-    url: "/img/sahil1.jpeg",
+    url: "/img/sahil8.jpeg",
   },
   {
     id: 2,
-    url: "/img/sahil2.jpeg",
+    url: "/img/sahil7.jpeg",
   },
   {
     id: 3,
-    url: "/img/sahil3.jpeg",
+    url: "/img/sahil6.jpeg",
   },
   {
     id: 4,
+    url: "/img/sahil5.jpeg",
+  },
+  {
+    id: 5,
     url: "/img/sahil4.jpeg",
   },
+  {
+    id: 6,
+    url: "/img/sahil3.jpeg",
+  },
+  {
+    id: 7,
+    url: "/img/sahil2.jpeg",
+  },
+  {
+    id: 8,
+    url: "/img/sahil1.jpeg",
+  }
 ];
