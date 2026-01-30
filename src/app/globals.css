@@ -86,6 +86,28 @@
   }
 }
 
+/* Custom Scrollbar Styles for Webkit (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* color of the tracking area */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground)); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 2px solid transparent; /* creates padding around scroll thumb */
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: hsl(var(--muted-foreground)) transparent; /* thumb and track color */
+}
+
+
 @layer base {
   * {
     @apply border-border;

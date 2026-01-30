@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import testimonialsData from "@/data/testimonials.json";
 import { useState, useEffect } from "react";
+import SectionHeader from "./SectionHeader";
 
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,12 +47,7 @@ export default function TestimonialsSection() {
 
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="title text-2xl sm:text-3xl">what others say</h2>
-        <p className="text-sm text-muted-foreground sm:text-base">
-          Feedback from colleagues and leaders I&apos;ve worked with
-        </p>
-      </div>
+      <SectionHeader title="what others say" description="Feedback from colleagues and leaders I've worked with" />
 
       <div className="relative" onMouseEnter={() => setIsAutoPlay(false)} onMouseLeave={() => setIsAutoPlay(true)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">

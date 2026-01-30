@@ -49,15 +49,18 @@ export default memo(function ChatMessage({
   return (
     <div
       className={cn(
-        "mb-3 flex items-start sm:mb-4",
+        "mb-3 flex items-start sm:mb-4 animate-fade-in-up",
         isBot ? "justify-start" : "justify-end",
+        !isBot && "animate-pop-in"
       )}
     >
       {isBot && <Bot className="mr-2 mt-0.5 size-4 sm:mr-2.5 sm:size-5" />}
       <div
         className={cn(
           "min-w-0 max-w-[220px] break-words rounded-lg border px-3 py-2 text-sm shadow-sm sm:max-w-72 sm:px-4 sm:py-2.5 sm:text-base",
-          isBot ? "bg-background" : "bg-foreground text-background",
+          isBot
+            ? "bg-secondary text-secondary-foreground"
+            : "bg-blue-500 text-white",
         )}
       >
         <Markdown

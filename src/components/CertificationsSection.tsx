@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Cloud, Zap, GitBranch } from "lucide-react";
 import certificationsData from "@/data/certifications.json";
+import SectionHeader from "./SectionHeader";
 
 // Unique configuration for each certification
 const certConfig: Record<string, { icon: any; colors: { from: string; via: string; to: string } }> = {
@@ -23,12 +24,7 @@ const certConfig: Record<string, { icon: any; colors: { from: string; via: strin
 export default function CertificationsSection() {
     return (
         <section className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h2 className="title text-2xl sm:text-3xl">Certifications</h2>
-                <p className="text-sm text-muted-foreground sm:text-base">
-                    Professional certifications and credentials
-                </p>
-            </div>
+            <SectionHeader title="Certifications" description="Professional certifications and credentials" />
 
             <div className="grid gap-4 sm:grid-cols-2">
                 {certificationsData.certifications.map((cert, index) => {

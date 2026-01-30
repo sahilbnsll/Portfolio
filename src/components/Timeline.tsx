@@ -4,6 +4,7 @@ import { Experience } from "@/lib/schemas";
 import TimelineItem from "./TimelineItem";
 import { Card, CardContent } from "./ui/Card";
 import { motion } from "framer-motion";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface Props {
   experience: Experience[];
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export default function Timeline({ experience, type = "work" }: Props) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -40,14 +43,14 @@ export default function Timeline({ experience, type = "work" }: Props) {
       <CardContent className="p-0">
         <motion.ul
           className="relative ml-10 border-l"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          variants={prefersReducedMotion ? undefined : containerVariants}
+          initial={prefersReducedMotion ? "" : "hidden"}
+          whileInView={prefersReducedMotion ? "" : "visible"}
           viewport={{ once: true, amount: 0.1 }}
         >
           {experience.map((exp, id) => (
             <li key={id}>
-              <motion.div variants={itemVariants}>
+              <motion.div variants={prefersReducedMotion ? undefined : itemVariants}>
                 <TimelineItem experience={exp} type={type} />
               </motion.div>
             </li>

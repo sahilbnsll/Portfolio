@@ -3,10 +3,10 @@ export default function ChatHeader() {
     <section className="flex w-full items-center justify-between gap-3">
       <div className="flex items-center gap-3">
         <div className="flex flex-col items-start">
-          <p className="text-xs">Chat with</p>
+          <p className="text-xs text-black dark:text-white">Chat with</p>
           <div className="flex items-center gap-2">
             <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
-            <p className="text-sm font-medium">Sahil Support</p>
+            <p className="text-sm font-medium text-black dark:text-white">Sahil Support</p>
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { Bot, Loader2 } from "lucide-react";
 import { memo, useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatPrompts from "./ChatPrompts";
+import WelcomeMessage from "./WelcomeMessage";
+import TypingIndicator from "./TypingIndicator";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -41,29 +43,10 @@ export default memo(function ChatMessages({
       </ul>
 
       {/* empty */}
-      {!error && messages.length === 0 && (
-        <div className="flex h-full flex-col items-center justify-center gap-2 p-3 sm:gap-3 sm:p-4">
-          <Bot className="size-6 sm:size-8" />
-          <p className="text-sm font-medium">
-            Send a message to start the chat!
-          </p>
-          <p className="max-w-[200px] text-center text-xs text-muted-foreground sm:max-w-[250px]">
-            You can ask the bot anything about me and it will help to find the
-            relevant information!
-          </p>
-          {onPromptClick && <ChatPrompts onPromptClick={onPromptClick} />}
-        </div>
-      )}
+      {!error && messages.length === 0 && <WelcomeMessage />}
 
       {/* loading */}
-      {isLoading && isLastMessageUser && (
-        <div className="flex items-center justify-center">
-          <Loader2 className="mr-1.5 size-3 animate-spin text-muted-foreground" />
-          <p className="text-center text-xs text-muted-foreground">
-            Thinking...
-          </p>
-        </div>
-      )}
+      {isLoading && isLastMessageUser && <TypingIndicator />}
 
       {/* error */}
       {error && (

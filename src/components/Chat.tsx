@@ -74,11 +74,12 @@ export default function Chat() {
       >
         <AccordionItem
           value="item-1"
-          className={`fixed bottom-4 right-4 overflow-hidden transition-all duration-700 ease-in-out ${
-            isExpanded
-              ? "w-96 rounded-2xl border border-white/20 bg-gradient-to-br from-background to-background/95 opacity-100 dark:border-white/10"
-              : "w-16 h-16 rounded-full border border-border/50 bg-background/50 hover:bg-accent/10 hover:scale-110 hover:shadow-lg cursor-pointer"
-          }`}
+          className={`fixed bottom-4 right-4 overflow-hidden transition-all duration-500 ease-in-out
+            state-open:w-96 state-open:rounded-2xl state-open:border state-open:border-border state-open:bg-background state-open:opacity-100 
+            state-closed:w-16 state-closed:h-16 state-closed:rounded-full state-closed:border state-closed:border-border/50 state-closed:bg-background/50 state-closed:hover:bg-accent/10 state-closed:hover:shadow-lg state-closed:cursor-pointer
+            animate-in state-open:fade-in state-open:zoom-in-95
+            animate-out state-closed:fade-out state-closed:zoom-out-95
+          `}
         >
           <AccordionTrigger
             className={`group flex items-center justify-center transition-all duration-500 ${

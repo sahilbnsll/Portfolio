@@ -26,6 +26,8 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog";
+import SectionHeader from "./SectionHeader";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 // Icon and color mapping for each category
 const categoryConfig: Record<string, { icon: any; colors: { from: string; via: string; to: string } }> = {
@@ -75,6 +77,7 @@ type Category = {
 export default function SkillsSection() {
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     const handleCategoryClick = (category: Category) => {
         setSelectedCategory(category);
@@ -83,12 +86,7 @@ export default function SkillsSection() {
 
     return (
         <section className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-                <h2 className="section-title">Skills & Expertise</h2>
-                <p className="text-sm text-muted-foreground sm:text-base">
-                    Technologies and tools I work with
-                </p>
-            </div>
+            <SectionHeader title="Skills & Expertise" description="Technologies and tools I work with" />
 
             {/* Category Cards Grid */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
@@ -101,16 +99,16 @@ export default function SkillsSection() {
                         <motion.button
                             key={category.name}
                             onClick={() => handleCategoryClick(category)}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{
+                            initial={prefersReducedMotion ? {} : { opacity: 0, scale: 0.9 }}
+                            animate={prefersReducedMotion ? {} : { opacity: 1, scale: 1 }}
+                            transition={prefersReducedMotion ? {} : {
                                 duration: 0.3,
                                 delay: index * 0.04,
                                 type: "spring",
                                 stiffness: 300,
                                 damping: 20
                             }}
-                            whileHover={{
+                            whileHover={prefersReducedMotion ? {} : {
                                 scale: 1.05,
                                 transition: {
                                     type: "spring",
@@ -118,7 +116,7 @@ export default function SkillsSection() {
                                     damping: 15
                                 }
                             }}
-                            whileTap={{ scale: 0.95 }}
+                            whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
                             className="group relative overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 ease-out hover:shadow-2xl"
                             style={{
                                 ['--skill-from' as any]: from,
@@ -151,9 +149,9 @@ export default function SkillsSection() {
 
                             {/* Skill Preview - appears on hover */}
                             <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              whileHover={{ opacity: 1, height: "auto" }}
-                              transition={{ duration: 0.2 }}
+                              initial={prefersReducedMotion ? {} : { opacity: 0, height: 0 }}
+                              whileHover={prefersReducedMotion ? {} : { opacity: 1, height: "auto" }}
+                              transition={prefersReducedMotion ? {} : { duration: 0.2 }}
                               className="mt-3 overflow-hidden border-t border-border/30 pt-3 text-center text-xs text-muted-foreground"
                             >
                               <p className="line-clamp-2 text-accent font-medium">
@@ -192,9 +190,9 @@ export default function SkillsSection() {
                                 {selectedCategory.skills.map((skill, idx) => (
                                     <motion.div
                                         key={skill.name}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{
+                                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
+                                        animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+                                        transition={prefersReducedMotion ? {} : {
                                             duration: 0.25,
                                             delay: idx * 0.03,
                                             type: "spring",
@@ -212,9 +210,9 @@ export default function SkillsSection() {
                                                     {[...Array(5)].map((_, i) => (
                                                         <motion.div
                                                             key={i}
-                                                            initial={{ opacity: 0, scale: 0 }}
-                                                            animate={{ opacity: 1, scale: 1 }}
-                                                            transition={{ delay: idx * 0.03 + i * 0.05 }}
+                                                            initial={prefersReducedMotion ? {} : { opacity: 0, scale: 0 }}
+                                                            animate={prefersReducedMotion ? {} : { opacity: 1, scale: 1 }}
+                                                            transition={prefersReducedMotion ? {} : { delay: idx * 0.03 + i * 0.05 }}
                                                             className={`h-3 w-3 rounded-full transition-all ${
                                                                 i < Math.round(skill.level / 20)
                                                                     ? "bg-gradient-to-r from-yellow-400 to-orange-400 shadow-md shadow-orange-300/50"
@@ -227,9 +225,9 @@ export default function SkillsSection() {
                                         </div>
                                         <div className="mb-2 h-2 overflow-hidden rounded-full bg-muted">
                                             <motion.div
-                                                initial={{ width: 0 }}
-                                                animate={{ width: `${skill.level}%` }}
-                                                transition={{
+                                                initial={prefersReducedMotion ? {} : { width: 0 }}
+                                                animate={prefersReducedMotion ? {} : { width: `${skill.level}%` }}
+                                                transition={prefersReducedMotion ? {} : {
                                                     duration: 0.8,
                                                     delay: idx * 0.03,
                                                     type: "spring",

@@ -62,7 +62,8 @@ export default memo(function ChatPrompts({ onPromptClick }: ChatPromptsProps) {
           <button
             key={prompt}
             onClick={() => onPromptClick(prompt)}
-            className="group h-auto min-h-[32px] w-full justify-start whitespace-normal break-words px-2 py-1.5 text-left text-xs leading-normal sm:min-h-[36px] sm:px-3 sm:py-2 rounded-lg border border-primary/20 bg-primary/5 text-foreground hover:bg-primary/15 hover:border-primary/40 transition-all duration-200 ease-out hover:shadow-md hover:shadow-primary/10 relative overflow-hidden"
+            className="group h-auto min-h-[32px] w-full justify-start whitespace-normal break-words px-2 py-1.5 text-left text-xs leading-normal sm:min-h-[36px] sm:px-3 sm:py-2 rounded-lg border border-primary/20 bg-primary/5 text-foreground hover:bg-primary/15 hover:border-primary/40 transition-all duration-200 ease-out hover:shadow-md hover:shadow-primary/10 relative overflow-hidden animate-fade-in-up"
+            style={{ animationDelay: `${idx * 150}ms` }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
             <span className="line-clamp-2 relative z-10">{prompt}</span>

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface CharacterRevealProps {
   text: string;
@@ -15,6 +16,11 @@ export default function CharacterReveal({
   delay = 0,
 }: CharacterRevealProps) {
   const characters = text.split("");
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <span className={className}>{text}</span>;
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },

@@ -7,6 +7,7 @@ import ThemeToggle from "./ThemeToggle";
 import VisitStats from "./VisitStats";
 
 import routesData from "@/data/routes.json";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const navLinks = routesData.routes
   .filter((route) => route.showInNav)
@@ -18,9 +19,10 @@ const navLinks = routesData.routes
 
 export default function Header() {
   const pathname = usePathname();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
-    <header className="sticky top-0 z-50 bg-background/75 backdrop-blur-sm">
+    <header className={`sticky top-0 z-50 bg-background/75 backdrop-blur-sm ${prefersReducedMotion ? '' : 'animate-slide-down-fade-in'}`}>
       <div className="mx-auto max-w-3xl px-8 py-6">
         <nav className="flex items-center justify-between">
           <ul className="flex gap-4 sm:gap-8">

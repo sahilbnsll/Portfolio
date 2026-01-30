@@ -3,6 +3,7 @@ import { SendHorizontal, Trash } from "lucide-react";
 import { HTMLAttributes } from "react";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
+import { cn } from "@/lib/utils";
 
 interface ChatInputProps extends HTMLAttributes<HTMLFormElement> {
   input: string;
@@ -37,7 +38,10 @@ export default function ChatInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex gap-1.5 border-t px-2 py-2 backdrop-blur-sm sm:gap-2 sm:px-3 sm:py-2.5"
+      className={cn(
+        "flex gap-1.5 border-t px-2 py-2 backdrop-blur-sm sm:gap-2 sm:px-3 sm:py-2.5",
+        "border-t shadow-lg pt-4",
+      )}
     >
       <Button
         title="Clear chat"

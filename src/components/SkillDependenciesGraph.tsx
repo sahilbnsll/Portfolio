@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import SectionHeader from "./SectionHeader";
 
 interface Node {
   id: string;
@@ -176,7 +177,7 @@ export default function SkillDependenciesGraph() {
       .data(nodes as any)
       .enter()
       .append("circle")
-      .attr("r", (d: any) => {
+      .attr("r", function (d: any) {
         // base radii by category
         let base = 20;
         if (d.category === "outcome") base = 35;
@@ -191,6 +192,7 @@ export default function SkillDependenciesGraph() {
           60,
           Math.max(base, Math.ceil(labelLen * (width < 500 ? 2 : 4)))
         );
+        d.radius = computed; // Store radius in data
         return computed;
       })
       .attr("fill", (d: any) => {
@@ -242,7 +244,9 @@ export default function SkillDependenciesGraph() {
       .attr("fill", "#fff")
       .text((d: any) => d.id)
       .attr("dy", "0.3em")
-      .call(wrap, 50); // wrap text to 50px
+      .each(function (d: any) {
+        wrap(d3.select(this), d.radius * 1.5 - 10);
+      });
 
     // Update positions on simulation tick
     simulation.on("tick", () => {
@@ -271,12 +275,10 @@ export default function SkillDependenciesGraph() {
 
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="title text-2xl sm:text-3xl">skill dependencies</h2>
-        <p className="text-sm text-muted-foreground sm:text-base">
-          How my technologies and skills interconnect (drag nodes to explore)
-        </p>
-      </div>
+      <SectionHeader
+        title="skill dependencies"
+        description="How my technologies and skills interconnect (drag nodes to explore)"
+      />
 
       <div
         ref={containerRef}
