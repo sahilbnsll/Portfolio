@@ -67,7 +67,7 @@ export default function ChatInput({
       />
       <Button
         title="Send message"
-        variant="default"
+        variant="black_white"
         className="h-9 px-3 py-2 touch-target sm:h-10 sm:px-4 sm:py-2.5"
         disabled={input.length === 0}
         type="submit"

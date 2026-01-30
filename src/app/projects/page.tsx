@@ -8,7 +8,7 @@ export default function ProjectPage() {
       <div className="flex flex-col gap-4">
         <h1 className="title">infrastructure projects.</h1>
         <p className="text-muted-foreground">
-          A selection of systems I&apos;ve architected and problems I&apos;ve solved. From zero-downtime migrations to cost optimizations that saved $40k+ annually&mdash;here&apos;s what I&apos;ve shipped.
+          A selection of systems I&apos;ve architected and problems I&apos;ve solved. From zero-downtime migrations to cost optimizations that saved $40k+ annually. Here&apos;s what I&apos;ve shipped.
         </p>
       </div>
 

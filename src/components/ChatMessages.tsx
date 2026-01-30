@@ -52,9 +52,6 @@ export default memo(function ChatMessages({
             relevant information!
           </p>
           {onPromptClick && <ChatPrompts onPromptClick={onPromptClick} />}
-          <p className="text-center text-xs text-muted-foreground">
-            Powered by AI
-          </p>
         </div>
       )}
 

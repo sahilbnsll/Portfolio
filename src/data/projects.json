@@ -2,7 +2,7 @@
   "projects": [
     {
       "name": "Multi-Tenant Merchant Platform",
-      "description": "Problem: FTP ingress was a bottleneck with frequent downtime, costing clients money. Solution: Built 99.99% available multi-tenant SFTP gateway with automated AWS provisioning. Impact: Zero unplanned downtime, supports 500+ merchants simultaneously.",
+      "description": "**Problem:** FTP ingress was a bottleneck with frequent downtime, costing clients money.\n**Solution:** Built a 99.99% available multi-tenant SFTP gateway with automated AWS provisioning.\n**Impact:** Zero unplanned downtime; supports 500+ merchants simultaneously.",
       "image": "/img/merchant_project.png",
       "category": "Infrastructure & DevOps",
       "tags": [
@@ -17,7 +17,7 @@
     },
     {
       "name": "Real-Time Data Pipeline",
-      "description": "Problem: Analytics queries took minutes to return, blocking decision-making. Solution: Architected real-time ELT pipeline with Dagster, DLT, and ClickHouse. Impact: Query latency reduced from 5-10 min to <100ms, enabling real-time dashboards.",
+      "description": "**Problem:** Analytics queries took minutes to return, blocking decision-making.\n**Solution:** Architected a real-time ELT pipeline using Dagster, DLT, and ClickHouse.\n**Impact:** Query latency reduced from 5–10 minutes to under 100ms, enabling real-time dashboards.",
       "image": "/img/data_pipeline.png",
       "category": "Data & Analytics",
       "tags": [
@@ -32,7 +32,7 @@
     },
     {
       "name": "Infrastructure as Code Migration",
-      "description": "Problem: Manual infrastructure changes led to drift, inconsistency, and slow recovery. Solution: Led comprehensive ClickOps→Terraform migration for all AWS assets with full audit trail. Impact: MTTR down 40%, infrastructure versioned, repeatability guaranteed.",
+      "description": "**Problem:** Manual infrastructure changes led to drift, inconsistency, and slow recovery. \n**Solution:** Led comprehensive ClickOps→Terraform migration for all AWS assets with full audit trail. \n**Impact:** MTTR down 40%, infrastructure versioned, repeatability guaranteed.",
       "image": "/img/IAC_migration.png",
       "category": "Infrastructure & DevOps",
       "tags": [
@@ -46,7 +46,7 @@
     },
     {
       "name": "CI/CD Pipeline Optimization",
-      "description": "Problem: Deployments were slow and deployment confidence was low due to serial testing. Solution: Redesigned GitHub Actions with semantic versioning, parallelized test suites, and intelligent caching. Impact: 30% faster deployments, increased release frequency from 1x/week to daily.",
+      "description": "**Problem:** Deployments were slow and deployment confidence was low due to serial testing. \n**Solution:** Redesigned GitHub Actions with semantic versioning, parallelized test suites, and intelligent caching. \n**Impact:** 30% faster deployments, increased release frequency from 1x/week to daily.",
       "image": "/img/cicd_optimize.png",
       "category": "CI/CD",
       "tags": [
@@ -60,7 +60,7 @@
     },
     {
       "name": "Observability & Monitoring Platform",
-      "description": "Problem: Incidents took hours to diagnose due to fragmented monitoring. Solution: Implemented service-level observability with Prometheus and Grafana, unified SLI tracking. Impact: MTTD reduced by 60%, on-call burden decreased significantly.",
+      "description": "**Problem:** Incidents took hours to diagnose due to fragmented monitoring. \n**Solution:** Implemented service-level observability with Prometheus and Grafana, unified SLI tracking. \n**Impact:** MTTD reduced by 60%, on-call burden decreased significantly.",
       "image": "/img/monitoring.png",
       "category": "Infrastructure & DevOps",
       "tags": [
@@ -74,7 +74,7 @@
     },
     {
       "name": "Auth0 Tenant Migration",
-      "description": "Problem: Legacy Auth0 tenant had security and scalability issues. Solution: Executed zero-downtime migration for 1,000+ users with least-privilege IAM via AWS SSO. Impact: Zero user disruption, improved security posture, unified identity system.",
+      "description": "**Problem:** Legacy Auth0 tenant had security and scalability issues. \n**Solution:** Executed zero-downtime migration for 1,000+ users with least-privilege IAM via AWS SSO. \n**Impact:** Zero user disruption, improved security posture, unified identity system.",
       "image": "/img/auth0_tenant.png",
       "category": "Security",
       "tags": [

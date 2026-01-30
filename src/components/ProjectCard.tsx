@@ -57,7 +57,7 @@ export function ProjectCard({ project }: Props) {
             </Badge>
           )}
         </div>
-        <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert leading-relaxed">
+        <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert leading-relaxed whitespace-pre-line">
           {description}
         </Markdown>
       </CardContent>
