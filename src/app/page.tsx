@@ -24,23 +24,29 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import homeContent from "@/data/home.json";
+import { useEffect, useState } from "react";
 
 const SAHIL_BIRTH_DATE = new Date(2002, 7, 24); // August 24, 2002
 const LIMIT = 2; // max show 2
 
 export default function Home() {
-  const today = new Date();
-  let currentAge = today.getFullYear() - SAHIL_BIRTH_DATE.getFullYear();
+  const [currentAge, setCurrentAge] = useState(0);
 
-  // Adjust age if birthday hasn't occurred yet this year
-  const hasHadBirthdayThisYear =
-    today.getMonth() > SAHIL_BIRTH_DATE.getMonth() ||
-    (today.getMonth() === SAHIL_BIRTH_DATE.getMonth() &&
-      today.getDate() >= SAHIL_BIRTH_DATE.getDate());
+  useEffect(() => {
+    const today = new Date();
+    let age = today.getFullYear() - SAHIL_BIRTH_DATE.getFullYear();
 
-  if (!hasHadBirthdayThisYear) {
-    currentAge--;
-  }
+    const hasHadBirthdayThisYear =
+      today.getMonth() > SAHIL_BIRTH_DATE.getMonth() ||
+      (today.getMonth() === SAHIL_BIRTH_DATE.getMonth() &&
+        today.getDate() >= SAHIL_BIRTH_DATE.getDate());
+
+    if (!hasHadBirthdayThisYear) {
+      age--;
+    }
+
+    setCurrentAge(age);
+  }, []);
 
   // Animation variants
   const fadeInUp = {

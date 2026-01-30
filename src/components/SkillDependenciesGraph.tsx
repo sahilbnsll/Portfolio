@@ -17,6 +17,8 @@ interface Link {
 
 export default function SkillDependenciesGraph() {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 400 });
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,22 @@ export default function SkillDependenciesGraph() {
   }, []);
 
   useEffect(() => {
-    if (!isClient || !svgRef.current) return;
+    if (containerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        if (entries[0]) {
+          const { width } = entries[0].contentRect;
+          setDimensions({ width, height: 400 });
+        }
+      });
+      resizeObserver.observe(containerRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, [isClient]);
+
+  useEffect(() => {
+    if (!isClient || !svgRef.current || dimensions.width === 0) return;
+
+    const { width, height } = dimensions;
 
     const nodes: Node[] = [
       // Languages
@@ -85,9 +102,6 @@ export default function SkillDependenciesGraph() {
       { source: "Kubernetes", target: "Infrastructure", strength: 0.8 },
     ];
 
-    const width = 800;
-    const height = 400;
-
     // Clear previous content
     d3.select(svgRef.current).selectAll("*").remove();
 
@@ -108,7 +122,7 @@ export default function SkillDependenciesGraph() {
       )
       .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(50));
+      .force("collision", d3.forceCollide().radius(width < 500 ? 30 : 50));
 
     // Create links
     const link = svg
@@ -133,9 +147,11 @@ export default function SkillDependenciesGraph() {
         else if (d.category === "platform") base = 28;
         else if (d.category === "tool") base = 24;
 
+        if (width < 500) base *= 0.7;
+
         // increase radius when label is long (characters)
         const labelLen = String(d.id).length;
-        const computed = Math.min(60, Math.max(base, Math.ceil(labelLen * 4)));
+        const computed = Math.min(60, Math.max(base, Math.ceil(labelLen * (width < 500 ? 2 : 4) )));
         return computed;
       })
       .attr("fill", (d: any) => {
@@ -182,7 +198,7 @@ export default function SkillDependenciesGraph() {
       .attr("class", "label")
       .attr("pointer-events", "none")
       .attr("text-anchor", "middle")
-      .attr("font-size", "11px")
+      .attr("font-size", width < 500 ? "9px" : "11px")
       .attr("font-weight", 600)
       .attr("fill", "#fff")
       .each(function (d: any) {
@@ -211,11 +227,11 @@ export default function SkillDependenciesGraph() {
 
       labels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
     });
-  }, [isClient]);
+  }, [isClient, dimensions]);
 
   if (!isClient) {
     return (
-      <div className="flex h-96 items-center justify-center rounded-lg border border-border/50 bg-card/50">
+      <div ref={containerRef} className="flex h-96 items-center justify-center rounded-lg border border-border/50 bg-card/50">
         <p className="text-muted-foreground">Loading graph...</p>
       </div>
     );
@@ -230,7 +246,7 @@ export default function SkillDependenciesGraph() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-border/50 bg-card/50 p-4 backdrop-blur-sm">
+      <div ref={containerRef} className="flex flex-col gap-4 rounded-lg border border-border/50 bg-card/50 p-4 backdrop-blur-sm">
         <svg
           ref={svgRef}
           className="w-full"
