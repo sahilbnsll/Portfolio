@@ -5,6 +5,7 @@ import { ThemeProvider, useTheme } from "next-themes";
 import React, { useEffect } from "react";
 import { Toaster } from "sonner";
 import Chat from "./Chat";
+import ErrorBoundary from "./ErrorBoundary"; // Import the new ErrorBoundary
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -15,10 +16,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       {/* <ThemeColorUpdater /> */}
-      <ChatProvider>
-        {children}
-        <Chat />
-      </ChatProvider>
+      <ErrorBoundary> {/* Wrap children with ErrorBoundary */}
+        <ChatProvider>
+          {children}
+          <Chat />
+        </ChatProvider>
+      </ErrorBoundary>
       <ToastProvider />
     </ThemeProvider>
   );
