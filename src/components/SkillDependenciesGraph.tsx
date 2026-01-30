@@ -15,6 +15,42 @@ interface Link {
   strength: number;
 }
 
+// Function to wrap text
+function wrap(text: any, width: number) {
+  text.each(function (this: SVGTextElement) { // Explicitly type 'this' as SVGTextElement
+    const text = d3.select(this);
+    const words = text.text().split(/\s+/).reverse();
+    let word;
+    let line: any[] = [];
+    let lineNumber = 0;
+    const lineHeight = 1.1; // ems
+    const y = text.attr("y");
+    const dy = parseFloat(text.attr("dy"));
+    let tspan = text
+      .text(null)
+      .append("tspan")
+      .attr("x", 0)
+      .attr("y", y)
+      .attr("dy", dy + "em");
+
+    while ((word = words.pop())) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if ((tspan.node() as any).getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text
+          .append("tspan")
+          .attr("x", 0)
+          .attr("y", y)
+          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+          .text(word);
+      }
+    }
+  });
+}
+
 export default function SkillDependenciesGraph() {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +63,7 @@ export default function SkillDependenciesGraph() {
 
   useEffect(() => {
     if (containerRef.current) {
-      const resizeObserver = new ResizeObserver(entries => {
+      const resizeObserver = new ResizeObserver((entries) => {
         if (entries[0]) {
           const { width } = entries[0].contentRect;
           setDimensions({ width, height: 400 });
@@ -151,7 +187,10 @@ export default function SkillDependenciesGraph() {
 
         // increase radius when label is long (characters)
         const labelLen = String(d.id).length;
-        const computed = Math.min(60, Math.max(base, Math.ceil(labelLen * (width < 500 ? 2 : 4) )));
+        const computed = Math.min(
+          60,
+          Math.max(base, Math.ceil(labelLen * (width < 500 ? 2 : 4)))
+        );
         return computed;
       })
       .attr("fill", (d: any) => {
@@ -189,7 +228,7 @@ export default function SkillDependenciesGraph() {
           }) as any
       );
 
-    // Add labels as text elements with tspans
+    // Add labels as text elements
     const labels = svg
       .selectAll("text.label")
       .data(nodes as any)
@@ -201,19 +240,9 @@ export default function SkillDependenciesGraph() {
       .attr("font-size", width < 500 ? "9px" : "11px")
       .attr("font-weight", 600)
       .attr("fill", "#fff")
-      .each(function (d: any) {
-        const g = d3.select(this);
-        const words = String(d.id).split(" ");
-        // If label is short keep single line, otherwise split in two lines
-        const lines = words.length <= 2 ? [d.id] : [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")];
-
-        lines.forEach((line, i) => {
-          g.append("tspan")
-            .attr("x", 0)
-            .attr("dy", i === 0 ? (lines.length === 1 ? "0.3em" : "-0.4em") : "1.1em")
-            .text(line);
-        });
-      });
+      .text((d: any) => d.id)
+      .attr("dy", "0.3em")
+      .call(wrap, 50); // wrap text to 50px
 
     // Update positions on simulation tick
     simulation.on("tick", () => {
@@ -231,7 +260,10 @@ export default function SkillDependenciesGraph() {
 
   if (!isClient) {
     return (
-      <div ref={containerRef} className="flex h-96 items-center justify-center rounded-lg border border-border/50 bg-card/50">
+      <div
+        ref={containerRef}
+        className="flex h-96 items-center justify-center rounded-lg border border-border/50 bg-card/50"
+      >
         <p className="text-muted-foreground">Loading graph...</p>
       </div>
     );
@@ -246,7 +278,10 @@ export default function SkillDependenciesGraph() {
         </p>
       </div>
 
-      <div ref={containerRef} className="flex flex-col gap-4 rounded-lg border border-border/50 bg-card/50 p-4 backdrop-blur-sm">
+      <div
+        ref={containerRef}
+        className="flex flex-col gap-4 rounded-lg border border-border/50 bg-card/50 p-4 backdrop-blur-sm"
+      >
         <svg
           ref={svgRef}
           className="w-full"

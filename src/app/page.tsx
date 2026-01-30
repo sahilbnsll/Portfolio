@@ -30,7 +30,7 @@ const SAHIL_BIRTH_DATE = new Date(2002, 7, 24); // August 24, 2002
 const LIMIT = 2; // max show 2
 
 export default function Home() {
-  const [currentAge, setCurrentAge] = useState(0);
+  const [currentAge, setCurrentAge] = useState<number | null>(null);
 
   useEffect(() => {
     const today = new Date();
@@ -105,7 +105,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-2 whitespace-nowrap text-sm font-medium sm:text-base">
-            <AnimatedNumber target={currentAge} />yo DevOps engineer from India 🇮🇳
+            {currentAge !== null && <AnimatedNumber target={currentAge} />}yo DevOps engineer from India 🇮🇳
           </p>
 
           {/* Available for work badge */}

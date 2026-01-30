@@ -64,7 +64,7 @@ export default function AboutMe() {
         </motion.div>
 
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 hover:border-primary/50 transition-all duration-300"
+          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 hover:border-accent/50 transition-all duration-300"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">
