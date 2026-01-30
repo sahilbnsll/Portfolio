@@ -14,7 +14,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       defaultTheme="system"
       disableTransitionOnChange
     >
-      <ThemeColorUpdater />
+      {/* <ThemeColorUpdater /> */}
       <ChatProvider>
         {children}
         <Chat />
