@@ -11,7 +11,7 @@ export default function MainContentProvider({
   const pathname = usePathname();
 
   return (
-    <main className="grow" key={pathname}>
+    <main className="grow">
       {children}
     </main>
   );
