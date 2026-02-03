@@ -239,13 +239,15 @@ export default function SkillDependenciesGraph() {
       .attr("class", "label")
       .attr("pointer-events", "none")
       .attr("text-anchor", "middle")
-      .attr("font-size", width < 500 ? "9px" : "11px")
+      .attr("font-size", width < 400 ? "7px" : width < 500 ? "8.5px" : "11px")
       .attr("font-weight", 600)
       .attr("fill", "#fff")
       .text((d: any) => d.id)
       .attr("dy", "0.3em")
       .each(function (d: any) {
-        wrap(d3.select(this), d.radius * 1.5 - 10);
+        // On mobile, wrap to node radius, not radius*1.5
+        const wrapWidth = width < 500 ? d.radius - 6 : d.radius * 1.5 - 10;
+        wrap(d3.select(this), wrapWidth);
       });
 
     // Update positions on simulation tick

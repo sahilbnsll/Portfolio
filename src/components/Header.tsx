@@ -33,7 +33,6 @@ export default function Header() {
                   <Link
                     href={nav.href}
                     title={nav.title}
-                    target="_self"
                     className={`relative inline-block transition-colors duration-500 ${isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     <span className="relative z-10">{nav.name}</span>
