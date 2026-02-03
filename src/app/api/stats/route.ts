@@ -153,6 +153,16 @@ export async function GET(request: NextRequest) {
           )
         : 0;
 
+    // Calculate weekDelta safely
+    const previousWeekEntry = weekEntries.length > 1 ? weekEntries[weekEntries.length - 2] : null;
+    const previousWeekDevices = previousWeekEntry?.devices || 0;
+    const weekDelta =
+      previousWeekDevices > 0
+        ? Math.round(
+            (((visitorsToday - previousWeekDevices) / previousWeekDevices) * 100)
+          )
+        : 0;
+
     const stats = {
       today: visitorsToday,
       week: visitorsWeek,
@@ -163,7 +173,7 @@ export async function GET(request: NextRequest) {
         month: pageViewsMonth,
       },
       todayDelta,
-      weekDelta: 0,
+      weekDelta,
       monthDelta: 0,
       todayTrend: todayTrend.length > 0 ? todayTrend : [0],
       todayPageviewTrend: todayPageviewTrend.length > 0 ? todayPageviewTrend : [0],
