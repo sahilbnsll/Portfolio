@@ -1,13 +1,14 @@
+
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import Providers from "@/components/Providers";
+import ClientProviders from "@/components/ClientProviders";
 import ScrollToTop from "@/components/ScrollToTop";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import MainContentProvider from "@/components/MainContentProvider"; // Import the new component
+import MainContentProvider from "@/components/MainContentProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,11 +33,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -46,14 +43,14 @@ export default function RootLayout({
           calistoga.variable,
         )}
       >
-        <Providers>
-          <Header />
+        <Header />
+        <ClientProviders>
           <div className="mx-auto flex max-w-3xl flex-col px-8">
-            <MainContentProvider>{children}</MainContentProvider> {/* Use the new component here */}
+            <MainContentProvider>{children}</MainContentProvider>
           </div>
-          <Footer />
-          <ScrollToTop />
-        </Providers>
+        </ClientProviders>
+        <Footer />
+        <ScrollToTop />
         <Analytics />
       </body>
     </html>
