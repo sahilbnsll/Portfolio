@@ -9,17 +9,23 @@ import VisitStats from "./VisitStats";
 import routesData from "@/data/routes.json";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-const navLinks = routesData.routes
-  .filter((route) => route.showInNav)
-  .map((route) => ({
-    name: route.name,
-    href: route.path,
-    title: route.description,
-  }));
+
 
 export default function Header() {
   const pathname = usePathname();
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  // Move navLinks mapping inside the component
+  const navLinks = routesData.routes
+    .filter((route) => route.showInNav)
+    .map((route) => ({
+      name: route.name,
+      href: route.path,
+      title: route.description,
+    }));
+
+  // Normalize pathnames (remove trailing slash)
+  const normalize = (str: string) => str.replace(/\/$/, "");
 
   return (
     <header className={`sticky top-0 z-50 bg-background/75 backdrop-blur-sm ${prefersReducedMotion ? '' : 'animate-slide-down-fade-in'}`}>
@@ -27,13 +33,14 @@ export default function Header() {
         <nav className="flex items-center justify-between">
           <ul className="flex gap-4 sm:gap-8">
             {navLinks.map((nav, id) => {
-              const isActive = pathname === nav.href;
+              const isActive = normalize(pathname) === normalize(nav.href);
               return (
                 <li key={id} className="link relative group">
                   <Link
                     href={nav.href}
                     title={nav.title}
                     className={`relative inline-block transition-colors duration-500 ${isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    prefetch={false}
                   >
                     <span className="relative z-10">{nav.name}</span>
                     {/* 3D white underline with depth effect on hover */}
