@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function MainContentProvider({
@@ -8,8 +7,6 @@ export default function MainContentProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-
   return (
     <main className="grow">
       {children}
