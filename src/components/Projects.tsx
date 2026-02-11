@@ -81,11 +81,10 @@ export default function Projects({ limit }: Props) {
                 key={cat}
                 onClick={() => handleCategoryClick(cat === "All" ? null : cat)}
                 type="button"
-                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 ${
-                  isActive
+                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 ${isActive
                     ? "bg-accent text-accent-foreground border-accent shadow-md hover:shadow-lg hover:scale-105"
                     : "border-border bg-background text-foreground hover:border-accent hover:bg-accent/5"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -108,7 +107,7 @@ export default function Projects({ limit }: Props) {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {filteredProjects.length > 0 ? (
             filteredProjects.map((project, idx) => (
               <motion.div

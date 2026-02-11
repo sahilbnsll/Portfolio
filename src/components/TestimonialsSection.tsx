@@ -51,7 +51,7 @@ export default function TestimonialsSection() {
 
       <div className="relative" onMouseEnter={() => setIsAutoPlay(false)} onMouseLeave={() => setIsAutoPlay(true)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {visibleTestimonials.map((testimonial, idx) => (
               <motion.div
                 key={`${currentIndex}-${idx}`}
