@@ -62,58 +62,64 @@ export default function VisitStats() {
   });
 
   const animateCount = useCallback((key: keyof typeof displayStats, to: number) => {
-    const start = displayStats[key];
-    let frame = 0;
-    const duration = 600;
-    const steps = 24;
-
     if (animRefsVisitors.current[key]) {
       clearInterval(animRefsVisitors.current[key]!);
     }
 
-    animRefsVisitors.current[key] = setInterval(() => {
-      frame++;
-      const value = Math.round(start + ((to - start) * frame) / steps);
-      setDisplayStats((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-      if (frame >= steps) {
-        setDisplayStats((prev) => ({ ...prev, [key]: to }));
-        if (animRefsVisitors.current[key]) {
-          clearInterval(animRefsVisitors.current[key]!);
-          animRefsVisitors.current[key] = null;
+    setDisplayStats((prev) => {
+      const start = prev[key];
+      let frame = 0;
+      const duration = 600;
+      const steps = 24;
+
+      animRefsVisitors.current[key] = setInterval(() => {
+        frame++;
+        const value = Math.round(start + ((to - start) * frame) / steps);
+        setDisplayStats((current) => ({
+          ...current,
+          [key]: value,
+        }));
+        if (frame >= steps) {
+          setDisplayStats((current) => ({ ...current, [key]: to }));
+          if (animRefsVisitors.current[key]) {
+            clearInterval(animRefsVisitors.current[key]!);
+            animRefsVisitors.current[key] = null;
+          }
         }
-      }
-    }, duration / steps);
-  }, [displayStats]);
+      }, duration / steps);
+      return prev;
+    });
+  }, []);
 
   const animateCountPV = useCallback((key: keyof typeof displayPVs, to: number) => {
-    const start = displayPVs[key];
-    let frame = 0;
-    const duration = 600;
-    const steps = 24;
-
     if (animRefsPV.current[key]) {
       clearInterval(animRefsPV.current[key]!);
     }
 
-    animRefsPV.current[key] = setInterval(() => {
-      frame++;
-      const value = Math.round(start + ((to - start) * frame) / steps);
-      setDisplayPVs((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-      if (frame >= steps) {
-        setDisplayPVs((prev) => ({ ...prev, [key]: to }));
-        if (animRefsPV.current[key]) {
-          clearInterval(animRefsPV.current[key]!);
-          animRefsPV.current[key] = null;
+    setDisplayPVs((prev) => {
+      const start = prev[key];
+      let frame = 0;
+      const duration = 600;
+      const steps = 24;
+
+      animRefsPV.current[key] = setInterval(() => {
+        frame++;
+        const value = Math.round(start + ((to - start) * frame) / steps);
+        setDisplayPVs((current) => ({
+          ...current,
+          [key]: value,
+        }));
+        if (frame >= steps) {
+          setDisplayPVs((current) => ({ ...current, [key]: to }));
+          if (animRefsPV.current[key]) {
+            clearInterval(animRefsPV.current[key]!);
+            animRefsPV.current[key] = null;
+          }
         }
-      }
-    }, duration / steps);
-  }, [displayPVs]);
+      }, duration / steps);
+      return prev;
+    });
+  }, []);
 
   const fetchStats = useCallback(async () => {
     try {
@@ -167,7 +173,7 @@ export default function VisitStats() {
         animateCountPV("month", stats.pageViews.month);
       }
     }
-  }, [stats.today, stats.week, stats.month, isLoading, animateCount, animateCountPV, displayStats, stats.pageViews]);
+  }, [stats.today, stats.week, stats.month, isLoading, animateCount, animateCountPV, stats.pageViews]);
 
   const visitorsTotal = displayStats.month;
   const pageViewsTotal = displayPVs.month;
@@ -183,13 +189,13 @@ export default function VisitStats() {
   const trendLabels =
     trendLength > 0
       ? Array.from({ length: trendLength }, (_, idx) => {
-          const d = new Date();
-          d.setDate(d.getDate() - (trendLength - 1 - idx));
-          return d.toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-          });
-        })
+        const d = new Date();
+        d.setDate(d.getDate() - (trendLength - 1 - idx));
+        return d.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+        });
+      })
       : [];
 
   const [activePointIndex, setActivePointIndex] = useState<number | null>(null);
@@ -282,28 +288,25 @@ export default function VisitStats() {
                       refetch();
                       setActiveMetric("visitors");
                     }}
-                    className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${
-                      activeMetric === "visitors"
-                        ? "border border-border bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-1))] dark:via-[hsl(var(--chart-2))] dark:to-[hsl(var(--chart-3))]"
-                        : "border border-blue-400/40 bg-gradient-to-r from-blue-400/15 via-cyan-400/10 to-teal-400/10 text-foreground/90 dark:border-[hsl(var(--chart-1))]/40 dark:bg-gradient-to-r dark:from-[hsl(var(--chart-1))]/20 dark:via-[hsl(var(--chart-2))]/15 dark:to-[hsl(var(--chart-3))]/15 dark:text-foreground hover:border-blue-400/60 hover:bg-gradient-to-r hover:from-blue-400/25 hover:via-cyan-400/20 hover:to-teal-400/20 dark:hover:border-[hsl(var(--chart-1))]/60 dark:hover:bg-gradient-to-r dark:hover:from-[hsl(var(--chart-1))]/25 dark:hover:via-[hsl(var(--chart-2))]/20 dark:hover:to-[hsl(var(--chart-3))]/20"
-                    }`}
+                    className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${activeMetric === "visitors"
+                      ? "border border-border bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-1))] dark:via-[hsl(var(--chart-2))] dark:to-[hsl(var(--chart-3))]"
+                      : "border border-blue-400/40 bg-gradient-to-r from-blue-400/15 via-cyan-400/10 to-teal-400/10 text-foreground/90 dark:border-[hsl(var(--chart-1))]/40 dark:bg-gradient-to-r dark:from-[hsl(var(--chart-1))]/20 dark:via-[hsl(var(--chart-2))]/15 dark:to-[hsl(var(--chart-3))]/15 dark:text-foreground hover:border-blue-400/60 hover:bg-gradient-to-r hover:from-blue-400/25 hover:via-cyan-400/20 hover:to-teal-400/20 dark:hover:border-[hsl(var(--chart-1))]/60 dark:hover:bg-gradient-to-r dark:hover:from-[hsl(var(--chart-1))]/25 dark:hover:via-[hsl(var(--chart-2))]/20 dark:hover:to-[hsl(var(--chart-3))]/20"
+                      }`}
                   >
                     <div
-                      className={`text-xs font-semibold uppercase tracking-[0.16em] ${
-                        activeMetric === "visitors"
-                          ? "text-white/75"
-                          : "text-foreground/70"
-                      }`}
+                      className={`text-xs font-semibold uppercase tracking-[0.16em] ${activeMetric === "visitors"
+                        ? "text-white/75"
+                        : "text-foreground/70"
+                        }`}
                     >
                       Visitors
                     </div>
                     <div className="mt-1 flex items-baseline gap-2">
                       <span
-                        className={`text-2xl font-semibold leading-tight ${
-                          activeMetric === "visitors"
-                            ? "text-white"
-                            : "text-foreground"
-                        }`}
+                        className={`text-2xl font-semibold leading-tight ${activeMetric === "visitors"
+                          ? "text-white"
+                          : "text-foreground"
+                          }`}
                       >
                         {visitorsTotal.toLocaleString()}
                       </span>
@@ -312,11 +315,10 @@ export default function VisitStats() {
                       )}
                     </div>
                     <div
-                      className={`mt-1 text-xs ${
-                        activeMetric === "visitors"
-                          ? "text-white/80"
-                          : "text-foreground/70"
-                      }`}
+                      className={`mt-1 text-xs ${activeMetric === "visitors"
+                        ? "text-white/80"
+                        : "text-foreground/70"
+                        }`}
                     >
                       Unique visitors this month
                     </div>
@@ -328,28 +330,25 @@ export default function VisitStats() {
                       refetch();
                       setActiveMetric("pageviews");
                     }}
-                    className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${
-                      activeMetric === "pageviews"
-                        ? "border border-border bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-4))] dark:via-[hsl(var(--chart-5))] dark:to-[hsl(var(--chart-1))]"
-                        : "border border-amber-400/40 bg-gradient-to-r from-amber-400/15 via-orange-400/10 to-rose-400/10 text-foreground/90 dark:border-[hsl(var(--chart-4))]/40 dark:bg-gradient-to-r dark:from-[hsl(var(--chart-4))]/20 dark:via-[hsl(var(--chart-5))]/15 dark:to-[hsl(var(--chart-1))]/15 dark:text-foreground hover:border-amber-400/60 hover:bg-gradient-to-r hover:from-amber-400/25 hover:via-orange-400/20 hover:to-rose-400/20 dark:hover:border-[hsl(var(--chart-4))]/60 dark:hover:bg-gradient-to-r dark:hover:from-[hsl(var(--chart-4))]/25 dark:hover:via-[hsl(var(--chart-5))]/20 dark:hover:to-[hsl(var(--chart-1))]/20"
-                    }`}
+                    className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${activeMetric === "pageviews"
+                      ? "border border-border bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-4))] dark:via-[hsl(var(--chart-5))] dark:to-[hsl(var(--chart-1))]"
+                      : "border border-amber-400/40 bg-gradient-to-r from-amber-400/15 via-orange-400/10 to-rose-400/10 text-foreground/90 dark:border-[hsl(var(--chart-4))]/40 dark:bg-gradient-to-r dark:from-[hsl(var(--chart-4))]/20 dark:via-[hsl(var(--chart-5))]/15 dark:to-[hsl(var(--chart-1))]/15 dark:text-foreground hover:border-amber-400/60 hover:bg-gradient-to-r hover:from-amber-400/25 hover:via-orange-400/20 hover:to-rose-400/20 dark:hover:border-[hsl(var(--chart-4))]/60 dark:hover:bg-gradient-to-r dark:hover:from-[hsl(var(--chart-4))]/25 dark:hover:via-[hsl(var(--chart-5))]/20 dark:hover:to-[hsl(var(--chart-1))]/20"
+                      }`}
                   >
                     <div
-                      className={`text-xs font-semibold uppercase tracking-[0.16em] ${
-                        activeMetric === "pageviews"
-                          ? "text-white/75"
-                          : "text-foreground/70"
-                      }`}
+                      className={`text-xs font-semibold uppercase tracking-[0.16em] ${activeMetric === "pageviews"
+                        ? "text-white/75"
+                        : "text-foreground/70"
+                        }`}
                     >
                       Page Views
                     </div>
                     <div className="mt-1 flex items-baseline gap-2">
                       <span
-                        className={`text-2xl font-semibold leading-tight ${
-                          activeMetric === "pageviews"
-                            ? "text-white"
-                            : "text-foreground"
-                        }`}
+                        className={`text-2xl font-semibold leading-tight ${activeMetric === "pageviews"
+                          ? "text-white"
+                          : "text-foreground"
+                          }`}
                       >
                         {pageViewsTotal.toLocaleString()}
                       </span>
@@ -358,11 +357,10 @@ export default function VisitStats() {
                       )}
                     </div>
                     <div
-                      className={`mt-1 text-xs ${
-                        activeMetric === "pageviews"
-                          ? "text-white/80"
-                          : "text-foreground/70"
-                      }`}
+                      className={`mt-1 text-xs ${activeMetric === "pageviews"
+                        ? "text-white/80"
+                        : "text-foreground/70"
+                        }`}
                     >
                       Page views this month
                     </div>
@@ -399,22 +397,22 @@ export default function VisitStats() {
                     {(activeMetric === "visitors"
                       ? visitorsTrend.length > 1
                       : pageViewsTrend.length > 1) && (
-                      <div className="sm:w-1/2">
-                        <Sparkline
-                          data={
-                            activeMetric === "visitors"
-                              ? visitorsTrend
-                              : pageViewsTrend
-                          }
-                          width={200}
-                          height={60}
-                          color={primaryLineColor}
-                          color2={secondaryLineColor}
-                          interactive
-                          onActiveIndexChange={setActivePointIndex}
-                        />
-                      </div>
-                    )}
+                        <div className="sm:w-1/2">
+                          <Sparkline
+                            data={
+                              activeMetric === "visitors"
+                                ? visitorsTrend
+                                : pageViewsTrend
+                            }
+                            width={200}
+                            height={60}
+                            color={primaryLineColor}
+                            color2={secondaryLineColor}
+                            interactive
+                            onActiveIndexChange={setActivePointIndex}
+                          />
+                        </div>
+                      )}
                   </div>
 
                   {/* Today / This week / This month numbers */}
