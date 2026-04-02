@@ -10,21 +10,27 @@ const stats = [
     value: 40,
     suffix: "k+",
     description: "AWS cost savings optimized",
-    color: "text-green-500"
+    gradient: "from-emerald-500/10 to-emerald-500/5",
+    iconColor: "text-emerald-500",
+    borderHover: "hover:border-emerald-500/30",
   },
   {
     icon: Zap,
     value: 40,
     suffix: "%",
     description: "Faster deployments",
-    color: "text-yellow-500"
+    gradient: "from-amber-500/10 to-amber-500/5",
+    iconColor: "text-amber-500",
+    borderHover: "hover:border-amber-500/30",
   },
   {
     icon: Users,
     value: 500,
     suffix: "+",
     description: "Users & merchants served",
-    color: "text-blue-500"
+    gradient: "from-blue-500/10 to-blue-500/5",
+    iconColor: "text-blue-500",
+    borderHover: "hover:border-blue-500/30",
   },
   {
     icon: Shield,
@@ -32,58 +38,58 @@ const stats = [
     decimals: 2,
     suffix: "%",
     description: "Uptime achieved",
-    color: "text-purple-500"
-  }
+    gradient: "from-violet-500/10 to-violet-500/5",
+    iconColor: "text-violet-500",
+    borderHover: "hover:border-violet-500/30",
+  },
 ];
 
 export default function StatsOverview() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 }
-    }
-  };
-
   return (
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={containerVariants}
-      className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6"
+      viewport={{ once: true, margin: "-50px" }}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+        },
+      }}
+      className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4"
     >
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
           <motion.div
             key={index}
-            variants={itemVariants}
-            className="flex flex-col gap-2 rounded-lg border border-border/50 bg-card/50 p-4 backdrop-blur-sm transition-all duration-300 hover:border-border hover:shadow-lg"
+            variants={{
+              hidden: { opacity: 0, y: 16, scale: 0.95 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                transition: { duration: 0.4, ease: "easeOut" },
+              },
+            }}
+            className={`group relative flex flex-col gap-2 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-b ${stat.gradient} p-4 transition-all duration-300 ${stat.borderHover} hover:shadow-lg`}
           >
             <div className="flex items-center gap-2">
-              <Icon className={`size-5 ${stat.color}`} />
-              <span className="text-xl font-bold sm:text-2xl">
-                <AnimatedNumber 
-                  target={stat.value} 
+              <div className={`rounded-lg bg-background/80 p-1.5`}>
+                <Icon className={`size-4 ${stat.iconColor}`} />
+              </div>
+            </div>
+            <div>
+              <span className="text-2xl font-bold tracking-tight sm:text-3xl">
+                <AnimatedNumber
+                  target={stat.value}
                   decimals={stat.decimals || 0}
                   suffix={stat.suffix}
                 />
               </span>
             </div>
-            <p className="text-xs text-muted-foreground sm:text-sm">
+            <p className="text-[11px] leading-tight text-muted-foreground sm:text-xs">
               {stat.description}
             </p>
           </motion.div>

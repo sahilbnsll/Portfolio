@@ -21,6 +21,27 @@
       ]
     },
     {
+      "name": "ZabeSync",
+      "href": "https://sync.zabe.in/",
+      "logo": "/img/zabe.png",
+      "positions": [
+        {
+          "title": "Workflow Automation Engineer - Freelance",
+          "start": "Mar 2026",
+          "end": "Apr 2026",
+          "description": [
+            "Designed and deployed ZabeSync, an end-to-end LinkedIn content automation pipeline on AWS EC2 using containerized n8n workflows",
+            "Built a daily AI-powered idea generation system leveraging live web research and LLM reasoning, delivering deduplicated content ideas via Discord bot with interactive controls",
+            "Developed event-driven content creation workflows triggered from Discord, generating LinkedIn posts, AI-based images, and storing assets in Google Drive",
+            "Implemented a one-click publishing pipeline integrating LinkedIn API with Supabase-backed state management for seamless draft-to-publish flow",
+            "Engineered full lifecycle automation with Supabase for deduplication and workflow state, eliminating manual LinkedIn interaction",
+            "Integrated multiple APIs (Discord, Google Drive, LinkedIn) into a unified automation system with Dockerized deployment and scalable workflow orchestration"
+            
+          ]
+        }
+      ]
+    },
+    {
       "name": "Capgemini",
       "href": "https://www.capgemini.com",
       "logo": "/img/Capgemini.png",

@@ -22,6 +22,7 @@ const categoryColors: Record<string, string> = {
   "CI/CD": "bg-green-500/10 text-green-600 dark:text-green-400",
   "Security": "bg-red-500/10 text-red-600 dark:text-red-400",
   "Data & Analytics": "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  "Automation & AI": "bg-amber-500/10 text-amber-600 dark:text-amber-400",
 };
 
 // Function to generate key features based on description and tags

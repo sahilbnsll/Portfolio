@@ -7,7 +7,7 @@ import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import MainContentProvider from "@/components/MainContentProvider"; // Import the new component
+import MainContentProvider from "@/components/MainContentProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,8 +22,8 @@ const calistoga = Calistoga({
 
 export const metadata: Metadata = {
   title: "Sahil Bansal - DevOps Engineer",
-  description: "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems.",
-
+  description:
+    "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems.",
   manifest: "/manifest.json",
 };
 
@@ -47,12 +47,15 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <Header />
-          <div className="mx-auto flex max-w-3xl flex-col px-8">
-            <MainContentProvider>{children}</MainContentProvider> {/* Use the new component here */}
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-8">
+              <MainContentProvider>{children}</MainContentProvider>
+            </div>
+            <Footer />
           </div>
-          <Footer />
           <ScrollToTop />
+          <div className="grain-overlay" aria-hidden="true" />
         </Providers>
         <Analytics />
       </body>

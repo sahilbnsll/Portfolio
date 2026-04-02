@@ -49,7 +49,7 @@ export default function Projects({ limit }: Props) {
             Filter:
           </span>
           <div className="flex flex-wrap gap-2">
-            {["All", "Infrastructure & DevOps", "CI/CD", "Security", "Data & Analytics"].map((cat) => (
+            {["All", "Infrastructure & DevOps", "CI/CD", "Security", "Data & Analytics", "Automation & AI"].map((cat) => (
               <div
                 key={cat}
                 className="px-3 py-1.5 text-xs font-medium rounded-full border border-border bg-background text-foreground animate-pulse"

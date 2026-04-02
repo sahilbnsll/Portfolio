@@ -155,7 +155,7 @@ export default function SkillsSection() {
                               className="mt-3 overflow-hidden border-t border-border/30 pt-3 text-center text-xs text-muted-foreground"
                             >
                               <p className="line-clamp-2 text-accent font-medium">
-                                {category.skills.slice(0, 3).join(" • ")}
+                                {category.skills.slice(0, 3).map(s => s.name).join(" • ")}
                               </p>
                             </motion.div>
                         </motion.button>

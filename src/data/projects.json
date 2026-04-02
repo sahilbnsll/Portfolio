@@ -1,6 +1,26 @@
 {
   "projects": [
     {
+      "name": "LinkedIn Content Automation Pipeline",
+      "description": "**Problem:** LinkedIn content creation is time-intensive, repetitive, and often lacks real-time relevance, reducing posting consistency. \n**Solution:** Built an AI-driven n8n automation pipeline with live research, LLM-based generation, and Discord-triggered workflows with Supabase state management. \n**Impact:** Automated end-to-end ideation to publishing, reducing effort from hours to seconds and enabling consistent, high-quality output.",
+      "image": "/img/zabesync.png",
+      "category": "Automation & AI",
+      "tags": [
+        "n8n",
+        "AWS",
+        "Supabase",
+        "Discord API",
+        "LinkedIn API",
+        "Google Drive API",
+        "Docker",
+        "Workflow Automation",
+        "AI/LLM",
+        "API Integration"
+      ],
+      "href": "/projects/zabesync",
+      "links": []
+    },
+    {
       "name": "Multi-Tenant Merchant Platform",
       "description": "**Problem:** FTP ingress was a bottleneck with frequent downtime, costing clients money.\n**Solution:** Built a 99.99% available multi-tenant SFTP gateway with automated AWS provisioning.\n**Impact:** Zero unplanned downtime; supports 500+ merchants simultaneously.",
       "image": "/img/merchant_project.png",
