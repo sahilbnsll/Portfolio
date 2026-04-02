@@ -2,15 +2,15 @@
 
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function AvailableForWorkBadge() {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <Link href="/contact">
-            <motion.div
+        <motion.a
+            href="/contact"
+            aria-label="Reach out"
                 className="relative inline-flex cursor-pointer items-center gap-2.5 overflow-hidden rounded-full bg-green-500/10 px-4 py-2 text-sm font-medium text-green-600 backdrop-blur-sm transition-all duration-300 hover:bg-green-500/20 hover:shadow-lg hover:shadow-green-500/20 dark:text-green-400"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -22,7 +22,6 @@ export default function AvailableForWorkBadge() {
                         damping: 15
                     }
                 }}
-                whileTap={{ scale: 0.95 }}
             >
                 {/* Pulsing indicator dot */}
                 <motion.span
@@ -98,7 +97,6 @@ export default function AvailableForWorkBadge() {
                         </motion.div>
                     </motion.span>
                 </motion.div>
-            </motion.div>
-        </Link>
+        </motion.a>
     );
 }

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Socials from "./Socials";
 
 export default function Footer() {
@@ -9,13 +8,13 @@ export default function Footer() {
         <section className="text-center sm:text-left">
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()}{" "}
-            <Link className="link font-medium" href="/">
+            <a className="link font-medium" href="/">
               Sahil Bansal
-            </Link>
+            </a>
             <span className="mx-2 text-border">|</span>
-            <Link className="link font-medium" href="/privacy">
+            <a className="link font-medium" href="/privacy">
               privacy?
-            </Link>
+            </a>
           </p>
         </section>
       </div>

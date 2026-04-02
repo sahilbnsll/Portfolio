@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -39,7 +38,7 @@ export default function Header() {
               const isActive = pathname === nav.href;
               return (
                 <li key={id} className="relative">
-                  <Link
+                  <a
                     href={nav.href}
                     title={nav.title}
                     className={`relative inline-block py-1 text-sm font-medium tracking-wide transition-colors duration-300 ${
@@ -60,7 +59,7 @@ export default function Header() {
                         }}
                       />
                     )}
-                  </Link>
+                  </a>
                 </li>
               );
             })}
@@ -104,7 +103,7 @@ export default function Header() {
                   const isActive = pathname === nav.href;
                   return (
                     <li key={id}>
-                      <Link
+                      <a
                         href={nav.href}
                         title={nav.title}
                         onClick={() => setMobileMenuOpen(false)}
@@ -115,7 +114,7 @@ export default function Header() {
                         }`}
                       >
                         {nav.name}
-                      </Link>
+                      </a>
                     </li>
                   );
                 })}
