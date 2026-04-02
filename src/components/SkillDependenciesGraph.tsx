@@ -91,6 +91,7 @@ export default function SkillDependenciesGraph() {
       { id: "AWS", category: "platform", level: 95 },
       { id: "Kubernetes", category: "platform", level: 75 },
       { id: "Docker", category: "tool", level: 85 },
+      { id: "Supabase", category: "platform", level: 80 },
 
       // Tools
       { id: "Terraform", category: "tool", level: 95 },
@@ -98,45 +99,52 @@ export default function SkillDependenciesGraph() {
       { id: "Grafana", category: "tool", level: 80 },
       { id: "GitHub Actions", category: "tool", level: 80 },
       { id: "CI/CD", category: "tool", level: 80 },
+      { id: "n8n", category: "tool", level: 85 },
+      { id: "Dagster", category: "tool", level: 80 },
 
       // Outcomes
       { id: "Infrastructure", category: "outcome" },
       { id: "Observability", category: "outcome" },
+      { id: "Automation", category: "outcome" },
       { id: "DevOps", category: "outcome" },
     ];
 
     const links: Link[] = [
-      // Python to AWS
+      // Languages → Platforms/Tools
       { source: "Python", target: "AWS", strength: 0.7 },
-      // Bash to AWS
+      { source: "Python", target: "Dagster", strength: 0.85 },
       { source: "Bash", target: "AWS", strength: 0.6 },
-      // HCL to Terraform
       { source: "HCL", target: "Terraform", strength: 1 },
-      // Terraform to AWS
+
+      // Tools → Platforms
       { source: "Terraform", target: "AWS", strength: 0.9 },
-      // AWS to Infrastructure
-      { source: "AWS", target: "Infrastructure", strength: 0.95 },
-      // Terraform to Infrastructure
-      { source: "Terraform", target: "Infrastructure", strength: 0.95 },
-      // Prometheus to Grafana
-      { source: "Prometheus", target: "Grafana", strength: 0.9 },
-      // Git and CI/CD
-      { source: "Git", target: "GitHub Actions", strength: 0.95 },
-      { source: "GitHub Actions", target: "CI/CD", strength: 0.95 },
-      { source: "CI/CD", target: "DevOps", strength: 0.8 },
-      // Docker connections
       { source: "Docker", target: "Kubernetes", strength: 0.9 },
-      { source: "Docker", target: "Infrastructure", strength: 0.7 },
-      // Prometheus to Observability
-      { source: "Prometheus", target: "Observability", strength: 0.9 },
-      // Grafana to Observability
-      { source: "Grafana", target: "Observability", strength: 0.9 },
-      // Observability to DevOps
-      { source: "Observability", target: "DevOps", strength: 0.85 },
-      // Infrastructure to DevOps
-      { source: "Infrastructure", target: "DevOps", strength: 0.95 },
-      // Kubernetes to Infrastructure
+      { source: "Docker", target: "AWS", strength: 0.7 },
+      { source: "n8n", target: "Supabase", strength: 0.85 },
+      { source: "n8n", target: "Docker", strength: 0.7 },
+
+      // → Infrastructure outcome
+      { source: "AWS", target: "Infrastructure", strength: 0.95 },
+      { source: "Terraform", target: "Infrastructure", strength: 0.95 },
       { source: "Kubernetes", target: "Infrastructure", strength: 0.8 },
+      { source: "Docker", target: "Infrastructure", strength: 0.7 },
+
+      // → Observability outcome
+      { source: "Prometheus", target: "Grafana", strength: 0.9 },
+      { source: "Prometheus", target: "Observability", strength: 0.9 },
+      { source: "Grafana", target: "Observability", strength: 0.9 },
+
+      // → Automation outcome
+      { source: "n8n", target: "Automation", strength: 0.95 },
+      { source: "Dagster", target: "Automation", strength: 0.85 },
+      { source: "GitHub Actions", target: "CI/CD", strength: 0.95 },
+      { source: "Git", target: "GitHub Actions", strength: 0.95 },
+      { source: "CI/CD", target: "Automation", strength: 0.8 },
+
+      // → DevOps (top-level outcome)
+      { source: "Infrastructure", target: "DevOps", strength: 0.95 },
+      { source: "Observability", target: "DevOps", strength: 0.85 },
+      { source: "Automation", target: "DevOps", strength: 0.9 },
     ];
 
     // Clear previous content
@@ -276,7 +284,7 @@ export default function SkillDependenciesGraph() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section id="skill-graph" className="scroll-mt-28 flex flex-col gap-6">
       <SectionHeader
         title="skill dependencies"
         description="How my technologies and skills interconnect (drag nodes to explore)"
