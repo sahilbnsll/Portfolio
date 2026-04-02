@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { animate, motion, useMotionValue, useTransform } from "framer-motion";
+import { animate, motion, useDragControls, useMotionValue, useTransform } from "framer-motion";
 import { RefreshCw } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import ImageWithSkeleton from "./ImageWithSkeleton";
@@ -63,6 +63,7 @@ const Card = ({
   depth: number;
 }) => {
   const x = useMotionValue(0);
+  const dragControls = useDragControls();
 
   const rotateRaw = useTransform(x, [-150, 150], [-18, 18]);
   const opacity = useTransform(x, [-100, 0, 100], [0, 1, 0]);
@@ -116,6 +117,9 @@ const Card = ({
           : undefined
       }
       drag={isFront ? "x" : false}
+      dragControls={dragControls}
+      dragListener={false}
+      onPointerDown={(e) => { if (isFront) dragControls.start(e); }}
       dragConstraints={{
         left: -150,
         right: 150,

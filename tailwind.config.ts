@@ -145,7 +145,10 @@ const config: Config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        'fade-in-up': 'fade-in-up 0.5s ease-out',
+        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
+        'fade-in-up-d1': 'fade-in-up 0.5s ease-out 0.1s forwards',
+        'fade-in-up-d2': 'fade-in-up 0.5s ease-out 0.2s forwards',
+        'fade-in-up-d3': 'fade-in-up 0.5s ease-out 0.3s forwards',
         'pop-in': 'pop-in 0.3s ease-out',
         'slide-down-fade-in': 'slide-down-fade-in 0.5s ease-out',
         'slide-in-from-left': 'slide-in-from-left 0.5s ease-out',
