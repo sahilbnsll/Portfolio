@@ -24,7 +24,7 @@ const calistoga = Calistoga({
 export const metadata: Metadata = {
   title: "Sahil Bansal - DevOps Engineer",
   description:
-    "DevOps Engineer focused on infrastructure automation, reliability, and cost-efficient cloud systems.",
+    "DevOps & cloud infrastructure engineer: AWS, Terraform, CI/CD, observability, and data platforms. Building reliable systems at Buyogo; workflow automation & AI integrations (ZabeSync).",
   manifest: "/manifest.json",
 };
 

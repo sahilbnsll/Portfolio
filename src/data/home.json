@@ -1,8 +1,8 @@
 {
   "introduction": {
     "greeting": "infrastructure that scales automatically.",
-    "description": "I build cloud systems that don't break at 3am. From zero-downtime migrations to cost-optimized infrastructure. I obsess over reliability, automation, and giving teams the confidence to deploy. Currently architecting scalable infrastructure at Buyogo AG.",
-    "chatPrompt": "Questions about DevOps, reliability cloud infrastructure? Let's chat.",
+    "description": "I build cloud systems that don't break at 3am—reliable deployments, cost-smart AWS, and automation that removes toil. Day to day I architect scalable infrastructure at Buyogo AG; I've also shipped workflow automation (ZabeSync) around LinkedIn content and integrations.",
+    "chatPrompt": "Questions about DevOps, reliability, or cloud infrastructure? Ask the chat.",
     "escalation": {
       "text": "For anything else, let's",
       "linkText": "connect directly",

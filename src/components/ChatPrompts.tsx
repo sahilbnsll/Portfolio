@@ -12,6 +12,8 @@ const allPrompts = [
   "What is Sahil's current role?",
   "Tell me about Sahil's skills",
   "What companies has Sahil worked at?",
+  "What is ZabeSync and what did Sahil build there?",
+  "How does Sahil approach reliability and on-call pain?",
 
   // Portfolio & career
   "What is Sahil currently working on?",

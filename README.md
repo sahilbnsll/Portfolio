@@ -1,10 +1,12 @@
 # Sahil Bansal's Portfolio
 
-A clean, minimal portfolio website built with Next.js, Tailwind CSS, and Shadcn UI. Features an AI chatbot, email contact form, and certification showcase.
+A clean, minimal portfolio built with Next.js, Tailwind CSS, and Shadcn UI. Includes an AI assistant (Groq) grounded in Sahil's career data, a contact form, certifications, and project pages.
 
-## Live Demo
+## Live site
 
-🌐 Check it out here: **[sahilbansal.dev](https://sahilbansal.dev)**
+Deploy your fork to Vercel or your domain. The chatbot's knowledge lives in `src/app/api/chat/route.ts` (system prompt) and `src/data/*.json` for structured content—keep them in sync when you update your story.
+
+Example production: **[sahilbansal.vercel.app](https://sahilbansal.vercel.app)** (add your own custom domain in Vercel if you use one).
 
 ![Portfolio Screenshot](public/img/hero.png)
 
@@ -12,7 +14,7 @@ A clean, minimal portfolio website built with Next.js, Tailwind CSS, and Shadcn 
 
 - Minimal design with Shadcn UI
 - Light/dark mode toggle
-- AI chatbot (Sahil Support) trained on my portfolio content - please be nice to it! 😊
+- AI Twin (Groq) with a system prompt aligned to `src/data` + `src/app/api/chat/route.ts`
 - Contact form with email integration
 - Responsive mobile design
 - Skills & Certifications visualization
