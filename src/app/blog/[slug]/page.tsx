@@ -1,6 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 import Markdown from "react-markdown";
-import Link from "next/link";
 import type { Metadata } from "next";
 import blogData from "@/data/blog.json";
 import blogContentData from "@/data/blog-content.json";
@@ -59,12 +58,12 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <article className="mx-auto mt-8 flex max-w-3xl flex-col gap-8 pb-16">
       <div className="space-y-3">
-        <Link
+        <a
           href="/blog"
           className="inline-flex text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           ← Back to blog
-        </Link>
+        </a>
         <h1 className="title text-3xl sm:text-4xl">{post.title}</h1>
         <p className="text-sm text-muted-foreground">{post.description}</p>
       </div>

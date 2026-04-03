@@ -3,7 +3,6 @@
 import { Badge } from "@/components/ui/Badge";
 import { Project } from "@/lib/schemas";
 import { getProjectSlug } from "@/lib/project-utils";
-import Link from "next/link";
 import Icon from "./Icon";
 import ImageWithSkeleton from "./ImageWithSkeleton";
 import BrowserFrame from "./BrowserFrame";
@@ -125,16 +124,16 @@ export function ProjectCard({ project }: Props) {
       {/* Actions */}
       <div className="flex flex-wrap items-center gap-3 border-t border-border/30 px-5 py-3">
         {detailUrl && (
-          <Link
+          <a
             href={detailUrl}
             className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
           >
             Case study
             <ArrowUpRight className="size-3.5" aria-hidden />
-          </Link>
+          </a>
         )}
         {links?.map((linkItem, idx) => (
-          <Link
+          <a
             href={linkItem.href}
             key={idx}
             target="_blank"
@@ -143,7 +142,7 @@ export function ProjectCard({ project }: Props) {
           >
             <Icon name={linkItem.icon} className="size-3.5" />
             {linkItem.name}
-          </Link>
+          </a>
         ))}
       </div>
     </div>

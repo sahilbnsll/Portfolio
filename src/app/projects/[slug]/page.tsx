@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import Markdown from "react-markdown";
 import data from "@/data/projects.json";
@@ -66,13 +65,13 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-3xl pb-16 pt-8">
-      <Link
+      <a
         href="/projects"
         className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="size-4" aria-hidden />
         All projects
-      </Link>
+      </a>
 
       <header className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
@@ -183,15 +182,18 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
       )}
 
       <footer className="mt-14 flex flex-wrap gap-4 border-t border-border/40 pt-8">
-        <Link
+        <a
           href="/contact"
           className="text-sm font-semibold text-primary hover:underline"
         >
           Discuss this project →
-        </Link>
-        <Link href="/projects" className="text-sm text-muted-foreground hover:text-foreground">
+        </a>
+        <a
+          href="/projects"
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
           Back to grid
-        </Link>
+        </a>
       </footer>
     </article>
   );

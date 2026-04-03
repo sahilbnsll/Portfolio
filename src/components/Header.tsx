@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -89,7 +88,7 @@ export default function Header() {
                       )}
                     </a>
                   ) : (
-                    <Link href={nav.href} title={nav.title} className={linkClass}>
+                    <a href={nav.href} title={nav.title} className={linkClass}>
                       {nav.name}
                       {active && (
                         <motion.span
@@ -98,7 +97,7 @@ export default function Header() {
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}
-                    </Link>
+                    </a>
                   )}
                 </li>
               );
@@ -156,14 +155,14 @@ export default function Header() {
                           {nav.name}
                         </a>
                       ) : (
-                        <Link
+                        <a
                           href={nav.href}
                           title={nav.title}
                           onClick={() => setMobileMenuOpen(false)}
                           className={mobileClass}
                         >
                           {nav.name}
-                        </Link>
+                        </a>
                       )}
                     </li>
                   );

@@ -17,7 +17,6 @@ import StatsOverview from "@/components/StatsOverview";
 import CoreSkillsExpertiseSection from "@/components/CoreSkillsExpertiseSection";
 import { Button } from "@/components/ui/Button";
 import { FileDown } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 import homeContent from "@/data/home.json";
@@ -116,13 +115,13 @@ export default function Home() {
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
               For anything else, let&apos;s{" "}
-              <Link
+              <a
                 href={homeContent.escalationLink.href}
                 className="underline underline-offset-4 hover:text-primary"
                 title={homeContent.escalationLink.title}
               >
                 connect directly
-              </Link>
+              </a>
               .
             </p>
           </div>
@@ -180,12 +179,12 @@ export default function Home() {
             </p>
           </div>
           <Projects limit={2} showFilters={false} compact />
-          <Link
+          <a
             href="/projects"
             className="inline-flex w-fit text-sm font-semibold text-primary hover:underline"
           >
             More projects →
-          </Link>
+          </a>
         </div>
       </motion.section>
 
@@ -231,12 +230,12 @@ export default function Home() {
                         {post.title}
                       </a>
                     ) : (
-                      <Link
+                      <a
                         href={post.href}
                         className="hover:text-primary hover:underline"
                       >
                         {post.title}
-                      </Link>
+                      </a>
                     )
                   ) : (
                     post.title
@@ -257,12 +256,12 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <Link
+          <a
             href="/blog"
             className="mt-3 inline-flex text-sm font-semibold text-primary hover:underline"
           >
             All posts →
-          </Link>
+          </a>
         </motion.section>
       )}
     </article>

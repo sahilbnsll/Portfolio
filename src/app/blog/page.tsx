@@ -2,7 +2,6 @@
 
 import blogData from "@/data/blog.json";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { isExternalBlogPost } from "@/lib/blog-utils";
 
 type Post = {
@@ -64,12 +63,12 @@ export default function BlogPage() {
                           {post.title}
                         </a>
                       ) : (
-                        <Link
+                        <a
                           href={post.href}
                           className="hover:text-primary hover:underline"
                         >
                           {post.title}
-                        </Link>
+                        </a>
                       )
                     ) : (
                       post.title
