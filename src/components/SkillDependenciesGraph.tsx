@@ -28,42 +28,6 @@ const NODE_TEXT_LABELS: Record<string, string> = {
   Automation: "Auto",
 };
 
-// Function to wrap text
-function wrap(text: any, width: number) {
-  text.each(function (this: SVGTextElement) { // Explicitly type 'this' as SVGTextElement
-    const text = d3.select(this);
-    const words = text.text().split(/\s+/).reverse();
-    let word;
-    let line: any[] = [];
-    let lineNumber = 0;
-    const lineHeight = 1.1; // ems
-    const y = text.attr("y");
-    const dy = parseFloat(text.attr("dy"));
-    let tspan = text
-      .text(null)
-      .append("tspan")
-      .attr("x", 0)
-      .attr("y", y)
-      .attr("dy", dy + "em");
-
-    while ((word = words.pop())) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if ((tspan.node() as any).getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text
-          .append("tspan")
-          .attr("x", 0)
-          .attr("y", y)
-          .attr("dy", ++lineNumber * lineHeight + dy + "em")
-          .text(word);
-      }
-    }
-  });
-}
-
 export default function SkillDependenciesGraph() {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,7 +69,6 @@ export default function SkillDependenciesGraph() {
       { id: "Kubernetes", category: "platform", level: 75 },
       { id: "Docker", category: "tool", level: 85 },
       { id: "Supabase", category: "platform", level: 80 },
-      { id: "Supabase", category: "platform", level: 80 },
 
       // Tools
       { id: "Terraform", category: "tool", level: 95 },
@@ -125,20 +88,14 @@ export default function SkillDependenciesGraph() {
       { id: "Cost Optimization", category: "outcome" },
       { id: "Observability", category: "outcome" },
       { id: "Automation", category: "outcome" },
-      { id: "Automation", category: "outcome" },
       { id: "DevOps", category: "outcome" },
     ];
 
     const links: Link[] = [
-      // Languages → Platforms/Tools
-      // Languages → Platforms/Tools
       { source: "Python", target: "AWS", strength: 0.7 },
-      { source: "Python", target: "Dagster", strength: 0.85 },
       { source: "Python", target: "Dagster", strength: 0.85 },
       { source: "Bash", target: "AWS", strength: 0.6 },
       { source: "HCL", target: "Terraform", strength: 1 },
-
-      // Tools → Platforms
 
       // Tools → Platforms
       { source: "Terraform", target: "AWS", strength: 0.9 },
@@ -148,15 +105,8 @@ export default function SkillDependenciesGraph() {
       { source: "n8n", target: "Docker", strength: 0.7 },
 
       // → Infrastructure outcome
-      { source: "Docker", target: "Kubernetes", strength: 0.9 },
-      { source: "Docker", target: "AWS", strength: 0.7 },
-      { source: "n8n", target: "Supabase", strength: 0.85 },
-      { source: "n8n", target: "Docker", strength: 0.7 },
-
-      // → Infrastructure outcome
       { source: "AWS", target: "Infrastructure", strength: 0.95 },
       { source: "Terraform", target: "Infrastructure", strength: 0.95 },
-      { source: "Kubernetes", target: "Infrastructure", strength: 0.8 },
       { source: "Kubernetes", target: "Infrastructure", strength: 0.8 },
       { source: "Docker", target: "Infrastructure", strength: 0.7 },
 

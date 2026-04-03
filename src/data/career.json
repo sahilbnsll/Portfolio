@@ -9,13 +9,9 @@
           "title": "Software Engineer — DevOps & Cloud Infrastructure",
           "start": "Jun 2024",
           "description": [
-            "Architected a 99.99% available multi-tenant FTP ingress platform using SFTP-gateway and automated cloud provisioning",
-            "Led ClickOps to Terraform transformation for all AWS assets, reducing TTR by 40%",
-            "Redesigned GitHub Actions pipelines with semantic versioning and parallelized testing, increasing engineering velocity by 30%",
-            "Reduced AWS spend by 40% (~$40k annually) using Fargate Spot, Savings Plans, and right-sizing",
-            "Implemented service-level observability with Prometheus and Grafana for improved incident triage",
-            "Built a real-time data lakehouse (ELT) using Dagster, DLT, and ClickHouse, reducing query latency from minutes to milliseconds",
-            "Executed zero-downtime Auth0 tenant migration for 1,000+ users and enforced least-privilege IAM policies via AWS SSO"
+            "Architected a 99.99% available multi-tenant FTP ingress platform (500+ merchants) using SFTP-gateway and automated AWS provisioning",
+            "Led ClickOps → Terraform migration + CI/CD modernization (GitHub Actions, semantic versioning), reducing TTR by 40% and improving engineering velocity by 30%",
+            "Drove reliability + cost outcomes: 40% AWS spend reduction (~$40k/yr), stronger observability (Prometheus/Grafana), real-time ELT (Dagster/DLT/ClickHouse; minutes → ms), and zero-downtime Auth0 migration for 1,000+ users"
           ]
         }
       ]
@@ -30,13 +26,9 @@
           "start": "Mar 2026",
           "end": "Apr 2026",
           "description": [
-            "Designed and deployed ZabeSync, an end-to-end LinkedIn content automation pipeline on AWS EC2 using containerized n8n workflows",
-            "Built a daily AI-powered idea generation system leveraging live web research and LLM reasoning, delivering deduplicated content ideas via Discord bot with interactive controls",
-            "Developed event-driven content creation workflows triggered from Discord, generating LinkedIn posts, AI-based images, and storing assets in Google Drive",
-            "Implemented a one-click publishing pipeline integrating LinkedIn API with Supabase-backed state management for seamless draft-to-publish flow",
-            "Engineered full lifecycle automation with Supabase for deduplication and workflow state, eliminating manual LinkedIn interaction",
-            "Integrated multiple APIs (Discord, Google Drive, LinkedIn) into a unified automation system with Dockerized deployment and scalable workflow orchestration"
-            
+            "Designed and deployed ZabeSync: an end-to-end LinkedIn content automation pipeline (n8n on AWS EC2, Docker) with Discord as the human-in-the-loop control plane",
+            "Built AI-assisted daily ideation + research workflows with deduped content delivery via Discord and asset storage in Google Drive",
+            "Implemented draft → one-click publish by integrating LinkedIn API with Supabase-backed state (idempotency, workflow state, deduplication), unifying Discord/Drive/LinkedIn into one orchestration system"
           ]
         }
       ]

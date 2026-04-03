@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
     ref={ref}
     className={cn(
       // Use a high z-index so the overlay sits above any "glass" headers/nav.
-      "fixed inset-0 z-[1000] bg-black/40",
+      "fixed inset-0 z-[1000] bg-black/40 data-[state=closed]:pointer-events-none data-[state=open]:pointer-events-auto",
       className
     )}
     {...props}
