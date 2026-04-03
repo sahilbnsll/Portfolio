@@ -36,6 +36,7 @@ const sectionAnim = {
 
 type BlogPost = {
   title: string;
+  description?: string;
   date: string;
   comingSoon?: boolean;
   href?: string;

@@ -1,6 +1,6 @@
 export type BlogPost = {
   title: string;
-  description: string;
+  description?: string;
   date: string;
   comingSoon?: boolean;
   href?: string;

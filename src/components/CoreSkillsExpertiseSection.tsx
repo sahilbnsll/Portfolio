@@ -40,7 +40,7 @@ type CategoryName = (typeof CORE_SKILL_CATEGORIES)[number];
 
 const categoryMeta: Record<
   CategoryName,
-  { color: string; Icon: (props: { className?: string }) => JSX.Element; key: string }
+  { color: string; Icon: (props: React.SVGAttributes<SVGSVGElement> & { className?: string }) => JSX.Element; key: string }
 > = {
   "Cloud & Infrastructure": { color: "#3b82f6", Icon: Cloud as any, key: "cloud" },
   "Infrastructure as Code": { color: "#10b981", Icon: Boxes as any, key: "iac" },

@@ -369,7 +369,6 @@ export default function SkillDependenciesGraph() {
 
   return (
     <section id="skill-graph" className="scroll-mt-28 flex flex-col gap-6">
-    <section id="skill-graph" className="scroll-mt-28 flex flex-col gap-6">
       <SectionHeader
         title="skill dependencies"
         description="How my technologies and skills interconnect (drag nodes to explore)"
