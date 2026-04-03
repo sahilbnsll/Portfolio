@@ -2,9 +2,16 @@
   "projects": [
     {
       "name": "LinkedIn Content Automation Pipeline",
+      "slug": "zabesync",
       "description": "**Problem:** LinkedIn content creation is time-intensive, repetitive, and often lacks real-time relevance, reducing posting consistency. \n**Solution:** Built an AI-driven n8n automation pipeline with live research, LLM-based generation, and Discord-triggered workflows with Supabase state management. \n**Impact:** Automated end-to-end ideation to publishing, reducing effort from hours to seconds and enabling consistent, high-quality output.",
+      "summary": "AI-assisted LinkedIn content pipeline that turns Discord prompts into researched, deduped posts in seconds instead of hours.",
       "image": "/img/zabesync.png",
       "category": "Automation & AI",
+      "metrics": [
+        "Hours → seconds per content cycle",
+        "Multi-API orchestration (Discord, Drive, LinkedIn)",
+        "Stateful dedup via Supabase"
+      ],
       "tags": [
         "n8n",
         "AWS",
@@ -18,93 +25,170 @@
         "API Integration"
       ],
       "href": "/projects/zabesync",
-      "links": []
+      "links": [],
+      "detail": {
+        "overview": "End-to-end automation from research and ideation to drafted posts and one-click publish, with human-in-the-loop via Discord and durable state for deduplication.",
+        "stackHighlights": ["AWS EC2 + Docker", "n8n workflows", "Supabase", "LLM + web research", "LinkedIn & Google APIs"],
+        "beforeAfter": [
+          {
+            "label": "Publishing flow",
+            "before": "Manual context-switching across tools",
+            "after": "Single pipeline with checkpointed state"
+          },
+          {
+            "label": "Ideation",
+            "before": "Ad hoc notes and repetition",
+            "after": "Deduped AI-assisted ideas delivered on schedule"
+          }
+        ],
+        "architectureMermaid": "flowchart LR\n  subgraph ingest [Trigger & control]\n    D[Discord]\n  end\n  subgraph compute [Automation]\n    N[n8n on EC2]\n    L[LLM + research]\n  end\n  subgraph data [State & assets]\n    S[(Supabase)]\n    G[Google Drive]\n  end\n  subgraph publish [Outbound]\n    LI[LinkedIn API]\n  end\n  D --> N\n  N --> L\n  N --> S\n  N --> G\n  N --> LI\n  S --> N"
+      }
     },
     {
       "name": "Multi-Tenant Merchant Platform",
+      "slug": "merchant-platform",
       "description": "**Problem:** FTP ingress was a bottleneck with frequent downtime, costing clients money.\n**Solution:** Built a 99.99% available multi-tenant SFTP gateway with automated AWS provisioning.\n**Impact:** Zero unplanned downtime; supports 500+ merchants simultaneously.",
+      "summary": "Highly available SFTP ingress on AWS that onboards hundreds of merchants without sacrificing reliability.",
       "image": "/img/merchant_project.png",
       "category": "Infrastructure & DevOps",
-      "tags": [
-        "AWS",
-        "SFTP",
-        "Terraform",
-        "High Availability",
-        "Multi-Tenant"
+      "metrics": [
+        "99.99% platform availability",
+        "500+ merchants served",
+        "Zero unplanned downtime target"
       ],
+      "tags": ["AWS", "SFTP", "Terraform", "High Availability", "Multi-Tenant"],
       "href": "/projects/merchant-platform",
-      "links": []
+      "links": [],
+      "detail": {
+        "overview": "Multi-tenant SFTP ingress with automated provisioning and strong isolation so merchant onboarding doesn't compromise reliability.",
+        "stackHighlights": ["AWS", "Terraform", "SFTP gateway", "HA design"],
+        "beforeAfter": [
+          {
+            "label": "Ingress reliability",
+            "before": "Fragile FTP paths, painful incidents",
+            "after": "Standardized SFTP gateway with automated fleet patterns"
+          },
+          {
+            "label": "Scale",
+            "before": "Onboarding friction for new tenants",
+            "after": "500+ concurrent merchants supported"
+          }
+        ],
+        "architectureMermaid": "flowchart TB\n  M[Merchants] --> SFTP[SFTP gateway tier]\n  SFTP --> S3[(Object storage)]\n  SFTP --> MET[Metadata & routing]\n  MET --> AUTO[Terraform-managed infra]"
+      }
     },
     {
       "name": "Real-Time Data Pipeline",
+      "slug": "data-pipeline",
       "description": "**Problem:** Analytics queries took minutes to return, blocking decision-making.\n**Solution:** Architected a real-time ELT pipeline using Dagster, DLT, and ClickHouse.\n**Impact:** Query latency reduced from 5–10 minutes to under 100ms, enabling real-time dashboards.",
+      "summary": "Real-time ELT stack with Dagster and ClickHouse that turns minute-long analytics waits into sub-100ms dashboards.",
       "image": "/img/data_pipeline.png",
       "category": "Data & Analytics",
-      "tags": [
-        "Dagster",
-        "DLT",
-        "ClickHouse",
-        "ELT",
-        "Data Engineering",
-        "Python"
-      ],
-      "links": []
+      "metrics": ["Minutes → sub-100ms queries", "Real-time dashboards", "ELT with Dagster + DLT"],
+      "tags": ["Dagster", "DLT", "ClickHouse", "ELT", "Data Engineering", "Python"],
+      "href": "/projects/data-pipeline",
+      "links": [],
+      "detail": {
+        "overview": "From batch pain to near-real-time analytics by orchestrating assets in Dagster and serving ClickHouse for interactive use.",
+        "stackHighlights": ["Dagster", "DLT", "ClickHouse", "Python"],
+        "beforeAfter": [
+          {
+            "label": "Query latency",
+            "before": "5–10 minute waits",
+            "after": "Sub-100ms for core dashboards"
+          }
+        ],
+        "architectureMermaid": "flowchart LR\n  SRC[Sources] --> DLT[DLT ingest]\n  DLT --> CH[(ClickHouse)]\n  D[Dagster orchestration] --> DLT\n  D --> CH\n  CH --> BI[Dashboards]"
+      }
     },
     {
       "name": "Infrastructure as Code Migration",
+      "slug": "iac-migration",
       "description": "**Problem:** Manual infrastructure changes led to drift, inconsistency, and slow recovery. \n**Solution:** Led comprehensive ClickOps→Terraform migration for all AWS assets with full audit trail. \n**Impact:** MTTR down 40%, infrastructure versioned, repeatability guaranteed.",
+      "summary": "End-to-end AWS ClickOps to Terraform migration that cut MTTR by 40% and made every infra change reviewable.",
       "image": "/img/IAC_migration.png",
       "category": "Infrastructure & DevOps",
-      "tags": [
-        "Terraform",
-        "AWS",
-        "IaC",
-        "CloudFormation",
-        "DevOps"
-      ],
-      "links": []
+      "metrics": ["40% lower MTTR", "Full AWS coverage in Terraform", "Auditable change trail"],
+      "tags": ["Terraform", "AWS", "IaC", "CloudFormation", "DevOps"],
+      "href": "/projects/iac-migration",
+      "links": [],
+      "detail": {
+        "overview": "Replaced ad-hoc console changes with Terraform-managed infrastructure and reviewable workflows so recovery and scaling follow predictable patterns.",
+        "beforeAfter": [
+          {
+            "label": "Change safety",
+            "before": "Drift and tribal knowledge",
+            "after": "Versioned infra and reviewed applies"
+          }
+        ]
+      }
     },
     {
       "name": "CI/CD Pipeline Optimization",
+      "slug": "cicd-optimization",
       "description": "**Problem:** Deployments were slow and deployment confidence was low due to serial testing. \n**Solution:** Redesigned GitHub Actions with semantic versioning, parallelized test suites, and intelligent caching. \n**Impact:** 30% faster deployments, increased release frequency from 1x/week to daily.",
+      "summary": "Rebuilt GitHub Actions pipelines to ship daily with ~30% faster, better-cached deployments.",
       "image": "/img/cicd_optimize.png",
       "category": "CI/CD",
-      "tags": [
-        "GitHub Actions",
-        "CI/CD",
-        "DevOps",
-        "Automation",
-        "Testing"
-      ],
-      "links": []
+      "metrics": ["30% faster deployments", "Releases: weekly → daily", "Semantic versioning + parallel tests"],
+      "tags": ["GitHub Actions", "CI/CD", "DevOps", "Automation", "Testing"],
+      "href": "/projects/cicd-optimization",
+      "links": [],
+      "detail": {
+        "overview": "Engineering velocity through parallel jobs, better caching, and release discipline—not by skipping quality gates.",
+        "beforeAfter": [
+          {
+            "label": "Release cadence",
+            "before": "~1x per week",
+            "after": "Daily releases with safer automation"
+          }
+        ]
+      }
     },
     {
       "name": "Observability & Monitoring Platform",
+      "slug": "observability-platform",
       "description": "**Problem:** Incidents took hours to diagnose due to fragmented monitoring. \n**Solution:** Implemented service-level observability with Prometheus and Grafana, unified SLI tracking. \n**Impact:** MTTD reduced by 60%, on-call burden decreased significantly.",
+      "summary": "Service-level observability platform with Prometheus and Grafana that shrinks incident detection time by 60%.",
       "image": "/img/monitoring.png",
       "category": "Infrastructure & DevOps",
-      "tags": [
-        "Prometheus",
-        "Grafana",
-        "Monitoring",
-        "Alerting",
-        "SLI"
-      ],
-      "links": []
+      "metrics": ["60% lower MTTD", "Unified SLIs", "Prometheus + Grafana"],
+      "tags": ["Prometheus", "Grafana", "Monitoring", "Alerting", "SLI"],
+      "href": "/projects/observability-platform",
+      "links": [],
+      "detail": {
+        "overview": "Service-level golden signals and dashboards that match how engineers actually triage—not vanity charts.",
+        "beforeAfter": [
+          {
+            "label": "Incident triage",
+            "before": "Hours to find signal",
+            "after": "Faster correlation with SLI-focused views"
+          }
+        ],
+        "architectureMermaid": "flowchart TB\n  SRV[Services] --> PROM[Prometheus]\n  PROM --> GRAF[Grafana]\n  PROM --> AM[Alertmanager]\n  AM --> ON[On-call]"
+      }
     },
     {
       "name": "Auth0 Tenant Migration",
+      "slug": "auth0-migration",
       "description": "**Problem:** Legacy Auth0 tenant had security and scalability issues. \n**Solution:** Executed zero-downtime migration for 1,000+ users with least-privilege IAM via AWS SSO. \n**Impact:** Zero user disruption, improved security posture, unified identity system.",
+      "summary": "Zero-downtime Auth0 migration for 1,000+ users, aligned with least-privilege IAM and AWS SSO.",
       "image": "/img/auth0_tenant.png",
       "category": "Security",
-      "tags": [
-        "Auth0",
-        "AWS SSO",
-        "IAM",
-        "Security",
-        "Zero Downtime"
-      ],
-      "links": []
+      "metrics": ["1,000+ users migrated", "Zero-downtime cutover", "AWS SSO + least privilege"],
+      "tags": ["Auth0", "AWS SSO", "IAM", "Security", "Zero Downtime"],
+      "href": "/projects/auth0-migration",
+      "links": [],
+      "detail": {
+        "overview": "Identity migration with rollback strategy and IAM alignment so security improvements don't become a customer-facing outage.",
+        "beforeAfter": [
+          {
+            "label": "User impact",
+            "before": "Risky big-bang migration",
+            "after": "Phased, verified zero-downtime path"
+          }
+        ]
+      }
     }
   ]
 }

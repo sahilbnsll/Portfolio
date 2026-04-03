@@ -1,6 +1,7 @@
 import { useChatbot } from "@/contexts/ChatContext";
 import { Suspense, lazy, useCallback, useState } from "react";
 import { Bot } from "lucide-react";
+import { motion } from "framer-motion";
 import ChatHeader from "./ChatHeader";
 import {
   Accordion,
@@ -88,7 +89,16 @@ export default function Chat() {
                 : "p-0 h-16 w-16 rounded-full"
             }`}
           >
-            {isExpanded ? <ChatHeader /> : <Bot className="size-6 text-foreground" />}
+            {isExpanded ? (
+              <ChatHeader />
+            ) : (
+              <motion.div
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Bot className="size-6 text-foreground" />
+              </motion.div>
+            )}
           </AccordionTrigger>
           <AccordionContent
             forceMount={hasOpened ? true : undefined}

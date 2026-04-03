@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import MainContentProvider from "@/components/MainContentProvider";
+import ParticleBackground from "@/components/ParticleBackground";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,7 +25,7 @@ const calistoga = Calistoga({
 export const metadata: Metadata = {
   title: "Sahil Bansal - DevOps Engineer",
   description:
-    "DevOps & cloud infrastructure engineer: AWS, Terraform, CI/CD, observability, and data platforms. Building reliable systems at Buyogo; workflow automation & AI integrations (ZabeSync).",
+    "DevOps & cloud infrastructure engineer: AWS, Terraform, CI/CD, observability, and data platforms. Building reliable systems at Buyogo; workflow automation & AI integrations.",
   manifest: "/manifest.json",
 };
 
@@ -48,9 +49,10 @@ export default function RootLayout({
         )}
       >
         <Providers>
+          <ParticleBackground />
           <div className="flex min-h-screen flex-col">
             <Header />
-            <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-8">
+            <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-8">
               <MainContentProvider>{children}</MainContentProvider>
             </div>
             <Footer />
@@ -58,8 +60,12 @@ export default function RootLayout({
           <ScrollToTop />
           <div className="grain-overlay" aria-hidden="true" />
         </Providers>
-        <Analytics />
-        <SpeedInsights />
+        {process.env.NODE_ENV === "production" ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

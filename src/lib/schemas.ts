@@ -20,12 +20,44 @@ const iconLink = z.object({
 });
 export type IconLink = z.infer<typeof iconLink>;
 
+const projectDetail = z.object({
+  overview: z.string().optional(),
+  architectureMermaid: z.string().optional(),
+  beforeAfter: z
+    .array(
+      z.object({
+        label: z.string(),
+        before: z.string(),
+        after: z.string(),
+      }),
+    )
+    .optional(),
+  stackHighlights: z.array(z.string()).optional(),
+});
+
 const project = z.object({
   name: z.string(),
   description: z.string(),
+  /** Short impact line for cards (rendered on the project grid). */
+  summary: z.string().optional(),
   image: z.string().optional(),
   tags: z.array(z.string()),
-  category: z.enum(["Infrastructure & DevOps", "CI/CD", "Security", "Data & Analytics", "Automation & AI"]).optional(),
+  category: z
+    .enum([
+      "Infrastructure & DevOps",
+      "CI/CD",
+      "Security",
+      "Data & Analytics",
+      "Automation & AI",
+    ])
+    .optional(),
+  /** Internal case-study path, e.g. /projects/zabesync */
+  href: z.string().optional(),
+  /** Explicit slug; otherwise derived from href */
+  slug: z.string().optional(),
+  /** Short impact lines for cards (legacy) */
+  metrics: z.array(z.string()).optional(),
+  detail: projectDetail.optional(),
   links: z.array(iconLink),
 });
 export const projectSchema = z.object({ projects: z.array(project) });

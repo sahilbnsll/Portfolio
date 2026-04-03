@@ -1,4 +1,11 @@
 {
+  "currentlyBuilding": 
+  {
+    "title": "Currently building",
+    "headline": "ZabeSync & portfolio hardening",
+    "body": "Sharpening LinkedIn automation workflows, tightening AWS cost guardrails at Buyogo, and documenting migration playbooks for the blog. Always interested in high-impact infra and reliability work.",
+    "tags": ["ZabeSync", "AWS", "Reliability", "Automation"]
+  },
   "introduction": {
     "greeting": "infrastructure that scales automatically.",
     "description": "I build cloud systems that don't break at 3am. From zero-downtime migrations to cost-optimized infrastructure. I obsess over reliability, automation, and giving teams the confidence to deploy. Currently architecting scalable infrastructure at Buyogo AG.",

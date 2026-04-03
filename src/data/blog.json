@@ -1,0 +1,51 @@
+{
+  "intro": "Sometimes I write about things that I've worked on, and sometimes I write about things that I've learned.", 
+  "posts": [
+    {
+      "title": "Everything Docker!!",
+      "description": "From Basic Containers to Multi-Stage Builds",
+      "date": "2026-02-26",
+      "comingSoon": false,
+      "external": true,
+      "href": "https://medium.com/@sahilbansal.sb24/everything-docker-from-basic-containers-to-multi-stage-builds-bf14948a38ab"
+    },
+    {
+      "title": "From ClickOps to Terraform: what we measured",
+      "description": "How we cut MTTR and why state files deserve respect.",
+      "date": "2026-02-01",
+      "comingSoon": false,
+      "href": "/blog/from-clickops-to-terraform"
+    },
+    {
+      "title": "Running LinkedIn automation without losing your mind (or API limits)",
+      "description": "n8n, idempotency, and state in Supabase—patterns from ZabeSync.",
+      "date": "2026-01-18",
+      "comingSoon": false,
+      "href": "/blog/running-linkedin-automation"
+    },
+    {
+      "title": "Observability that on-call actually uses",
+      "description": "Prometheus + Grafana SLIs: alerts humans can act on.",
+      "date": "2025-12-10",
+      "comingSoon": false,
+      "external": false,
+      "href": "/blog/observability-oncall-actually-uses"
+    },
+    {
+      "title": "Setting Up Seq Logging Alerts Across Multiple Channels",
+      "description": "How to set up Seq logging alerts across multiple channels",
+      "date": "2023-11-30",
+      "comingSoon": false,
+      "external": true,
+      "href": "https://medium.com/@sahil.bansal24/setting-up-seq-logging-alerts-across-multiple-channels-c3e4a0e2dd17"
+    },
+    {
+      "title": "Access Jenkins running on EC2 with only private IP on web",
+      "description": "How to access Jenkins running on EC2 with only private IP on web",
+      "date": "2023-11-29",
+      "comingSoon": false,
+      "external": true,
+      "href": "https://medium.com/@sahil.bansal24/access-jenkins-running-on-ec2-with-only-private-ip-on-web-a-step-by-step-guide-12c6560309b1"
+    }
+  ]
+}

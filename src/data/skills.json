@@ -146,6 +146,31 @@
             ]
         },
         {
+            "name": "Workflow Automation & AI",
+            "skills": [
+                {
+                    "name": "n8n",
+                    "level": 85,
+                    "description": "Visual workflow builder, event-driven pipelines. Built ZabeSync's full LinkedIn content automation system."
+                },
+                {
+                    "name": "Supabase",
+                    "level": 80,
+                    "description": "Postgres-backed BaaS, real-time subscriptions, auth. Used for state management and deduplication in ZabeSync."
+                },
+                {
+                    "name": "Discord Bots",
+                    "level": 75,
+                    "description": "Bot development, interactive controls, webhooks. Built content review and approval flows via Discord."
+                },
+                {
+                    "name": "LinkedIn API",
+                    "level": 80,
+                    "description": "Content publishing, OAuth flows, profile integration. Automated draft-to-publish pipeline."
+                }
+            ]
+        },
+        {
             "name": "Security & DevSecOps",
             "skills": [
                 {

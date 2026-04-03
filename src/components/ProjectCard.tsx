@@ -1,174 +1,151 @@
+"use client";
+
 import { Badge } from "@/components/ui/Badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/Card";
 import { Project } from "@/lib/schemas";
+import { getProjectSlug } from "@/lib/project-utils";
 import Link from "next/link";
-import Markdown from "react-markdown";
 import Icon from "./Icon";
 import ImageWithSkeleton from "./ImageWithSkeleton";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import BrowserFrame from "./BrowserFrame";
+import { ArrowUpRight } from "lucide-react";
 
 interface Props {
   project: Project;
 }
 
+const categoryGradients: Record<string, string> = {
+  "Infrastructure & DevOps":
+    "from-blue-500/20 via-blue-400/10 to-transparent",
+  "CI/CD": "from-green-500/20 via-green-400/10 to-transparent",
+  Security: "from-red-500/20 via-red-400/10 to-transparent",
+  "Data & Analytics":
+    "from-purple-500/20 via-purple-400/10 to-transparent",
+  "Automation & AI":
+    "from-amber-500/20 via-amber-400/10 to-transparent",
+};
+
 const categoryColors: Record<string, string> = {
   "Infrastructure & DevOps": "bg-blue-500/10 text-blue-600 dark:text-blue-400",
   "CI/CD": "bg-green-500/10 text-green-600 dark:text-green-400",
-  "Security": "bg-red-500/10 text-red-600 dark:text-red-400",
-  "Data & Analytics": "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-  "Automation & AI": "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  Security: "bg-red-500/10 text-red-600 dark:text-red-400",
+  "Data & Analytics":
+    "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  "Automation & AI":
+    "bg-amber-500/10 text-amber-600 dark:text-amber-400",
 };
 
-// Function to generate key features based on description and tags
-function generateKeyFeatures(description: string, tags: string[], name: string): string[] {
-  const features: string[] = [];
-
-  // General features based on description keywords
-  if (description.toLowerCase().includes("automate")) features.push("Automated Workflows & Operations");
-  if (description.toLowerCase().includes("scale")) features.push("Scalable Architecture Design");
-  if (description.toLowerCase().includes("optimize cost")) features.push("Cloud Cost Optimization");
-  if (description.toLowerCase().includes("monitor") || description.toLowerCase().includes("observability")) features.push("Advanced Monitoring & Observability");
-  if (description.toLowerCase().includes("deploy")) features.push("Streamlined Deployment Process");
-  if (description.toLowerCase().includes("secure")) features.push("Enhanced Security Measures");
-  if (description.toLowerCase().includes("data pipeline")) features.push("Robust Data Pipelines");
-  if (description.toLowerCase().includes("real-time")) features.push("Real-time Data Processing");
-  if (description.toLowerCase().includes("zero-downtime")) features.push("Zero-Downtime Migrations/Deployments");
-
-  // Tech-specific features from tags
-  if (tags.includes("Kubernetes")) features.push("Kubernetes Orchestration");
-  if (tags.includes("Docker")) features.push("Containerization with Docker");
-  if (tags.includes("Terraform")) features.push("Infrastructure as Code with Terraform");
-  if (tags.includes("AWS")) features.push("Leveraged AWS Cloud Services");
-  if (tags.includes("GitHub Actions")) features.push("CI/CD with GitHub Actions");
-  if (tags.includes("Prometheus") && tags.includes("Grafana")) features.push("Integrated Monitoring with Prometheus & Grafana");
-  if (tags.includes("Python")) features.push("Python Scripting & Automation");
-  if (tags.includes("Auth0")) features.push("Auth0 Integration for Auth/AuthZ");
-
-  // Add a generic feature if not many are found
-  if (features.length < 2 && name) {
-    features.push(`Key aspects of ${name} implementation`);
-  }
-  if (features.length === 0) {
-    features.push("Innovative solutions and technical excellence.");
-  }
-
-
-  // Ensure uniqueness and limit to 3-5 features for conciseness
-  return Array.from(new Set(features)).slice(0, 5);
-}
-
 export function ProjectCard({ project }: Props) {
-  const { name, description, image, tags, category, links } = project;
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const keyFeatures = generateKeyFeatures(description, tags || [], name);
+  const { name, description, image, tags, category, links, summary } = project;
+  const slug = getProjectSlug(project);
+  // Prefer the explicit href stored in `projects.json` (most reliable) but
+  // fall back to the derived slug path.
+  const detailUrl = project.href?.trim() ?? (slug ? `/projects/${slug}` : null);
+  const safeTags = tags ?? [];
+  const gradient =
+    categoryGradients[category ?? ""] ??
+    "from-gray-500/20 via-gray-400/10 to-transparent";
 
   return (
-    <Card className={`flex flex-col overflow-hidden transition-shadow duration-500 hover:shadow-lg group ${prefersReducedMotion ? '' : '[transform-style:preserve-3d] [perspective:1000px]'}`}>
-      <div className={`relative ${prefersReducedMotion ? '' : '[transform-style:preserve-3d] transition-transform duration-500 group-hover:[transform:rotateY(180deg)]'}`}>
-        <div className={`relative ${prefersReducedMotion ? '' : '[backface-visibility:hidden]'}`}>
-          <CardHeader className="p-0">
-            {image && (
-              <div className="group relative overflow-hidden block">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 transition-opacity duration-500 group-hover:from-black/40" />
-                <ImageWithSkeleton
-                  src={image}
-                  alt={name}
-                  width={500}
-                  height={300}
-                  sizes="(max-width: 640px) calc(100vw - 4rem), 344px"
-                  quality={75}
-                  containerClassName="h-48 w-full"
-                  className="h-48 w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-              </div>
-            )}
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2 pt-6">
-            <div className="flex items-start justify-between gap-2">
-              <CardTitle className="transition-colors duration-500 group-hover:text-primary">{name}</CardTitle>
-              {category && (
-                <Badge
-                  className={`whitespace-nowrap text-xs px-2 py-0.5 ${categoryColors[category] || "bg-gray-500/10 text-gray-600 dark:text-gray-400"}`}
-                  variant="secondary"
-                >
-                  {category}
-                </Badge>
-              )}
-            </div>
-            <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert leading-relaxed whitespace-pre-line">
-              {description}
-            </Markdown>
-          </CardContent>
-        </div>
-        <div className={`absolute top-0 left-0 w-full h-full p-6 bg-card rounded-lg [transform:rotateY(180deg)] [backface-visibility:hidden] overflow-y-scroll custom-scrollbar`}>
-          <h3 className="text-lg font-bold mb-2">{name}</h3>
-          
+    <div className="group flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_0_1px_rgba(99,102,241,0.35),0_0_45px_rgba(99,102,241,0.22)] dark:hover:border-primary/30 dark:hover:shadow-[0_0_0_1px_rgba(99,102,241,0.45),0_0_55px_rgba(99,102,241,0.35)]">
+      {/* Image with gradient overlay */}
+      {image && (
+        <BrowserFrame
+          url={name.toLowerCase().replace(/\s+/g, "-").slice(0, 28)}
+          className="rounded-b-none border-0 shadow-none ring-0"
+        >
+          <div className="relative overflow-hidden">
+            <div
+              className={`absolute inset-0 z-10 bg-gradient-to-t ${gradient} transition-opacity duration-500 group-hover:opacity-60`}
+            />
+            <ImageWithSkeleton
+              src={image}
+              alt={name}
+              width={960}
+              height={420}
+              sizes="(max-width: 1024px) 100vw, 448px"
+              quality={78}
+              containerClassName="h-44 w-full sm:h-48"
+              className="h-44 w-full object-cover object-center transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:scale-[1.02] sm:h-48"
+            />
+          </div>
+        </BrowserFrame>
+      )}
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
+            {name}
+          </h3>
           {category && (
-            <div className="mb-4">
-              <h4 className="text-md font-semibold mb-1">Category</h4>
-              <Badge
-                className={`whitespace-nowrap text-xs px-2 py-0.5 ${categoryColors[category] || "bg-gray-500/10 text-gray-600 dark:text-gray-400"}`}
-                variant="secondary"
-              >
-                {category}
-              </Badge>
-            </div>
-          )}
-
-          <h4 className="text-md font-semibold mb-1">Description</h4>
-          <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert leading-relaxed whitespace-pre-line mb-4">
-            {description}
-          </Markdown>
-            
-          {keyFeatures.length > 0 && (
-            <div className="mb-4">
-              <h4 className="text-md font-semibold mb-1">Key Features</h4>
-              <ul className="list-disc list-inside text-sm text-muted-foreground ml-4">
-                {keyFeatures.map((feature, idx) => (
-                  <li key={idx}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {tags && tags.length > 0 && (
-            <div className="mb-4">
-              <h4 className="text-md font-semibold mb-1">Tech Stack & Tools</h4>
-              <div className="flex flex-wrap gap-1">
-                  {tags?.toSorted().map((tag) => (
-                    <Badge
-                      key={tag}
-                      className="px-2 py-1 text-xs"
-                      variant="secondary"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-            </div>
+            <Badge
+              className={`shrink-0 whitespace-nowrap px-2 py-0.5 text-[10px] ${
+                categoryColors[category] ??
+                "bg-gray-500/10 text-gray-600 dark:text-gray-400"
+              }`}
+              variant="secondary"
+            >
+              {category}
+            </Badge>
           )}
         </div>
-      </div>
-      <CardFooter className="flex h-full flex-col items-start justify-between gap-4">
-        {links && links.length > 0 && (
-          <div className="flex flex-row flex-wrap items-start gap-1">
-            {links.toSorted().map((link, idx) => (
-              <Link href={link?.href} key={idx} target="_blank">
-                <Badge key={idx} className="flex gap-2 px-2 py-1 text-[10px]">
-                  <Icon name={link.icon} className="size-3" />
-                  {link.name}
+
+        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+          {(summary || description)
+            .replace(/\*\*/g, "")
+            .replace(/\n/g, " ")}
+        </p>
+
+        {safeTags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {[...safeTags]
+              .sort()
+              .slice(0, 5)
+              .map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="px-1.5 py-0.5 text-[10px]"
+                >
+                  {tag}
                 </Badge>
-              </Link>
-            ))}
+              ))}
+            {safeTags.length > 5 && (
+              <Badge
+                variant="secondary"
+                className="px-1.5 py-0.5 text-[10px]"
+              >
+                +{safeTags.length - 5}
+              </Badge>
+            )}
           </div>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-wrap items-center gap-3 border-t border-border/30 px-5 py-3">
+        {detailUrl && (
+          <Link
+            href={detailUrl}
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+          >
+            Case study
+            <ArrowUpRight className="size-3.5" aria-hidden />
+          </Link>
+        )}
+        {links?.map((linkItem, idx) => (
+          <Link
+            href={linkItem.href}
+            key={idx}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Icon name={linkItem.icon} className="size-3.5" />
+            {linkItem.name}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

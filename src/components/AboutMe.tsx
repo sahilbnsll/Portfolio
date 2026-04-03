@@ -18,11 +18,12 @@ export default function AboutMe() {
 
   return (
     <motion.section
+      id="about"
       initial="initial"
       whileInView="animate"
       viewport={{ once: true, margin: "-100px" }}
       variants={fadeInUp}
-      className="flex flex-col gap-8 rounded-lg bg-gradient-to-br from-card/80 to-card/40 p-8 backdrop-blur-sm border border-border/50 relative overflow-hidden"
+      className="relative scroll-mt-28 flex flex-col gap-8 overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-card/80 to-card/40 p-8 backdrop-blur-sm"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -49,7 +50,7 @@ export default function AboutMe() {
       {/* Content Cards */}
       <div className="relative z-10 flex flex-col gap-8 text-sm sm:text-base leading-relaxed text-foreground/90">
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 hover:border-accent/50 transition-all duration-300"
+          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)]"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">
@@ -64,7 +65,7 @@ export default function AboutMe() {
         </motion.div>
 
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 hover:border-accent/50 transition-all duration-300"
+          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)]"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">
@@ -79,7 +80,7 @@ export default function AboutMe() {
         </motion.div>
 
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 hover:border-accent/50 transition-all duration-300"
+          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)]"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">

@@ -11,9 +11,8 @@ import ClientOnly from "./ClientOnly"; // Import the new ClientOnly component
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
-      enableSystem
       attribute="class"
-      defaultTheme="system"
+      defaultTheme="dark"
       disableTransitionOnChange
     >
       {/* <ThemeColorUpdater /> */}

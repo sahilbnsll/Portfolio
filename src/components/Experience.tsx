@@ -9,6 +9,7 @@ export default function Experience() {
   const education = educationSchema.parse(educationData).education;
 
   return (
+    <section id="experience" className="scroll-mt-28">
     <Tabs defaultValue="work">
       <TabsList className="mb-2 grid w-full grid-cols-2">
         <TabsTrigger value="work">Work</TabsTrigger>
@@ -21,5 +22,6 @@ export default function Experience() {
         <Timeline experience={education} type="education"></Timeline>
       </TabsContent>
     </Tabs>
+    </section>
   );
 }

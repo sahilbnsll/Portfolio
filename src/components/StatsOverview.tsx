@@ -47,6 +47,7 @@ const stats = [
 export default function StatsOverview() {
   return (
     <motion.section
+      id="stats"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
@@ -57,7 +58,7 @@ export default function StatsOverview() {
           transition: { staggerChildren: 0.08, delayChildren: 0.1 },
         },
       }}
-      className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4"
+      className="scroll-mt-28 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4"
     >
       {stats.map((stat, index) => {
         const Icon = stat.icon;
@@ -73,7 +74,7 @@ export default function StatsOverview() {
                 transition: { duration: 0.4, ease: "easeOut" },
               },
             }}
-            className={`group relative flex flex-col gap-2 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-b ${stat.gradient} p-4 transition-all duration-300 ${stat.borderHover} hover:shadow-lg`}
+            className={`group relative flex flex-col gap-2 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-b ${stat.gradient} p-4 transition-all duration-500 ${stat.borderHover} hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.6)]`}
           >
             <div className="flex items-center gap-2">
               <div className={`rounded-lg bg-background/80 p-1.5`}>

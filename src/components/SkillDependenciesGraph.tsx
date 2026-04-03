@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import SectionHeader from "./SectionHeader";
+import { getToolIcon } from "@/lib/tool-icons";
 
 interface Node {
   id: string;
@@ -15,6 +16,17 @@ interface Link {
   target: string;
   strength: number;
 }
+
+// Short text labels (keeps the visual readable under the icon).
+const NODE_TEXT_LABELS: Record<string, string> = {
+  "GitHub Actions": "GH Actions",
+  "Cost Optimization": "Cost",
+  PostgreSQL: "Postgres",
+  CloudWatch: "CloudWatch",
+  Infrastructure: "Infra",
+  Observability: "Obs",
+  Automation: "Auto",
+};
 
 // Function to wrap text
 function wrap(text: any, width: number) {
@@ -89,32 +101,44 @@ export default function SkillDependenciesGraph() {
 
       // Platforms
       { id: "AWS", category: "platform", level: 95 },
+      { id: "IAM", category: "platform", level: 80 },
       { id: "Kubernetes", category: "platform", level: 75 },
       { id: "Docker", category: "tool", level: 85 },
+      { id: "Supabase", category: "platform", level: 80 },
       { id: "Supabase", category: "platform", level: 80 },
 
       // Tools
       { id: "Terraform", category: "tool", level: 95 },
+      { id: "CloudWatch", category: "tool", level: 85 },
       { id: "Prometheus", category: "tool", level: 80 },
       { id: "Grafana", category: "tool", level: 80 },
       { id: "GitHub Actions", category: "tool", level: 80 },
       { id: "CI/CD", category: "tool", level: 80 },
       { id: "n8n", category: "tool", level: 85 },
       { id: "Dagster", category: "tool", level: 80 },
+      { id: "Jenkins", category: "tool", level: 75 },
+      { id: "PostgreSQL", category: "tool", level: 80 },
 
       // Outcomes
       { id: "Infrastructure", category: "outcome" },
+      { id: "Security", category: "outcome" },
+      { id: "Cost Optimization", category: "outcome" },
       { id: "Observability", category: "outcome" },
+      { id: "Automation", category: "outcome" },
       { id: "Automation", category: "outcome" },
       { id: "DevOps", category: "outcome" },
     ];
 
     const links: Link[] = [
       // Languages → Platforms/Tools
+      // Languages → Platforms/Tools
       { source: "Python", target: "AWS", strength: 0.7 },
+      { source: "Python", target: "Dagster", strength: 0.85 },
       { source: "Python", target: "Dagster", strength: 0.85 },
       { source: "Bash", target: "AWS", strength: 0.6 },
       { source: "HCL", target: "Terraform", strength: 1 },
+
+      // Tools → Platforms
 
       // Tools → Platforms
       { source: "Terraform", target: "AWS", strength: 0.9 },
@@ -124,12 +148,25 @@ export default function SkillDependenciesGraph() {
       { source: "n8n", target: "Docker", strength: 0.7 },
 
       // → Infrastructure outcome
+      { source: "Docker", target: "Kubernetes", strength: 0.9 },
+      { source: "Docker", target: "AWS", strength: 0.7 },
+      { source: "n8n", target: "Supabase", strength: 0.85 },
+      { source: "n8n", target: "Docker", strength: 0.7 },
+
+      // → Infrastructure outcome
       { source: "AWS", target: "Infrastructure", strength: 0.95 },
       { source: "Terraform", target: "Infrastructure", strength: 0.95 },
       { source: "Kubernetes", target: "Infrastructure", strength: 0.8 },
+      { source: "Kubernetes", target: "Infrastructure", strength: 0.8 },
       { source: "Docker", target: "Infrastructure", strength: 0.7 },
 
+      // → Security outcome
+      { source: "AWS", target: "Security", strength: 0.8 },
+      { source: "IAM", target: "Security", strength: 0.95 },
+      { source: "Jenkins", target: "Security", strength: 0.6 },
+
       // → Observability outcome
+      { source: "CloudWatch", target: "Observability", strength: 0.9 },
       { source: "Prometheus", target: "Grafana", strength: 0.9 },
       { source: "Prometheus", target: "Observability", strength: 0.9 },
       { source: "Grafana", target: "Observability", strength: 0.9 },
@@ -141,10 +178,16 @@ export default function SkillDependenciesGraph() {
       { source: "Git", target: "GitHub Actions", strength: 0.95 },
       { source: "CI/CD", target: "Automation", strength: 0.8 },
 
+      // → Cost Optimization outcome
+      { source: "AWS", target: "Cost Optimization", strength: 0.8 },
+      { source: "Terraform", target: "Cost Optimization", strength: 0.85 },
+
       // → DevOps (top-level outcome)
       { source: "Infrastructure", target: "DevOps", strength: 0.95 },
       { source: "Observability", target: "DevOps", strength: 0.85 },
       { source: "Automation", target: "DevOps", strength: 0.9 },
+      { source: "Security", target: "DevOps", strength: 0.8 },
+      { source: "Cost Optimization", target: "DevOps", strength: 0.75 },
     ];
 
     // Clear previous content
@@ -238,24 +281,61 @@ export default function SkillDependenciesGraph() {
           }) as any
       );
 
-    // Add labels as text elements
+    // Add icon images centered inside nodes.
+    const iconImages = svg
+      .selectAll("image.icon")
+      .data(nodes as any)
+      .enter()
+      .append("image")
+      .attr("class", "icon")
+      .attr("href", (d: any) => getToolIcon(d.id)?.url ?? "")
+      .attr("width", (d: any) => Math.max(12, Math.round((d.radius ?? 20) * 0.9)))
+      .attr("height", (d: any) => Math.max(12, Math.round((d.radius ?? 20) * 0.9)))
+      .attr("opacity", (d: any) => (getToolIcon(d.id) ? 0.96 : 0))
+      .attr("pointer-events", "none");
+
+    // Add text labels under icon.
     const labels = svg
       .selectAll("text.label")
       .data(nodes as any)
       .enter()
       .append("text")
       .attr("class", "label")
+      .attr("data-node-id", (d: any) => d.id)
       .attr("pointer-events", "none")
       .attr("text-anchor", "middle")
-      .attr("font-size", width < 400 ? "7px" : width < 500 ? "8.5px" : "11px")
       .attr("font-weight", 600)
       .attr("fill", "#fff")
-      .text((d: any) => d.id)
-      .attr("dy", "0.3em")
-      .each(function (d: any) {
-        // On mobile, wrap to node radius, not radius*1.5
-        const wrapWidth = width < 500 ? d.radius - 6 : d.radius * 1.5 - 10;
-        wrap(d3.select(this), wrapWidth);
+      .text((d: any) => NODE_TEXT_LABELS[d.id] ?? d.id)
+      .attr("font-size", (d: any) =>
+        `${Math.max(7, Math.round((d.radius ?? 20) * 0.21))}px`,
+      )
+      .attr("dy", (d: any) => `${Math.max(14, Math.round((d.radius ?? 20) * 0.7))}px`);
+
+    // Node hover interactivity: highlight hovered node label + connected edges.
+    node
+      .attr("cursor", "grab")
+      .on("mouseenter", (event: any, d: any) => {
+        const related = (l: any) =>
+          l.source?.id === d.id || l.target?.id === d.id;
+
+        // Don't dim other labels; clicking should never make the rest unreadable.
+        labels.attr("opacity", 1);
+        link.attr("stroke-opacity", (l: any) =>
+          related(l) ? l.strength * 0.9 : l.strength * 0.12,
+        );
+
+        d3.select(event.currentTarget)
+          .attr("r", d.radius * 1.08)
+          .attr("stroke-width", 4);
+      })
+      .on("mouseleave", () => {
+        labels.attr("opacity", 1);
+        link.attr(
+          "stroke-opacity",
+          (l: any) => l.strength * 0.6,
+        );
+        node.attr("r", (dd: any) => dd.radius).attr("stroke-width", 2);
       });
 
     // Update positions on simulation tick
@@ -267,6 +347,10 @@ export default function SkillDependenciesGraph() {
         .attr("y2", (d: any) => d.target.y);
 
       node.attr("cx", (d: any) => d.x).attr("cy", (d: any) => d.y);
+
+      iconImages
+        .attr("x", (d: any) => d.x - Math.max(12, Math.round((d.radius ?? 20) * 0.9)) / 2)
+        .attr("y", (d: any) => d.y - Math.max(12, Math.round((d.radius ?? 20) * 0.9)) / 2);
 
       labels.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
     });
@@ -284,6 +368,7 @@ export default function SkillDependenciesGraph() {
   }
 
   return (
+    <section id="skill-graph" className="scroll-mt-28 flex flex-col gap-6">
     <section id="skill-graph" className="scroll-mt-28 flex flex-col gap-6">
       <SectionHeader
         title="skill dependencies"

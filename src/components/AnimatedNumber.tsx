@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
 
 interface AnimatedNumberProps {
   target: number;
@@ -20,11 +19,8 @@ export default function AnimatedNumber({
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const [displayValue, setDisplayValue] = useState(0);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
-    if (!isInView) return;
-
     let animationFrameId: number;
     let startTime: number;
 
@@ -47,7 +43,7 @@ export default function AnimatedNumber({
     animationFrameId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isInView, target, duration]);
+  }, [target, duration]);
 
   const formattedValue =
     decimals > 0

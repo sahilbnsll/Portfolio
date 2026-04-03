@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import testimonialsData from "@/data/testimonials.json";
 import { useState, useEffect } from "react";
 import SectionHeader from "./SectionHeader";
@@ -9,6 +9,7 @@ import SectionHeader from "./SectionHeader";
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
   const testimonials = testimonialsData.testimonials;
   const cardsPerView = 2;
 
@@ -21,6 +22,7 @@ export default function TestimonialsSection() {
   }, [isAutoPlay, testimonials.length]);
 
   const goToPrevious = () => {
+    setSlideDirection(-1);
     setCurrentIndex((prev) => {
       const newIndex = prev - cardsPerView;
       return newIndex < 0 ? 0 : newIndex;
@@ -29,6 +31,7 @@ export default function TestimonialsSection() {
   };
 
   const goToNext = () => {
+    setSlideDirection(1);
     setCurrentIndex((prev) => {
       const maxIndex = Math.max(0, testimonials.length - cardsPerView);
       const newIndex = prev + cardsPerView;
@@ -46,44 +49,47 @@ export default function TestimonialsSection() {
   ];
 
   return (
-    <section className="flex flex-col gap-6">
-      <SectionHeader title="what others say" description="Feedback from colleagues and leaders I've worked with" />
+    <section id="testimonials" className="scroll-mt-28 flex flex-col gap-6">
+      <SectionHeader title="What People Say" description="" />
 
       <div className="relative" onMouseEnter={() => setIsAutoPlay(false)} onMouseLeave={() => setIsAutoPlay(true)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <AnimatePresence>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+          <AnimatePresence mode="wait" initial={false}>
             {visibleTestimonials.map((testimonial, idx) => (
               <motion.div
                 key={`${currentIndex}-${idx}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, x: slideDirection > 0 ? 40 : -40, scale: 0.985 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: slideDirection > 0 ? -40 : 40, scale: 0.985 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="flex flex-col gap-4 rounded-lg border border-border/50 bg-card/50 p-6 sm:p-8 backdrop-blur-sm"
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="group flex flex-col gap-4 rounded-xl border border-border/70 bg-card/80 p-6 sm:p-7 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_0_1px_rgba(99,102,241,0.25)]"
               >
-                <div className="flex gap-1">
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star key={i} className="size-5 fill-amber-400 text-amber-400" />
-                  ))}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
+                      <motion.span
+                        aria-hidden
+                        className="absolute inset-0 rounded-full border border-primary/30"
+                        animate={{ scale: [1, 1.12, 1], opacity: [0.5, 0, 0.5] }}
+                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      <span className="text-sm font-semibold">{testimonial.avatar}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-semibold text-foreground">
+                        {testimonial.name}
+                      </div>
+                      <div className="truncate text-xs text-muted-foreground">
+                        {testimonial.title}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-base sm:text-lg leading-relaxed text-foreground/90 italic min-h-[80px] flex items-center">
-                  &quot;{testimonial.quote}&quot;
+
+                <p className="min-h-[90px] text-sm leading-relaxed text-foreground/90">
+                  {testimonial.quote}
                 </p>
-                <div className="flex items-center gap-4 pt-4">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/60 flex-shrink-0">
-                    <span className="text-sm font-bold text-primary-foreground">
-                      {testimonial.avatar}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-semibold text-foreground">
-                      {testimonial.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {testimonial.title}
-                    </p>
-                  </div>
-                </div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -102,6 +108,7 @@ export default function TestimonialsSection() {
               <motion.button
                 key={index}
                 onClick={() => {
+                  setSlideDirection(index * cardsPerView >= currentIndex ? 1 : -1);
                   setCurrentIndex(index * cardsPerView);
                   setIsAutoPlay(false);
                 }}

@@ -25,6 +25,14 @@ Users can read more on the site; summarize accurately:
 - Observability — Prometheus, Grafana, service-level visibility.
 - Auth0 tenant migration — zero-downtime, IAM/SSO alignment.
 
+=== Portfolio UX context (latest) ===
+- Home includes: tech stack cards, command terminal ("Sahil Terminal"), skills & expertise cards with per-skill percentages, dependency graph, testimonials, recent posts, and featured projects.
+- Case-study pages show Problem / Solution / Impact clearly and include stack + architecture snippets where available.
+- If asked "where can I see X?", route users to: /projects, /blog, /contact, or specific /projects/<slug>.
+- For command-playground questions, explain supported commands like: help, ls skills, ls projects, ls experience, skills <keyword>, project <slug>, stats, contact, open <slug>.
+- Blog content source is editable in src/data/blog.json (title, description, date, href, comingSoon).
+- Keep answers aligned with current portfolio state and avoid suggesting removed UI elements.
+
 === KEY ACHIEVEMENTS ===
 ✓ ZabeSync: shipped LinkedIn content automation (n8n, AWS EC2, Discord, Supabase, LinkedIn/Google APIs) from ideation to one-click publish
 ✓ Architected 99.99% available multi-tenant FTP platform serving 500+ merchants

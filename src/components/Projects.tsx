@@ -9,9 +9,11 @@ import { X } from "lucide-react";
 
 interface Props {
   limit?: number;
+  showFilters?: boolean;
+  compact?: boolean;
 }
 
-export default function Projects({ limit }: Props) {
+export default function Projects({ limit, showFilters = true, compact = false }: Props) {
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -57,7 +59,7 @@ export default function Projects({ limit }: Props) {
             ))}
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+        <div className="grid grid-cols-1 gap-10 xl:grid-cols-2 xl:gap-10">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-64 rounded-lg border border-border bg-card animate-pulse" />
           ))}
@@ -66,47 +68,55 @@ export default function Projects({ limit }: Props) {
     );
   }
 
+  const gridClasses = compact
+    ? "grid grid-cols-1 gap-6 md:grid-cols-2"
+    : "grid grid-cols-1 gap-10 xl:grid-cols-2 xl:gap-10";
+
   return (
     <div className="flex flex-col gap-6">
       {/* Filter Buttons */}
-      <div className="flex flex-wrap items-center gap-2 md:gap-3">
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
-          Filter:
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => {
-            const isActive = cat === "All" ? selectedCategory === null : selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => handleCategoryClick(cat === "All" ? null : cat)}
-                type="button"
-                className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 ${isActive
-                    ? "bg-accent text-accent-foreground border-accent shadow-md hover:shadow-lg hover:scale-105"
-                    : "border-border bg-background text-foreground hover:border-accent hover:bg-accent/5"
+      {showFilters && (
+        <div className="flex flex-wrap items-center gap-2 md:gap-3">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground md:text-sm">
+            Filter:
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => {
+              const isActive =
+                cat === "All" ? selectedCategory === null : selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategoryClick(cat === "All" ? null : cat)}
+                  type="button"
+                  className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 ${
+                    isActive
+                      ? "bg-accent text-accent-foreground border-accent shadow-md hover:shadow-lg hover:scale-105"
+                      : "border-border bg-background text-foreground hover:border-accent hover:bg-accent/5"
                   }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+          {/* Clear Filter Button */}
+          {selectedCategory && (
+            <button
+              onClick={() => handleCategoryClick(null)}
+              type="button"
+              className="ml-auto flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground transition-all duration-200 hover:border-accent hover:text-foreground md:ml-0"
+              title="Clear filter"
+            >
+              <X className="size-3" />
+              <span className="hidden sm:inline">Clear</span>
+            </button>
+          )}
         </div>
-        {/* Clear Filter Button */}
-        {selectedCategory && (
-          <button
-            onClick={() => handleCategoryClick(null)}
-            type="button"
-            className="ml-auto flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground transition-all duration-200 hover:border-accent hover:text-foreground md:ml-0"
-            title="Clear filter"
-          >
-            <X className="size-3" />
-            <span className="hidden sm:inline">Clear</span>
-          </button>
-        )}
-      </div>
+      )}
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+      <div className={gridClasses}>
         <AnimatePresence>
           {filteredProjects.length > 0 ? (
             filteredProjects.map((project, idx) => (
@@ -120,7 +130,7 @@ export default function Projects({ limit }: Props) {
               >
                 {/* Spotlight glow effect on hover */}
                 <motion.div
-                  className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-accent/0 via-accent/20 to-accent/0 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100 -z-10"
+                  className="pointer-events-none absolute -inset-0.5 rounded-lg bg-gradient-to-r from-accent/0 via-accent/35 to-accent/0 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 -z-10"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}

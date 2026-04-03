@@ -1,0 +1,19 @@
+{
+  "posts": [
+    {
+      "slug": "from-clickops-to-terraform",
+      "title": "From ClickOps to Terraform: what we measured",
+      "content": "## Problem\n\nManual cloud changes (ClickOps) caused drift, weak audit trails, and hard-to-reproduce incident fixes.\n\n## Solution\n\nWe moved core AWS resources to Terraform modules, standardized environments, and enforced PR-based infra changes.\n\n## Impact\n\nMTTR dropped, rollbacks became predictable, and infra changes became reviewable and repeatable.\n"
+    },
+    {
+      "slug": "running-linkedin-automation",
+      "title": "Running LinkedIn automation without losing your mind (or API limits)",
+      "content": "## Problem\n\nAutomation workflows can become brittle when rate limits, retries, and idempotency are not handled well.\n\n## Solution\n\nBuilt n8n workflows with state tracking in Supabase, explicit retry strategy, and controlled publishing paths.\n\n## Impact\n\nContent workflow became stable and repeatable, with less manual intervention and better output consistency.\n"
+    },
+    {
+      "slug": "observability-oncall-actually-uses",
+      "title": "Observability that on-call actually uses",
+      "content": "## Problem\n\nDashboards looked great but didn't help during incidents because alerts lacked context and actionability.\n\n## Solution\n\nDefined practical SLIs/SLOs, tuned Prometheus alerts, and created Grafana dashboards mapped to common failure modes.\n\n## Impact\n\nOn-call response improved with faster triage and fewer noisy, low-value alerts.\n"
+    }
+  ]
+}

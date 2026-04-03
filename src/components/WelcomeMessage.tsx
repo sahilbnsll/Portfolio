@@ -8,7 +8,7 @@ export default function WelcomeMessage() {
       <Bot className="w-12 h-12 mb-4 text-black dark:text-white" />
       <h2 className="text-2xl font-bold mb-2 text-black dark:text-white">Sahil&apos;s AI Twin</h2>
       <p className="text-muted-foreground max-w-sm">
-        Ask about Sahil&apos;s experience, stack, projects (including ZabeSync), or how to get in touch—short answers, real details from his portfolio.
+        Ask about Sahil&apos;s experience, stack, projects, or how to get in touch short answers, real details from his portfolio.
       </p>
     </div>
   );

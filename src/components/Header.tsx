@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import ChatToggle from "./ChatToggle";
@@ -11,7 +12,13 @@ import VisitStats from "./VisitStats";
 import routesData from "@/data/routes.json";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-const navLinks = routesData.routes
+type NavLink = {
+  name: string;
+  href: string;
+  title: string;
+};
+
+const navLinks: NavLink[] = routesData.routes
   .filter((route) => route.showInNav)
   .map((route) => ({
     name: route.name,
@@ -19,10 +26,37 @@ const navLinks = routesData.routes
     title: route.description,
   }));
 
+function activeHash(): string {
+  if (typeof window === "undefined") return "";
+  return window.location.hash || "";
+}
+
+function isNavActive(pathname: string, hash: string, href: string): boolean {
+  if (href === "/") {
+    return pathname === "/" && hash === "";
+  }
+  if (href.startsWith("/#")) {
+    return pathname === "/" && hash === href.slice(1);
+  }
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
 export default function Header() {
   const pathname = usePathname();
   const prefersReducedMotion = usePrefersReducedMotion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hash, setHash] = useState("");
+
+  useEffect(() => {
+    setHash(activeHash());
+    const onHash = () => setHash(activeHash());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  useEffect(() => {
+    setHash(activeHash());
+  }, [pathname]);
 
   return (
     <header
@@ -30,44 +64,49 @@ export default function Header() {
         prefersReducedMotion ? "" : "animate-slide-down-fade-in"
       }`}
     >
-      <div className="mx-auto max-w-3xl px-8 py-5">
-        <nav className="flex items-center justify-between">
-          {/* Desktop Nav */}
-          <ul className="hidden gap-8 sm:flex">
+      <div className="mx-auto max-w-4xl px-8 py-5">
+        <nav className="flex items-center justify-between gap-2">
+          <ul className="hidden flex-wrap items-center gap-x-5 gap-y-1 lg:flex xl:gap-x-7">
             {navLinks.map((nav, id) => {
-              const isActive = pathname === nav.href;
+              const active = isNavActive(pathname, hash, nav.href);
+              const isHashLink = nav.href.startsWith("/#");
+              const linkClass = `relative inline-block py-1 text-sm font-medium tracking-wide transition-colors duration-300 ${
+                active
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`;
               return (
                 <li key={id} className="relative">
-                  <a
-                    href={nav.href}
-                    title={nav.title}
-                    className={`relative inline-block py-1 text-sm font-medium tracking-wide transition-colors duration-300 ${
-                      isActive
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {nav.name}
-                    {isActive && (
-                      <motion.span
-                        layoutId="activeNav"
-                        className="absolute -bottom-[21px] left-0 right-0 h-[2px] bg-foreground"
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                  </a>
+                  {isHashLink ? (
+                    <a href={nav.href} title={nav.title} className={linkClass}>
+                      {nav.name}
+                      {active && (
+                        <motion.span
+                          layoutId="activeNav"
+                          className="absolute -bottom-[21px] left-0 right-0 h-[2px] bg-foreground"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </a>
+                  ) : (
+                    <Link href={nav.href} title={nav.title} className={linkClass}>
+                      {nav.name}
+                      {active && (
+                        <motion.span
+                          layoutId="activeNav"
+                          className="absolute -bottom-[21px] left-0 right-0 h-[2px] bg-foreground"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                    </Link>
+                  )}
                 </li>
               );
             })}
           </ul>
 
-          {/* Mobile hamburger */}
           <button
-            className="relative z-50 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:hidden"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -78,7 +117,6 @@ export default function Header() {
             )}
           </button>
 
-          {/* Right Controls */}
           <div className="flex items-center gap-1 sm:gap-3">
             <VisitStats />
             <ChatToggle />
@@ -87,7 +125,6 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -95,26 +132,39 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-border/40 bg-background/95 backdrop-blur-md sm:hidden"
+            className="overflow-hidden border-t border-border/40 bg-background/95 backdrop-blur-md lg:hidden"
           >
-            <div className="mx-auto max-w-3xl px-8 py-4">
+            <div className="mx-auto max-w-4xl px-8 py-4">
               <ul className="flex flex-col gap-1">
                 {navLinks.map((nav, id) => {
-                  const isActive = pathname === nav.href;
+                  const active = isNavActive(pathname, hash, nav.href);
+                  const isHashLink = nav.href.startsWith("/#");
+                  const mobileClass = `block rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                    active
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                  }`;
                   return (
                     <li key={id}>
-                      <a
-                        href={nav.href}
-                        title={nav.title}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`block rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                          isActive
-                            ? "bg-accent text-foreground"
-                            : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                        }`}
-                      >
-                        {nav.name}
-                      </a>
+                      {isHashLink ? (
+                        <a
+                          href={nav.href}
+                          title={nav.title}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={mobileClass}
+                        >
+                          {nav.name}
+                        </a>
+                      ) : (
+                        <Link
+                          href={nav.href}
+                          title={nav.title}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={mobileClass}
+                        >
+                          {nav.name}
+                        </Link>
+                      )}
                     </li>
                   );
                 })}
