@@ -2,9 +2,9 @@
   "currentlyBuilding": 
   {
     "title": "Currently building",
-    "headline": "ZabeSync & portfolio hardening",
-    "body": "Sharpening LinkedIn automation workflows, tightening AWS cost guardrails at Buyogo, and documenting migration playbooks for the blog. Always interested in high-impact infra and reliability work.",
-    "tags": ["ZabeSync", "AWS", "Reliability", "Automation"]
+    "headline": "AI Resume Intelligence Platform",
+    "body": "Automating ATS-optimized resume generation using multi-LLM orchestration and LaTeX pipelines.",
+    "tags": ["AI", "LLMs", "Next.js", "Automation"]
   },
   "introduction": {
     "greeting": "infrastructure that scales automatically.",

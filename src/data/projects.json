@@ -1,6 +1,67 @@
 {
   "projects": [
     {
+      "name": "LumaCV: AI Resume Intelligence",
+      "slug": "lumacv",
+      "description": "**Problem:** Resume tailoring is a manual, error-prone process that often fails ATS screening due to poor keyword alignment and inconsistent formatting. \n**Solution:** Built an AI-first resume intelligence platform using multi-LLM orchestration to parse resumes, analyze job descriptions, and generate tailored, ATS-optimized resumes with deterministic LaTeX rendering. \n**Impact:** Reduced resume tailoring time from ~30 minutes to under 60 seconds while ensuring consistent formatting, improved keyword coverage, and higher ATS compatibility.",
+      "summary": "AI-powered resume intelligence platform that automates ATS-optimized resume generation using multi-LLM failover and deterministic LaTeX rendering.",
+      "image": "/img/lumacv.png",
+      "category": "Automation & AI",
+      "metrics": [
+        "30 min -> <60 sec automation",
+        "Multi-LLM failover (Gemini, Claude, Llama)",
+        "Deterministic LaTeX PDF pipeline",
+        "Real-time JD skill gap analysis"
+      ],
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "AI/LLM",
+        "Supabase",
+        "LaTeX",
+        "State Management",
+        "Rate Limiting",
+        "Vercel"
+      ],
+      "href": "/projects/lumacv",
+      "links": [
+        {
+          "name": "Live",
+          "href": "https://luma-cv.vercel.app/",
+          "icon": "externalLink"
+        }
+      ],
+      "detail": {
+        "overview": "LumaCV is a full-stack AI system designed to automate resume tailoring at scale. It combines LLM-based parsing, semantic job description analysis, and deterministic LaTeX rendering to produce production-grade resumes with minimal user input. The system is built with reliability in mind, incorporating model failover, rate limiting, and state persistence.",
+        "stackHighlights": [
+          "Next.js App Router with Server Actions",
+          "Multi-provider LLM orchestration via OpenRouter",
+          "Supabase Auth and session management",
+          "Zustand for persistent client state",
+          "Upstash-based rate limiting and request control",
+          "Remote LaTeX compilation service"
+        ],
+        "beforeAfter": [
+          {
+            "label": "Resume Tailoring",
+            "before": "Manual rewriting + keyword guessing",
+            "after": "Automated semantic alignment with JD"
+          },
+          {
+            "label": "Formatting",
+            "before": "Inconsistent Word/Docs formatting",
+            "after": "Deterministic LaTeX-generated PDFs"
+          },
+          {
+            "label": "Time to Output",
+            "before": "20-30 minutes",
+            "after": "<60 seconds"
+          }
+        ],
+        "architectureMermaid": "flowchart LR\n  subgraph Input\n    U[User Resume / JD]\n  end\n  subgraph AI\n    P[LLM Parser]\n    A[JD Analyzer]\n    T[Tailoring Engine]\n  end\n  subgraph Infra\n    S[(Supabase Auth)]\n    Z[Zustand State]\n    R[Rate Limiter]\n  end\n  subgraph Output\n    L[LaTeX Engine]\n    PDF[Final Resume]\n  end\n  U --> P --> A --> T\n  T --> L --> PDF\n  S <--> T\n  Z <--> U\n  R --> T"
+      }
+    },
+    {
       "name": "LinkedIn Content Automation Pipeline",
       "slug": "zabesync",
       "description": "**Problem:** LinkedIn content creation is time-intensive, repetitive, and often lacks real-time relevance, reducing posting consistency. \n**Solution:** Built an AI-driven n8n automation pipeline with live research, LLM-based generation, and Discord-triggered workflows with Supabase state management. \n**Impact:** Automated end-to-end ideation to publishing, reducing effort from hours to seconds and enabling consistent, high-quality output.",

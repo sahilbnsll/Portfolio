@@ -59,6 +59,7 @@ export function ProjectCard({ project }: Props) {
             <ImageWithSkeleton
               src={image}
               alt={name}
+              fallbackText={`${name} preview unavailable`}
               width={960}
               height={420}
               sizes="(max-width: 1024px) 100vw, 448px"

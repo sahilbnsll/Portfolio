@@ -8,18 +8,21 @@ import { Skeleton } from "./ui/skeleton";
 type ImageWithSkeletonProps = Omit<ImageProps, "onLoadingComplete"> & {
   containerClassName?: string;
   skeletonClassName?: string;
+  fallbackText?: string;
 };
 
 export default function ImageWithSkeleton({
   alt,
   containerClassName,
   skeletonClassName,
+  fallbackText = "Image unavailable",
   className,
   onLoad,
   onError,
   ...props
 }: ImageWithSkeletonProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   return (
     <div className={cn("relative overflow-hidden", containerClassName)}>
@@ -41,10 +44,16 @@ export default function ImageWithSkeleton({
           onLoad?.(event);
         }}
         onError={(event) => {
+          setHasError(true);
           setIsLoaded(true);
           onError?.(event);
         }}
       />
+      {hasError && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-muted/80 px-3 text-center text-xs text-muted-foreground">
+          {fallbackText}
+        </div>
+      )}
     </div>
   );
 }

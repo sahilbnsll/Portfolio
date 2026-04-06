@@ -1,5 +1,4 @@
 import { LocaleRouteNormalizer } from "next/dist/server/future/normalizers/locale-route-normalizer";
-
 export type ToolIconDef = {
   name: string;
   url: string;
@@ -127,6 +126,22 @@ export const TOOL_ICONS: Record<string, ToolIconDef> = {
   DevSecOps: {
     name: "Snyk",
     url: `${LOCAL}/DevSecOps.svg`,
+  },
+  OpenRouter: {
+    name: "OpenRouter",
+    url: `${LOCAL}/openrouter.svg`,
+  },
+  LaTeX: {
+    name: "LaTeX",
+    url: `${LOCAL}/latex.svg`,
+  },
+  Zustand: {
+    name: "Zustand",
+    url: `${LOCAL}/zustand.svg`,
+  },
+  Upstash: {
+    name: "Upstash",
+    url: `${LOCAL}/upstash.svg`,
   },
 };
 
