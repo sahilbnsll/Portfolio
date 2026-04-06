@@ -28,7 +28,7 @@
         {
           "name": "Live",
           "href": "https://luma-cv.vercel.app/",
-          "icon": "externalLink"
+          "icon": "external-link"
         }
       ],
       "detail": {

@@ -1,5 +1,5 @@
-import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { z } from "zod";
+import { isSupportedIconName } from "@/lib/lucide-icons";
 
 export const ContactFormSchema = z.object({
   name: z
@@ -16,7 +16,9 @@ export const ContactFormSchema = z.object({
 const iconLink = z.object({
   name: z.string(),
   href: z.string().url(),
-  icon: z.custom<keyof typeof dynamicIconImports>(),
+  icon: z.string().refine(isSupportedIconName, {
+    message: "Unsupported icon name.",
+  }),
 });
 export type IconLink = z.infer<typeof iconLink>;
 
