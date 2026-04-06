@@ -31,7 +31,7 @@ export default function SkillsSection({ className }: { className?: string }) {
 
   return (
     <section className={cn("scroll-mt-28", className)}>
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3 sm:grid-cols-4">
         {skillsToRender.map((skill) => {
           const icon = getToolIcon(skill.name);
           return (
@@ -39,7 +39,7 @@ export default function SkillsSection({ className }: { className?: string }) {
               key={skill.name}
               whileHover={{ y: -3, scale: 1.02 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="group relative flex flex-col items-center justify-between gap-2 rounded-xl border border-border/60 bg-card/70 px-3 py-3 text-center text-xs font-medium text-foreground backdrop-blur-sm transition-all duration-300 cursor-pointer"
+              className="group relative flex min-h-[92px] flex-col items-center justify-between gap-2 rounded-xl border border-border/60 bg-card/70 px-2.5 py-3 text-center text-[11px] font-medium text-foreground backdrop-blur-sm transition-all duration-300 cursor-pointer sm:min-h-[104px] sm:px-3 sm:text-xs"
               title={skill.description}
             >
               <div className="flex h-8 w-8 items-center justify-center rounded-lg sm:h-9 sm:w-9">
@@ -54,7 +54,7 @@ export default function SkillsSection({ className }: { className?: string }) {
                   )}
                 </div>
               </div>
-              <span className="mt-1 line-clamp-1 transition-colors duration-300 group-hover:text-primary">
+              <span className="mt-0.5 line-clamp-2 leading-tight transition-colors duration-300 group-hover:text-primary">
                 {skill.name}
               </span>
             </motion.div>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useTheme } from "next-themes";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface Particle {
   x: number;
@@ -16,17 +17,24 @@ export default function ParticleBackground() {
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>(0);
   const { resolvedTheme } = useTheme();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [viewportWidth, setViewportWidth] = useState(1024);
 
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useEffect(() => {
+    const syncViewport = () => setViewportWidth(window.innerWidth);
 
-  const isMobile =
-    typeof window !== "undefined" && window.innerWidth < 768;
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => window.removeEventListener("resize", syncViewport);
+  }, []);
 
-  const PARTICLE_COUNT = isMobile ? 25 : 50;
-  const CONNECTION_DISTANCE = 120;
-  const SPEED = 0.3;
+  const isMobile = viewportWidth < 768;
+  const isTablet = viewportWidth >= 768 && viewportWidth < 1200;
+  const shouldAnimate = !prefersReducedMotion && !isMobile;
+
+  const PARTICLE_COUNT = isMobile ? 10 : isTablet ? 20 : 34;
+  const CONNECTION_DISTANCE = isTablet ? 96 : 120;
+  const SPEED = isTablet ? 0.22 : 0.3;
 
   const initParticles = useCallback(
     (width: number, height: number) => {
@@ -38,7 +46,7 @@ export default function ParticleBackground() {
         radius: Math.random() * 1.5 + 0.5,
       }));
     },
-    [PARTICLE_COUNT],
+    [PARTICLE_COUNT, SPEED],
   );
 
   useEffect(() => {
@@ -49,14 +57,14 @@ export default function ParticleBackground() {
     if (!ctx) return;
 
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      if (particlesRef.current.length === 0) {
+      if (particlesRef.current.length !== PARTICLE_COUNT) {
         initParticles(window.innerWidth, window.innerHeight);
       }
     };
@@ -72,15 +80,14 @@ export default function ParticleBackground() {
       ? "rgba(255, 255, 255,"
       : "rgba(0, 0, 0,";
 
-    const draw = () => {
+    const drawFrame = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
       ctx.clearRect(0, 0, w, h);
 
       const particles = particlesRef.current;
 
-      // Update positions
-      if (!prefersReducedMotion) {
+      if (shouldAnimate) {
         for (const p of particles) {
           p.x += p.vx;
           p.y += p.vy;
@@ -93,7 +100,6 @@ export default function ParticleBackground() {
         }
       }
 
-      // Draw connections (skip on mobile for performance)
       if (!isMobile) {
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
@@ -121,17 +127,24 @@ export default function ParticleBackground() {
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
       }
-
-      animationRef.current = requestAnimationFrame(draw);
     };
 
-    animationRef.current = requestAnimationFrame(draw);
+    if (shouldAnimate) {
+      const animateFrame = () => {
+        drawFrame();
+        animationRef.current = requestAnimationFrame(animateFrame);
+      };
+
+      animationRef.current = requestAnimationFrame(animateFrame);
+    } else {
+      drawFrame();
+    }
 
     return () => {
       cancelAnimationFrame(animationRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, [resolvedTheme, prefersReducedMotion, isMobile, initParticles]);
+  }, [CONNECTION_DISTANCE, PARTICLE_COUNT, initParticles, isMobile, resolvedTheme, shouldAnimate]);
 
   return (
     <canvas

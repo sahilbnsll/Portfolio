@@ -58,18 +58,18 @@ export default function Home() {
   }, []);
 
   return (
-    <article className="mt-8 flex flex-col gap-20 pb-16">
+    <article className="mt-6 flex flex-col gap-16 pb-14 sm:mt-8 sm:gap-20 sm:pb-16">
       {/* ── Hero ── */}
       <section
         id="top"
-        className="relative flex flex-col items-start gap-8 md:flex-row-reverse md:items-center md:justify-between"
+        className="relative flex flex-col items-center gap-10 md:flex-row-reverse md:items-center md:justify-between md:gap-12"
       >
-        <div className="animate-fade-in-up relative z-10">
-          <SwipeCards className="md:mr-8" />
+        <div className="animate-fade-in-up relative z-10 mx-auto w-full max-w-[220px] self-center sm:max-w-[240px] md:mx-0 md:w-auto md:max-w-none">
+          <SwipeCards className="mx-auto md:mr-2 lg:mr-8" />
         </div>
 
-        <div className="animate-fade-in-up-d1 relative z-10 flex max-w-[320px] flex-col opacity-0 sm:max-w-full">
-          <h1 className="title text-balance text-4xl sm:text-5xl">
+        <div className="animate-fade-in-up-d1 relative z-10 flex w-full max-w-2xl flex-col items-center text-center opacity-0 md:max-w-[32rem] md:items-start md:text-left">
+          <h1 className="title text-balance text-[2.65rem] leading-[0.94] sm:text-5xl">
             <CharacterReveal text="hi, sahil here. " delay={0.1} />
             <motion.span
               className="ml-2 inline-block origin-[70%_70%] cursor-pointer"
@@ -94,7 +94,7 @@ export default function Home() {
             </motion.span>
           </h1>
 
-          <p className="mt-2 whitespace-nowrap text-sm font-medium text-muted-foreground sm:text-base">
+          <p className="mt-2.5 text-sm font-medium text-muted-foreground sm:mt-3 sm:text-base">
             {currentAge !== null && <AnimatedNumber target={currentAge} />}
             yo DevOps engineer from India 🇮🇳
           </p>
@@ -103,11 +103,11 @@ export default function Home() {
             <AvailableForWorkBadge />
           </div>
 
-          <p className="mt-4 max-w-xl text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p className="mt-3.5 max-w-xl text-balance text-sm leading-7 text-muted-foreground sm:mt-4 sm:text-base sm:leading-relaxed">
             {homeContent.introduction.description}
           </p>
 
-          <div className="mt-3 max-w-xl">
+          <div className="mt-4 max-w-xl rounded-2xl border border-border/50 bg-card/50 px-4 py-4 backdrop-blur-sm sm:px-5">
             <p className="text-base font-bold leading-snug text-foreground sm:text-lg">
               Questions about DevOps, reliability,
               <br />
@@ -126,7 +126,7 @@ export default function Home() {
             </p>
           </div>
 
-          <section className="mt-6 flex flex-wrap items-center gap-4">
+          <section className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:mt-6 sm:gap-4 md:justify-start">
             <a
               href="/Sahil_Bansal_Resume.pdf"
               download="Sahil_Bansal_Resume.pdf"
@@ -148,10 +148,10 @@ export default function Home() {
 
       {/* ── Command Playground ── */}
       <section id="lab" className="scroll-mt-28">
-        <div className="relative rounded-2xl border border-border/40 bg-card/30 p-4 pb-5 backdrop-blur-sm sm:p-6">
+        <div className="relative rounded-2xl border border-border/40 bg-card/30 p-3 pb-4 backdrop-blur-sm sm:p-6">
           <div className="relative z-10 flex flex-col gap-4">
             <div className="min-w-0 flex-1">
-              <InteractiveTerminal className="min-h-[260px] sm:min-h-[320px]" />
+              <InteractiveTerminal className="min-h-[240px] sm:min-h-[320px]" />
             </div>
             {/* No extra helper text (keeps terminal looking clean/pro). */}
           </div>
@@ -159,7 +159,7 @@ export default function Home() {
       </section>
 
       {/* ── DevOps impact stats & Tech Stack ── */}
-      <motion.section {...sectionAnim} className="scroll-mt-28 space-y-8">
+      <motion.section {...sectionAnim} className="scroll-mt-28 space-y-6 sm:space-y-8">
         <AboutMe />
         <StatsOverview />
         <CoreSkillsExpertiseSection />

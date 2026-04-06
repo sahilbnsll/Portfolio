@@ -23,7 +23,7 @@ export default function AboutMe() {
       whileInView="animate"
       viewport={{ once: true, margin: "-100px" }}
       variants={fadeInUp}
-      className="relative scroll-mt-28 flex flex-col gap-8 overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-card/80 to-card/40 p-8 backdrop-blur-sm"
+      className="relative scroll-mt-28 flex flex-col gap-6 overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-card/80 to-card/40 p-5 backdrop-blur-sm sm:gap-8 sm:p-8"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -40,7 +40,7 @@ export default function AboutMe() {
       </div>
 
       {/* Header */}
-      <div className="relative z-10 flex flex-col gap-3">
+      <div className="relative z-10 flex flex-col gap-2.5">
         <h2 className="title text-2xl sm:text-3xl">why devops?</h2>
         <p className="text-sm text-muted-foreground sm:text-base">
           My journey, philosophy, and what drives me
@@ -48,9 +48,9 @@ export default function AboutMe() {
       </div>
 
       {/* Content Cards */}
-      <div className="relative z-10 flex flex-col gap-8 text-sm sm:text-base leading-relaxed text-foreground/90">
+      <div className="relative z-10 flex flex-col gap-4 text-sm leading-relaxed text-foreground/90 sm:gap-8 sm:text-base">
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)]"
+          className="flex gap-3 rounded-lg border border-border/30 bg-background/50 p-4 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)] sm:gap-4"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">
@@ -65,7 +65,7 @@ export default function AboutMe() {
         </motion.div>
 
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)]"
+          className="flex gap-3 rounded-lg border border-border/30 bg-background/50 p-4 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)] sm:gap-4"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">
@@ -80,7 +80,7 @@ export default function AboutMe() {
         </motion.div>
 
         <motion.div 
-          className="flex gap-4 p-4 rounded-lg border border-border/30 bg-background/50 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)]"
+          className="flex gap-3 rounded-lg border border-border/30 bg-background/50 p-4 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary/40 hover:ring-1 hover:ring-primary/25 dark:hover:ring-primary/30 hover:shadow-[0_0_35px_rgba(99,102,241,0.22)] dark:hover:shadow-[0_0_50px_rgba(99,102,241,0.32)] sm:gap-4"
           whileHover={{ translateX: 8 }}
         >
           <motion.div variants={iconVariants} className="flex-shrink-0">

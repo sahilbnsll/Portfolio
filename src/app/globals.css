@@ -120,7 +120,7 @@ html {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
   }
   .title {
     @apply font-serif text-4xl tracking-wide decoration-border/75 decoration-2 sm:text-5xl;

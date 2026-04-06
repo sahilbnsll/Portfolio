@@ -63,8 +63,8 @@ export default function Header() {
         prefersReducedMotion ? "" : "animate-slide-down-fade-in"
       }`}
     >
-      <div className="mx-auto max-w-4xl px-8 py-5">
-        <nav className="flex items-center justify-between gap-2">
+      <div className="mx-auto max-w-5xl px-4 py-3 sm:px-6 sm:py-4 md:px-8 lg:px-10">
+        <nav className="flex items-center justify-between gap-3">
           <ul className="hidden flex-wrap items-center gap-x-5 gap-y-1 lg:flex xl:gap-x-7">
             {navLinks.map((nav, id) => {
               const active = isNavActive(pathname, hash, nav.href);
@@ -105,7 +105,7 @@ export default function Header() {
           </ul>
 
           <button
-            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground lg:hidden"
+            className="rounded-full border border-border/60 bg-background/70 p-2.5 text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-foreground lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -116,7 +116,7 @@ export default function Header() {
             )}
           </button>
 
-          <div className="flex items-center gap-1 sm:gap-3">
+          <div className="flex items-center gap-1 rounded-full border border-border/60 bg-background/70 px-1.5 py-1 shadow-sm sm:gap-2 sm:px-2">
             <VisitStats />
             <ChatToggle />
             <ThemeToggle />
@@ -133,8 +133,8 @@ export default function Header() {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden border-t border-border/40 bg-background/95 backdrop-blur-md lg:hidden"
           >
-            <div className="mx-auto max-w-4xl px-8 py-4">
-              <ul className="flex flex-col gap-1">
+            <div className="mx-auto max-w-5xl px-4 py-4 sm:px-6 md:px-8 lg:px-10">
+              <ul className="flex flex-col gap-2 rounded-2xl border border-border/50 bg-card/60 p-2 shadow-lg">
                 {navLinks.map((nav, id) => {
                   const active = isNavActive(pathname, hash, nav.href);
                   const isHashLink = nav.href.startsWith("/#");

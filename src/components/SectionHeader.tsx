@@ -10,14 +10,17 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ title, description }: SectionHeaderProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const hasDescription = description.trim().length > 0;
 
   if (prefersReducedMotion) {
     return (
       <div className="flex flex-col gap-2">
         <h2 className="title text-2xl sm:text-3xl">{title}</h2>
-        <p className="text-sm text-muted-foreground sm:text-base">
-          {description}
-        </p>
+        {hasDescription ? (
+          <p className="text-sm text-muted-foreground sm:text-base">
+            {description}
+          </p>
+        ) : null}
       </div>
     );
   }
@@ -31,9 +34,11 @@ export default function SectionHeader({ title, description }: SectionHeaderProps
       className="flex flex-col gap-2"
     >
       <h2 className="title text-2xl sm:text-3xl">{title}</h2>
-      <p className="text-sm text-muted-foreground sm:text-base">
-        {description}
-      </p>
+      {hasDescription ? (
+        <p className="text-sm text-muted-foreground sm:text-base">
+          {description}
+        </p>
+      ) : null}
     </motion.div>
   );
 }

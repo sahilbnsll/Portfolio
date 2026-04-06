@@ -52,7 +52,7 @@ export default function RootLayout({
           <ParticleBackground />
           <div className="flex min-h-screen flex-col">
             <Header />
-            <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-8">
+            <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 sm:px-6 md:px-8 lg:px-10">
               <MainContentProvider>{children}</MainContentProvider>
             </div>
             <Footer />

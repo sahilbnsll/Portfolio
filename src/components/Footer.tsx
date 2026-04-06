@@ -3,9 +3,9 @@ import Socials from "./Socials";
 export default function Footer() {
   return (
     <footer className="mt-auto border-t border-border/40">
-      <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 px-8 py-10 sm:flex-row-reverse sm:justify-between">
+      <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-4 px-4 py-8 text-center sm:flex-row-reverse sm:justify-between sm:px-6 sm:py-10 sm:text-left md:px-8 lg:px-10">
         <Socials />
-        <section className="text-center sm:text-left">
+        <section>
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()}{" "}
             <a className="link font-medium" href="/">
