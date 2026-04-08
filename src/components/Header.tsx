@@ -42,6 +42,7 @@ function isNavActive(pathname: string, hash: string, href: string): boolean {
 
 export default function Header() {
   const pathname = usePathname();
+  const currentPathname = pathname ?? "";
   const prefersReducedMotion = usePrefersReducedMotion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hash, setHash] = useState("");
@@ -67,7 +68,7 @@ export default function Header() {
         <nav className="flex items-center justify-between gap-3">
           <ul className="hidden flex-wrap items-center gap-x-5 gap-y-1 lg:flex xl:gap-x-7">
             {navLinks.map((nav, id) => {
-              const active = isNavActive(pathname, hash, nav.href);
+              const active = isNavActive(currentPathname, hash, nav.href);
               const isHashLink = nav.href.startsWith("/#");
               const linkClass = `relative inline-block py-1 text-sm font-medium tracking-wide transition-colors duration-300 ${
                 active
@@ -136,7 +137,7 @@ export default function Header() {
             <div className="mx-auto max-w-5xl px-4 py-4 sm:px-6 md:px-8 lg:px-10">
               <ul className="flex flex-col gap-2 rounded-2xl border border-border/50 bg-card/60 p-2 shadow-lg">
                 {navLinks.map((nav, id) => {
-                  const active = isNavActive(pathname, hash, nav.href);
+                  const active = isNavActive(currentPathname, hash, nav.href);
                   const isHashLink = nav.href.startsWith("/#");
                   const mobileClass = `block rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 ${
                     active

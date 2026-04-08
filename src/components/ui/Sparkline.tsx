@@ -1,13 +1,17 @@
 import React from "react";
 
+import { cn } from "@/lib/utils";
+
 interface SparklineProps {
   data: number[];
   width?: number;
   height?: number;
+  className?: string;
   color?: string;
   // optional second series for comparisons
   data2?: number[];
   color2?: string;
+  showArea?: boolean;
   // enable simple hover/click interactivity
   interactive?: boolean;
   // report which index is currently active (hovered or clicked)
@@ -32,13 +36,16 @@ export default function Sparkline({
   data2,
   width = 60,
   height = 18,
+  className,
   color = "#6366f1",
   color2 = "#ffffff66",
+  showArea = false,
   interactive = false,
   onActiveIndexChange,
 }: SparklineProps) {
   // Initialize state BEFORE any early returns
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const gradientId = React.useId();
 
   if (!data || data.length === 0) return null;
   const { points, coords } = buildPoints(data, width, height);
@@ -46,6 +53,12 @@ export default function Sparkline({
     data2 && data2.length === data.length
       ? buildPoints(data2, width, height)
       : null;
+  const areaPath =
+    coords.length > 0
+      ? `M 0 ${height} L ${coords
+          .map((point) => `${point.x} ${point.y}`)
+          .join(" L ")} L ${width} ${height} Z`
+      : "";
 
   const segmentWidth = data.length > 1 ? width / data.length : width;
 
@@ -59,8 +72,21 @@ export default function Sparkline({
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className="overflow-visible"
+      className={cn("overflow-visible", className)}
+      preserveAspectRatio="none"
     >
+      {showArea ? (
+        <defs>
+          <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.32" />
+            <stop offset="80%" stopColor={color} stopOpacity="0.04" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      ) : null}
+      {showArea && areaPath ? (
+        <path d={areaPath} fill={`url(#${gradientId})`} />
+      ) : null}
       {secondary && (
         <polyline
           fill="none"

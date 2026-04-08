@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const revalidate = 0;
 
+const NO_STORE_CACHE_CONTROL = "no-store, no-cache, max-age=0, must-revalidate";
+
 interface VercelTimeSeriesEntry {
   key: string;
   total?: number;
@@ -70,7 +72,10 @@ export async function GET(request: NextRequest) {
     console.log("Request URL:", timeseriesUrl.toString());
 
     // Fetch data
-    const response = await fetch(timeseriesUrl.toString(), { headers });
+    const response = await fetch(timeseriesUrl.toString(), {
+      headers,
+      cache: "no-store",
+    });
 
     console.log("Response status:", response.status);
 
@@ -183,8 +188,11 @@ export async function GET(request: NextRequest) {
       monthPageviewTrend: monthPageviewTrend.length > 0 ? monthPageviewTrend : [0],
     };
 
-    console.log("Returning stats:", stats);
-    return NextResponse.json(stats);
+    return NextResponse.json(stats, {
+      headers: {
+        "Cache-Control": NO_STORE_CACHE_CONTROL,
+      },
+    });
   } catch (error) {
     console.error("Error fetching stats:", error);
     const errorMessage =
@@ -196,7 +204,12 @@ export async function GET(request: NextRequest) {
         error: "Failed to fetch statistics",
         details: errorMessage,
       },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": NO_STORE_CACHE_CONTROL,
+        },
+      }
     );
   }
 }

@@ -1,10 +1,13 @@
 "use client";
 
-import { Button } from "./ui/Button";
-import { CalendarDays, CalendarRange, CalendarCheck, BarChart3, X, RefreshCw } from "lucide-react";
-import Image from "next/image";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { BarChart3, Clock3, Eye, RefreshCw, Users, X } from "lucide-react";
+
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { cn } from "@/lib/utils";
+
+import { Button } from "./ui/Button";
 import Sparkline from "./ui/Sparkline";
 import StatDelta from "./ui/StatDelta";
 
@@ -15,10 +18,10 @@ interface Stats {
   todayDelta?: number;
   weekDelta?: number;
   monthDelta?: number;
+  pageViewsDelta?: number;
   todayTrend?: number[];
   weekTrend?: number[];
   monthTrend?: number[];
-  // pageviews
   pageViews?: {
     today: number;
     week: number;
@@ -29,12 +32,41 @@ interface Stats {
   monthPageviewTrend?: number[];
 }
 
+type MetricKey = "visitors" | "pageviews";
+
+function sumSeries(values?: number[]) {
+  return (values ?? []).reduce((sum, value) => sum + value, 0);
+}
+
+function calculateDelta(current: number, previous: number) {
+  if (previous <= 0) return 0;
+  return Math.round(((current - previous) / previous) * 100);
+}
+
+function formatRelativeRefresh(lastFetchedAt: number | null) {
+  if (!lastFetchedAt) return "Syncing";
+
+  const elapsedMs = Date.now() - lastFetchedAt;
+  const elapsedMinutes = Math.floor(elapsedMs / 60000);
+
+  if (elapsedMinutes <= 0) return "Just now";
+  if (elapsedMinutes === 1) return "1m ago";
+  if (elapsedMinutes < 60) return `${elapsedMinutes}m ago`;
+
+  return new Date(lastFetchedAt).toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export default function VisitStats() {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [activeMetric, setActiveMetric] = useState<"visitors" | "pageviews">(
-    "visitors",
-  );
+  const [activeMetric, setActiveMetric] = useState<MetricKey>("visitors");
+  const [isLoading, setIsLoading] = useState(false);
+  const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null);
+  const [activePointIndex, setActivePointIndex] = useState<number | null>(null);
   const [stats, setStats] = useState<Stats>({
     today: 0,
     week: 0,
@@ -45,465 +77,584 @@ export default function VisitStats() {
     todayTrend: [],
     weekTrend: [],
     monthTrend: [],
+    pageViews: {
+      today: 0,
+      week: 0,
+      month: 0,
+    },
+    todayPageviewTrend: [],
+    weekPageviewTrend: [],
+    monthPageviewTrend: [],
   });
-  const [isLoading, setIsLoading] = useState(false);
-  // For animated counters
-  const [displayStats, setDisplayStats] = useState({ today: 0, week: 0, month: 0 });
-  const [displayPVs, setDisplayPVs] = useState({ today: 0, week: 0, month: 0 });
-  const animRefsVisitors = useRef<{ [key: string]: NodeJS.Timeout | null }>({
-    today: null,
-    week: null,
-    month: null,
-  });
-  const animRefsPV = useRef<{ [key: string]: NodeJS.Timeout | null }>({
-    today: null,
-    week: null,
-    month: null,
-  });
-
-  const animateCount = useCallback((key: keyof typeof displayStats, to: number) => {
-    if (animRefsVisitors.current[key]) {
-      clearInterval(animRefsVisitors.current[key]!);
-    }
-
-    setDisplayStats((prev) => {
-      const start = prev[key];
-      let frame = 0;
-      const duration = 600;
-      const steps = 24;
-
-      animRefsVisitors.current[key] = setInterval(() => {
-        frame++;
-        const value = Math.round(start + ((to - start) * frame) / steps);
-        setDisplayStats((current) => ({
-          ...current,
-          [key]: value,
-        }));
-        if (frame >= steps) {
-          setDisplayStats((current) => ({ ...current, [key]: to }));
-          if (animRefsVisitors.current[key]) {
-            clearInterval(animRefsVisitors.current[key]!);
-            animRefsVisitors.current[key] = null;
-          }
-        }
-      }, duration / steps);
-      return prev;
-    });
-  }, []);
-
-  const animateCountPV = useCallback((key: keyof typeof displayPVs, to: number) => {
-    if (animRefsPV.current[key]) {
-      clearInterval(animRefsPV.current[key]!);
-    }
-
-    setDisplayPVs((prev) => {
-      const start = prev[key];
-      let frame = 0;
-      const duration = 600;
-      const steps = 24;
-
-      animRefsPV.current[key] = setInterval(() => {
-        frame++;
-        const value = Math.round(start + ((to - start) * frame) / steps);
-        setDisplayPVs((current) => ({
-          ...current,
-          [key]: value,
-        }));
-        if (frame >= steps) {
-          setDisplayPVs((current) => ({ ...current, [key]: to }));
-          if (animRefsPV.current[key]) {
-            clearInterval(animRefsPV.current[key]!);
-            animRefsPV.current[key] = null;
-          }
-        }
-      }, duration / steps);
-      return prev;
-    });
-  }, []);
 
   const fetchStats = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch("/api/stats");
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Stats fetched from API:", data);
-        setStats(data);
+      const response = await fetch("/api/stats", {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        console.error("Failed to fetch stats:", response.status);
+        return;
       }
+
+      const data = (await response.json()) as Stats;
+      setStats(data);
+      setLastFetchedAt(Date.now());
     } catch (error) {
       console.error("Failed to fetch stats:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
-
-  const refetch = useCallback(async () => {
-    setIsLoading(true);
-    await fetchStats();
-    setIsLoading(false);
-  }, [fetchStats]);
 
   useEffect(() => {
     setIsMounted(true);
-    // Fetch stats on initial mount for first page load
-    fetchStats();
+    void fetchStats();
   }, [fetchStats]);
 
   useEffect(() => {
-    if (isOpen) {
-      refetch();
-    }
-  }, [isOpen, refetch]);
+    if (!isOpen) return;
 
-  // Refetch when switching between visitors and pageviews tabs
-  useEffect(() => {
-    if (isOpen) {
-      refetch();
+    const isStale = !lastFetchedAt || Date.now() - lastFetchedAt > 2 * 60 * 1000;
+    if (isStale) {
+      void fetchStats();
     }
-  }, [activeMetric, isOpen, refetch]);
+  }, [fetchStats, isOpen, lastFetchedAt]);
 
-  // Animate on stats change
   useEffect(() => {
-    console.log("useEffect triggered - stats:", { today: stats.today, week: stats.week, month: stats.month, displayStats });
-    if (!isLoading) {
-      console.log("Calling animateCount with:", { today: stats.today, week: stats.week, month: stats.month });
-      animateCount("today", stats.today);
-      animateCount("week", stats.week);
-      animateCount("month", stats.month);
-      if (stats.pageViews) {
-        animateCountPV("today", stats.pageViews.today);
-        animateCountPV("week", stats.pageViews.week);
-        animateCountPV("month", stats.pageViews.month);
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
       }
-    }
-  }, [stats.today, stats.week, stats.month, isLoading, animateCount, animateCountPV, stats.pageViews]);
+    };
 
-  const visitorsTotal = displayStats.month;
-  const pageViewsTotal = displayPVs.month;
-  const visitorsDelta = stats.monthDelta ?? 0;
-  const pageViewsDelta = stats.monthDelta ?? 0;
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    setActivePointIndex(null);
+  }, [activeMetric]);
+
+  const visitorsToday = stats.today > 0 ? stats.today : (stats.monthTrend ?? []).at(-1) ?? 0;
+  const visitorsWeek = stats.week > 0 ? stats.week : sumSeries(stats.weekTrend);
+  const visitorsMonth = stats.month > 0 ? stats.month : sumSeries(stats.monthTrend);
+
+  const pageViewsToday =
+    (stats.pageViews?.today ?? 0) > 0
+      ? stats.pageViews?.today ?? 0
+      : (stats.monthPageviewTrend ?? []).at(-1) ?? 0;
+  const pageViewsWeek =
+    (stats.pageViews?.week ?? 0) > 0
+      ? stats.pageViews?.week ?? 0
+      : sumSeries(stats.weekPageviewTrend);
+  const pageViewsMonth =
+    (stats.pageViews?.month ?? 0) > 0
+      ? stats.pageViews?.month ?? 0
+      : sumSeries(stats.monthPageviewTrend);
 
   const visitorsTrend = stats.monthTrend ?? [];
   const pageViewsTrend = stats.monthPageviewTrend ?? [];
-
-  // Build simple date labels for the last N days, ending today.
-  const trendLength =
-    visitorsTrend.length || pageViewsTrend.length || 0;
+  const trendLength = visitorsTrend.length || pageViewsTrend.length || 0;
   const trendLabels =
     trendLength > 0
-      ? Array.from({ length: trendLength }, (_, idx) => {
-        const d = new Date();
-        d.setDate(d.getDate() - (trendLength - 1 - idx));
-        return d.toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-        });
-      })
+      ? Array.from({ length: trendLength }, (_, index) => {
+          const date = new Date();
+          date.setDate(date.getDate() - (trendLength - 1 - index));
+          return date.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          });
+        })
       : [];
 
-  const [activePointIndex, setActivePointIndex] = useState<number | null>(null);
-  // Use chart color variables so lines adapt between light/dark themes.
-  const primaryLineColor =
+  const previousVisitorsDay = visitorsTrend.at(-2) ?? 0;
+  const previousPageViewsDay = pageViewsTrend.at(-2) ?? 0;
+  const previousVisitorsWeek = sumSeries(visitorsTrend.slice(-14, -7));
+  const previousPageViewsWeek = sumSeries(pageViewsTrend.slice(-14, -7));
+
+  const metrics = {
+    visitors: {
+      label: "Visitors",
+      icon: Users,
+      accentBorder: "border-cyan-400/30",
+      accentBackground:
+        "bg-[linear-gradient(135deg,rgba(37,99,235,0.24),rgba(34,211,238,0.18),rgba(16,185,129,0.14))]",
+      accentText: "text-cyan-100",
+      chartColor: "hsl(var(--chart-1))",
+      total: visitorsMonth,
+      trend: visitorsTrend,
+      delta: stats.monthDelta ?? 0,
+      today: visitorsToday,
+      week: visitorsWeek,
+      month: visitorsMonth,
+      todayDelta: stats.todayDelta ?? calculateDelta(visitorsToday, previousVisitorsDay),
+      weekDelta: stats.weekDelta ?? calculateDelta(visitorsWeek, previousVisitorsWeek),
+      monthDelta: stats.monthDelta ?? 0,
+      short: "UV",
+    },
+    pageviews: {
+      label: "Page Views",
+      icon: Eye,
+      accentBorder: "border-amber-400/30",
+      accentBackground:
+        "bg-[linear-gradient(135deg,rgba(251,191,36,0.2),rgba(249,115,22,0.16),rgba(244,63,94,0.12))]",
+      accentText: "text-amber-50",
+      chartColor: "hsl(var(--chart-4))",
+      total: pageViewsMonth,
+      trend: pageViewsTrend,
+      delta: stats.pageViewsDelta ?? 0,
+      today: pageViewsToday,
+      week: pageViewsWeek,
+      month: pageViewsMonth,
+      todayDelta: calculateDelta(pageViewsToday, previousPageViewsDay),
+      weekDelta: calculateDelta(pageViewsWeek, previousPageViewsWeek),
+      monthDelta: stats.pageViewsDelta ?? 0,
+      short: "PV",
+    },
+  } as const;
+
+  const active = metrics[activeMetric];
+  const comparisonMetric = activeMetric === "visitors" ? metrics.pageviews : metrics.visitors;
+  const peakIndex = active.trend.reduce((bestIndex, value, index, values) => {
+    return value > (values[bestIndex] ?? 0) ? index : bestIndex;
+  }, 0);
+  const highlightedIndex =
+    activePointIndex !== null && active.trend[activePointIndex] !== undefined
+      ? activePointIndex
+      : null;
+  const highlightedValue =
+    highlightedIndex !== null ? active.trend[highlightedIndex] ?? active.total : active.total;
+  const highlightedLabel =
+    highlightedIndex !== null ? trendLabels[highlightedIndex] ?? "30D" : "Last 30 Days";
+  const averagePerDay = active.trend.length > 0 ? Math.round(active.total / active.trend.length) : 0;
+  const peakLabel = trendLabels[peakIndex] ?? "N/A";
+  const peakValue = active.trend[peakIndex] ?? 0;
+  const lastUpdatedText = formatRelativeRefresh(lastFetchedAt);
+  const activeTodayTrend =
     activeMetric === "visitors"
-      ? "hsl(var(--chart-1))"
-      : "hsl(var(--chart-4))";
-  const secondaryLineColor =
-    activeMetric === "visitors"
-      ? "hsl(var(--chart-2))"
-      : "hsl(var(--chart-5))";
+      ? [previousVisitorsDay, visitorsToday]
+      : [previousPageViewsDay, pageViewsToday];
+  const activeWeekTrend =
+    activeMetric === "visitors" ? stats.weekTrend ?? [] : stats.weekPageviewTrend ?? [];
+  const comparisonTrend =
+    comparisonMetric.trend.length === active.trend.length ? comparisonMetric.trend : undefined;
+  const activityBars = active.trend.slice(-20);
+  const maxBarValue = Math.max(...activityBars, 1);
+
+  const rangeCards = [
+    {
+      label: "1D",
+      value: active.today,
+      delta: active.todayDelta,
+      trend: activeTodayTrend,
+    },
+    {
+      label: "7D",
+      value: active.week,
+      delta: active.weekDelta,
+      trend: activeWeekTrend,
+    },
+    {
+      label: "30D",
+      value: active.month,
+      delta: active.monthDelta,
+      trend: active.trend,
+    },
+  ];
 
   return (
     <>
       <Button
-        size="icon"
         variant="ghost"
         title="View visit statistics"
+        aria-label="View visit statistics"
         onClick={() => setIsOpen(true)}
+        className="group relative h-11 overflow-hidden rounded-full border border-border/60 bg-background/70 px-2.5 text-muted-foreground shadow-[0_14px_40px_rgba(15,23,42,0.08)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:bg-card/85 hover:text-foreground sm:px-3"
       >
-        <BarChart3 className="size-5" />
-        <span className="sr-only">Visit Statistics</span>
+        <span className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_45%),radial-gradient(circle_at_right,rgba(245,158,11,0.12),transparent_40%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <span className="relative inline-flex size-8 items-center justify-center rounded-full border border-foreground/10 bg-foreground text-background shadow-sm transition-transform duration-300 group-hover:scale-105">
+          <BarChart3 className="size-4" />
+        </span>
+        <span className="relative hidden flex-col items-start leading-none sm:flex">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            Stats
+          </span>
+          <span className="text-sm font-semibold text-foreground">Visitors</span>
+        </span>
+        <span className="relative hidden min-w-20 items-center justify-center rounded-full border border-border/60 bg-background/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground md:inline-flex">
+          {visitorsMonth.toLocaleString()}
+        </span>
       </Button>
 
-      {isMounted && isOpen &&
-        createPortal(
-          <div className="fixed inset-0 z-[2000]">
-            <div
-              className="absolute inset-0 bg-black/40"
-              onClick={() => setIsOpen(false)}
-            />
-
-            <div
-              role="dialog"
-              aria-modal="true"
-              className="fixed left-1/2 top-1/2 z-[2001] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 border border-border bg-background/95 text-foreground shadow-2xl dark:bg-slate-950/90 dark:text-slate-50"
-              style={{
-                borderRadius: 28,
-                boxShadow: "0 20px 60px rgba(2,6,23,0.6)",
-                backdropFilter: "blur(28px) saturate(1.15)",
-                WebkitBackdropFilter: "blur(28px) saturate(1.15)",
-              }}
-            >
-              {/* Glass gradient + inline SVG noise overlay (fallback-safe) */}
-              <div
-                className="pointer-events-none absolute inset-0 z-0"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="f"><feTurbulence baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23f)" opacity="0.04"/></svg>')`,
-                  backgroundSize: "cover",
-                  backgroundBlendMode: "overlay",
-                  opacity: 1,
-                }}
+      {isMounted && isOpen
+        ? createPortal(
+            <div className="fixed inset-0 z-[2000]">
+              <button
+                type="button"
+                aria-label="Close visit statistics"
+                className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+                onClick={() => setIsOpen(false)}
               />
 
-              <div className="relative z-10 p-6">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-md text-foreground/70 hover:bg-foreground/10 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/30"
-                >
-                  <X className="size-4" />
-                  <span className="sr-only">Close</span>
-                </button>
-
-                <div className="flex items-center justify-start gap-3">
-                  <div className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground dark:text-white">
-                    <BarChart3 className="size-5 text-[hsl(var(--chart-1))]" />
-                    Visit Statistics
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={refetch}
-                    disabled={isLoading}
-                    title="Refresh stats"
-                    className="size-8"
-                  >
-                    <RefreshCw
-                      className={`size-4 ${isLoading ? "animate-spin" : ""}`}
-                    />
-                  </Button>
-                </div>
-
-                {/* Top summary row as interactive buttons: Visitors / Page Views */}
-                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      refetch();
-                      setActiveMetric("visitors");
+              <div className="fixed bottom-4 left-1/2 z-[2001] w-[min(calc(100vw-1.25rem),34rem)] -translate-x-1/2 sm:top-1/2 sm:bottom-auto sm:w-[min(1040px,calc(100vw-2rem))] sm:-translate-y-1/2">
+                <div className="relative flex max-h-[68svh] flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[#07111f]/95 text-white shadow-[0_40px_160px_rgba(2,6,23,0.78)] sm:max-h-[min(88vh,860px)] sm:rounded-[34px]">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.26),transparent_32%),radial-gradient(circle_at_85%_18%,rgba(34,211,238,0.18),transparent_30%),radial-gradient(circle_at_80%_88%,rgba(251,191,36,0.16),transparent_28%)]" />
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.08]"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px)",
+                      backgroundSize: "72px 72px",
                     }}
-                    className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${activeMetric === "visitors"
-                      ? "border border-border bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-1))] dark:via-[hsl(var(--chart-2))] dark:to-[hsl(var(--chart-3))]"
-                      : "border border-blue-400/40 bg-gradient-to-r from-blue-400/15 via-cyan-400/10 to-teal-400/10 text-foreground/90 dark:border-[hsl(var(--chart-1))]/40 dark:bg-gradient-to-r dark:from-[hsl(var(--chart-1))]/20 dark:via-[hsl(var(--chart-2))]/15 dark:to-[hsl(var(--chart-3))]/15 dark:text-foreground hover:border-blue-400/60 hover:bg-gradient-to-r hover:from-blue-400/25 hover:via-cyan-400/20 hover:to-teal-400/20 dark:hover:border-[hsl(var(--chart-1))]/60 dark:hover:bg-gradient-to-r dark:hover:from-[hsl(var(--chart-1))]/25 dark:hover:via-[hsl(var(--chart-2))]/20 dark:hover:to-[hsl(var(--chart-3))]/20"
-                      }`}
-                  >
-                    <div
-                      className={`text-xs font-semibold uppercase tracking-[0.16em] ${activeMetric === "visitors"
-                        ? "text-white/75"
-                        : "text-foreground/70"
-                        }`}
-                    >
-                      Visitors
-                    </div>
-                    <div className="mt-1 flex items-baseline gap-2">
-                      <span
-                        className={`text-2xl font-semibold leading-tight ${activeMetric === "visitors"
-                          ? "text-white"
-                          : "text-foreground"
-                          }`}
-                      >
-                        {visitorsTotal.toLocaleString()}
-                      </span>
-                      {typeof visitorsDelta === "number" && visitorsDelta !== 0 && (
-                        <StatDelta delta={visitorsDelta} />
-                      )}
-                    </div>
-                    <div
-                      className={`mt-1 text-xs ${activeMetric === "visitors"
-                        ? "text-white/80"
-                        : "text-foreground/70"
-                        }`}
-                    >
-                      Unique visitors this month
-                    </div>
-                  </button>
+                  />
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      refetch();
-                      setActiveMetric("pageviews");
-                    }}
-                    className={`rounded-2xl px-4 py-3 text-left shadow-sm transition-all ${activeMetric === "pageviews"
-                      ? "border border-border bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-[0_18px_40px_rgba(15,23,42,0.75)] dark:from-[hsl(var(--chart-4))] dark:via-[hsl(var(--chart-5))] dark:to-[hsl(var(--chart-1))]"
-                      : "border border-amber-400/40 bg-gradient-to-r from-amber-400/15 via-orange-400/10 to-rose-400/10 text-foreground/90 dark:border-[hsl(var(--chart-4))]/40 dark:bg-gradient-to-r dark:from-[hsl(var(--chart-4))]/20 dark:via-[hsl(var(--chart-5))]/15 dark:to-[hsl(var(--chart-1))]/15 dark:text-foreground hover:border-amber-400/60 hover:bg-gradient-to-r hover:from-amber-400/25 hover:via-orange-400/20 hover:to-rose-400/20 dark:hover:border-[hsl(var(--chart-4))]/60 dark:hover:bg-gradient-to-r dark:hover:from-[hsl(var(--chart-4))]/25 dark:hover:via-[hsl(var(--chart-5))]/20 dark:hover:to-[hsl(var(--chart-1))]/20"
-                      }`}
-                  >
-                    <div
-                      className={`text-xs font-semibold uppercase tracking-[0.16em] ${activeMetric === "pageviews"
-                        ? "text-white/75"
-                        : "text-foreground/70"
-                        }`}
-                    >
-                      Page Views
+                  <div className="relative min-h-0 flex-1 overflow-y-auto">
+                    <div className="flex justify-center pt-3 sm:hidden">
+                      <span className="h-1 w-14 rounded-full bg-white/15" />
                     </div>
-                    <div className="mt-1 flex items-baseline gap-2">
-                      <span
-                        className={`text-2xl font-semibold leading-tight ${activeMetric === "pageviews"
-                          ? "text-white"
-                          : "text-foreground"
-                          }`}
-                      >
-                        {pageViewsTotal.toLocaleString()}
-                      </span>
-                      {typeof pageViewsDelta === "number" && pageViewsDelta !== 0 && (
-                        <StatDelta delta={pageViewsDelta} />
-                      )}
-                    </div>
-                    <div
-                      className={`mt-1 text-xs ${activeMetric === "pageviews"
-                        ? "text-white/80"
-                        : "text-foreground/70"
-                        }`}
-                    >
-                      Page views this month
-                    </div>
-                  </button>
-                </div>
 
-                {/* Detail panel for the active metric: line graph + numeric trends */}
-                <div className="mt-6 rounded-2xl border border-border bg-gradient-to-br from-white/85 via-white/80 to-slate-100 px-4 py-4 text-slate-900 dark:from-slate-900/80 dark:via-slate-900/70 dark:to-slate-800/80 dark:text-slate-50">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <div className="text-xs font-medium uppercase tracking-[0.16em] text-foreground/70 dark:text-white/60">
-                        {activeMetric === "visitors" ? "Visitors" : "Page Views"} ·
-                        Last 30 days
-                      </div>
-                      <div className="mt-2 flex items-baseline gap-2 text-2xl font-semibold">
-                        <span>
-                          {activePointIndex !== null
-                            ? (activeMetric === "visitors"
-                              ? visitorsTrend[activePointIndex]?.toLocaleString()
-                              : pageViewsTrend[activePointIndex]?.toLocaleString())
-                            : (activeMetric === "visitors"
-                              ? visitorsTotal.toLocaleString()
-                              : pageViewsTotal.toLocaleString())}
-                        </span>
-                        {activePointIndex !== null &&
-                          trendLabels[activePointIndex] && (
-                            <span className="rounded-full bg-foreground/10 dark:bg-white/15 px-2 py-0.5 text-xs font-medium text-foreground dark:text-white/85">
-                              {trendLabels[activePointIndex]}
+                    <div className="sticky top-0 z-10 border-b border-white/10 bg-[#07111f]/72 px-3 pb-3 pt-3 backdrop-blur-xl sm:px-6 sm:pb-5 sm:pt-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-100/90">
+                              <span
+                                className={cn(
+                                  "size-2 rounded-full bg-emerald-300",
+                                  prefersReducedMotion ? "" : "animate-pulse",
+                                )}
+                              />
+                              Live
                             </span>
-                          )}
-                      </div>
-                    </div>
-
-                    {(activeMetric === "visitors"
-                      ? visitorsTrend.length > 1
-                      : pageViewsTrend.length > 1) && (
-                        <div className="sm:w-1/2">
-                          <Sparkline
-                            data={
-                              activeMetric === "visitors"
-                                ? visitorsTrend
-                                : pageViewsTrend
-                            }
-                            width={200}
-                            height={60}
-                            color={primaryLineColor}
-                            color2={secondaryLineColor}
-                            interactive
-                            onActiveIndexChange={setActivePointIndex}
-                          />
+                            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/60">
+                              30D
+                            </span>
+                            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/60">
+                              {lastUpdatedText}
+                            </span>
+                          </div>
+                          <h2 className="mt-3 text-xl font-semibold tracking-tight text-white sm:text-3xl">
+                            Visitor Stats
+                          </h2>
                         </div>
-                      )}
+
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => void fetchStats()}
+                            disabled={isLoading}
+                            title="Refresh stats"
+                            className="size-10 rounded-full border border-white/10 bg-white/5 text-white/75 hover:bg-white/10 hover:text-white"
+                          >
+                            <RefreshCw
+                              className={cn(
+                                "size-4",
+                                isLoading && !prefersReducedMotion ? "animate-spin" : "",
+                              )}
+                            />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setIsOpen(false)}
+                            title="Close"
+                            className="size-10 rounded-full border border-white/10 bg-white/5 text-white/75 hover:bg-white/10 hover:text-white"
+                          >
+                            <X className="size-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 p-3 sm:gap-4 sm:p-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+                      <section className="grid gap-4">
+                        <div className="grid grid-cols-2 gap-3">
+                          {(Object.entries(metrics) as Array<[MetricKey, typeof metrics.visitors]>).map(
+                            ([key, metric]) => {
+                              const Icon = metric.icon;
+                              const isActive = key === activeMetric;
+
+                              return (
+                                <button
+                                  key={key}
+                                  type="button"
+                                  aria-pressed={isActive}
+                                  onClick={() => setActiveMetric(key)}
+                                  className={cn(
+                                    "group relative overflow-hidden rounded-[22px] border px-3 py-3.5 text-left transition-all duration-300 sm:rounded-[24px] sm:px-4 sm:py-4",
+                                    isActive
+                                      ? cn(
+                                          "shadow-[0_20px_55px_rgba(2,6,23,0.35)]",
+                                          metric.accentBorder,
+                                          metric.accentBackground,
+                                        )
+                                      : "border-white/10 bg-white/[0.035] hover:border-white/20 hover:bg-white/[0.06]",
+                                  )}
+                                >
+                                  <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.14),transparent_55%)] opacity-60" />
+                                  <div className="relative flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span
+                                          className={cn(
+                                            "inline-flex size-8 items-center justify-center rounded-2xl border sm:size-9",
+                                            isActive
+                                              ? "border-white/15 bg-white/10 text-white"
+                                              : "border-white/10 bg-white/[0.05] text-white/70",
+                                          )}
+                                        >
+                                          <Icon className="size-4" />
+                                        </span>
+                                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/62 sm:text-[11px] sm:tracking-[0.24em]">
+                                          {metric.label}
+                                        </p>
+                                      </div>
+
+                                      <div className="mt-4 flex items-end gap-2 sm:mt-5">
+                                        <span
+                                          className={cn(
+                                            "text-2xl font-semibold tracking-tight sm:text-4xl",
+                                            isActive ? metric.accentText : "text-white/92",
+                                          )}
+                                        >
+                                          {metric.total.toLocaleString()}
+                                        </span>
+                                        {metric.delta !== 0 ? <StatDelta delta={metric.delta} /> : null}
+                                      </div>
+                                    </div>
+
+                                    <span className="rounded-full border border-white/10 bg-white/[0.06] px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/60 sm:px-2.5 sm:text-[10px] sm:tracking-[0.22em]">
+                                      {metric.short}
+                                    </span>
+                                  </div>
+
+                                  <div className="relative mt-3 rounded-[18px] border border-white/8 bg-slate-950/25 p-2.5 sm:mt-4 sm:p-3">
+                                    <Sparkline
+                                      data={metric.trend.length > 1 ? metric.trend : [0, metric.total]}
+                                      width={280}
+                                      height={56}
+                                      className="h-10 w-full sm:h-14"
+                                      color={metric.chartColor}
+                                      showArea
+                                    />
+                                  </div>
+                                </button>
+                              );
+                            },
+                          )}
+                        </div>
+
+                        <section className="rounded-[28px] border border-white/10 bg-white/[0.04] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-md sm:p-5">
+                          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                            <div>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/58">
+                                  {active.label}
+                                </span>
+                                <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                                  {highlightedLabel}
+                                </span>
+                              </div>
+                              <div className="mt-4 flex flex-wrap items-end gap-3">
+                                <h3 className="text-3xl font-semibold tracking-tight text-white sm:text-5xl">
+                                  {highlightedValue.toLocaleString()}
+                                </h3>
+                                {active.delta !== 0 ? <StatDelta delta={active.delta} /> : null}
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 sm:min-w-[220px]">
+                              <div className="rounded-[20px] border border-white/10 bg-slate-950/35 px-4 py-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/42">
+                                  Avg
+                                </p>
+                                <p className="mt-2 text-xl font-semibold text-white">
+                                  {averagePerDay.toLocaleString()}
+                                </p>
+                              </div>
+                              <div className="rounded-[20px] border border-white/10 bg-slate-950/35 px-4 py-3">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/42">
+                                  Peak
+                                </p>
+                                <p className="mt-2 text-xl font-semibold text-white">
+                                  {peakValue.toLocaleString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {active.trend.length > 1 ? (
+                            <div className="mt-5 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.015))] p-3 sm:p-4">
+                              <Sparkline
+                                data={active.trend}
+                                data2={comparisonTrend}
+                                width={680}
+                                height={160}
+                                className="h-28 w-full sm:h-44"
+                                color={active.chartColor}
+                                color2="rgba(255,255,255,0.24)"
+                                showArea
+                                interactive
+                                onActiveIndexChange={setActivePointIndex}
+                              />
+                            </div>
+                          ) : (
+                            <div className="mt-5 rounded-[24px] border border-dashed border-white/10 bg-slate-950/35 px-4 py-8 text-center text-sm text-slate-300/65">
+                              Waiting for more data
+                            </div>
+                          )}
+
+                          {activityBars.length > 0 ? (
+                            <div className="mt-4 hidden rounded-[22px] border border-white/10 bg-slate-950/28 px-3 py-4 sm:block sm:px-4">
+                              <div className="flex h-14 items-end gap-1.5">
+                                {activityBars.map((value, index) => {
+                                  const height = `${Math.max((value / maxBarValue) * 100, 10)}%`;
+                                  const isSelected =
+                                    highlightedIndex !== null &&
+                                    highlightedIndex === active.trend.length - activityBars.length + index;
+
+                                  return (
+                                    <span
+                                      key={`${index}-${value}`}
+                                      className={cn(
+                                        "flex-1 rounded-full bg-white/14 transition-all duration-300",
+                                        isSelected ? "opacity-100" : "opacity-60",
+                                      )}
+                                      style={{
+                                        height,
+                                        background: isSelected
+                                          ? `linear-gradient(180deg, ${active.chartColor}, rgba(255,255,255,0.22))`
+                                          : undefined,
+                                      }}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ) : null}
+                        </section>
+                      </section>
+
+                      <aside className="grid gap-3 sm:gap-4">
+                        <section className="grid grid-cols-2 gap-3 min-[430px]:grid-cols-3 xl:grid-cols-1">
+                          {rangeCards.map((card) => (
+                            <div
+                              key={card.label}
+                              className="rounded-[22px] border border-white/10 bg-white/[0.04] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-md sm:p-4"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-[10px] sm:tracking-[0.22em]">
+                                  {card.label}
+                                </p>
+                                {card.delta !== 0 ? <StatDelta delta={card.delta} /> : null}
+                              </div>
+                              <p className="mt-3 text-xl font-semibold tracking-tight text-white sm:text-3xl">
+                                {card.value.toLocaleString()}
+                              </p>
+                              <div className="mt-3 hidden rounded-[18px] border border-white/8 bg-slate-950/25 p-2 sm:mt-4 sm:block sm:p-3">
+                                <Sparkline
+                                  data={card.trend.length > 1 ? card.trend : [0, card.value]}
+                                  width={220}
+                                  height={44}
+                                  className="h-8 w-full sm:h-11"
+                                  color={active.chartColor}
+                                  showArea
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </section>
+
+                        <section className="hidden rounded-[28px] border border-white/10 bg-white/[0.04] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-md sm:block">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/55">
+                                <span
+                                  className="size-2 rounded-full"
+                                  style={{ backgroundColor: active.chartColor }}
+                                />
+                                {active.label}
+                              </div>
+                              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/42">
+                                <span className="size-2 rounded-full bg-white/45" />
+                                {comparisonMetric.label}
+                              </div>
+                            </div>
+                            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/55">
+                              <Clock3 className="size-3.5" />
+                              {lastUpdatedText}
+                            </span>
+                          </div>
+
+                          <div className="mt-4 rounded-[24px] border border-white/10 bg-slate-950/35 p-4">
+                            <Sparkline
+                              data={active.trend.length > 1 ? active.trend : [0, active.total]}
+                              data2={
+                                comparisonTrend && comparisonTrend.length > 1
+                                  ? comparisonTrend
+                                  : undefined
+                              }
+                              width={260}
+                              height={88}
+                              className="h-24 w-full"
+                              color={active.chartColor}
+                              color2="rgba(255,255,255,0.34)"
+                              showArea
+                            />
+                          </div>
+
+                          <div className="mt-4 grid grid-cols-3 gap-3">
+                            <div className="rounded-[20px] border border-white/10 bg-slate-950/35 px-3 py-3">
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/42">
+                                Peak
+                              </p>
+                              <p className="mt-2 text-lg font-semibold text-white">
+                                {peakValue.toLocaleString()}
+                              </p>
+                              <p className="mt-1 text-[11px] text-white/42">{peakLabel}</p>
+                            </div>
+                            <div className="rounded-[20px] border border-white/10 bg-slate-950/35 px-3 py-3">
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/42">
+                                Avg
+                              </p>
+                              <p className="mt-2 text-lg font-semibold text-white">
+                                {averagePerDay.toLocaleString()}
+                              </p>
+                              <p className="mt-1 text-[11px] text-white/42">per day</p>
+                            </div>
+                            <div className="rounded-[20px] border border-white/10 bg-slate-950/35 px-3 py-3">
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/42">
+                                Live
+                              </p>
+                              <p className="mt-2 text-lg font-semibold text-white">
+                                {active.total.toLocaleString()}
+                              </p>
+                              <p className="mt-1 text-[11px] text-white/42">{active.short}</p>
+                            </div>
+                          </div>
+                        </section>
+                      </aside>
+                    </div>
                   </div>
-
-                  {/* Today / This week / This month numbers */}
-                  <div className="mt-4 grid grid-cols-1 gap-3 text-xs text-foreground/85 dark:text-white/85 sm:grid-cols-3">
-                    <div className="rounded-lg border border-border bg-card/95 p-3 shadow-sm dark:bg-slate-900/80">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground dark:text-slate-300/80">
-                        Today
-                      </div>
-                      <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-base font-semibold">
-                          {(
-                            activeMetric === "visitors"
-                              ? displayStats.today
-                              : displayPVs.today
-                          ).toLocaleString()}
-                        </span>
-                        {typeof stats.todayDelta === "number" &&
-                          stats.todayDelta !== 0 && (
-                            <StatDelta delta={stats.todayDelta} />
-                          )}
-                      </div>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-card/95 p-3 shadow-sm dark:bg-slate-900/80">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground dark:text-slate-300/80">
-                        This Week
-                      </div>
-                      <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-base font-semibold">
-                          {(
-                            activeMetric === "visitors"
-                              ? displayStats.week
-                              : displayPVs.week
-                          ).toLocaleString()}
-                        </span>
-                        {typeof stats.weekDelta === "number" &&
-                          stats.weekDelta !== 0 && (
-                            <StatDelta delta={stats.weekDelta} />
-                          )}
-                      </div>
-                    </div>
-
-                    <div className="rounded-lg border border-border bg-card/95 p-3 shadow-sm dark:bg-slate-900/80">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground dark:text-slate-300/80">
-                        This Month
-                      </div>
-                      <div className="mt-1 flex items-baseline gap-1">
-                        <span className="text-base font-semibold">
-                          {(
-                            activeMetric === "visitors"
-                              ? displayStats.month
-                              : displayPVs.month
-                          ).toLocaleString()}
-                        </span>
-                        {typeof stats.monthDelta === "number" &&
-                          stats.monthDelta !== 0 && (
-                            <StatDelta delta={stats.monthDelta} />
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 border-t border-foreground/10 dark:border-white/10 pt-4">
-                  <p className="flex items-center justify-center gap-1 text-xs text-foreground/70 dark:text-white/70">
-                    Powered by
-                    <span className="ml-1 inline-block opacity-90">
-                      <Image
-                        src="/img/vercel-logomark.svg"
-                        alt="Vercel"
-                        width={16}
-                        height={16}
-                        priority
-                        className="inline"
-                      />
-                    </span>
-                    <a
-                      href="https://vercel.com/analytics"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium text-foreground dark:text-white hover:underline"
-                    >
-                      Vercel Analytics
-                    </a>
-                  </p>
                 </div>
               </div>
-            </div>
-          </div>,
-          document.body,
-        )}
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
