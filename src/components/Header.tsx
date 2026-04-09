@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import ChatToggle from "./ChatToggle";
 import ThemeToggle from "./ThemeToggle";
 import VisitStats from "./VisitStats";
+import ViewModeToggle from "./ViewModeToggle";
 
 import routesData from "@/data/routes.json";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -46,6 +47,7 @@ export default function Header() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hash, setHash] = useState("");
+  const showViewToggle = currentPathname === "/" || currentPathname === "/resume";
 
   useEffect(() => {
     setHash(activeHash());
@@ -118,6 +120,12 @@ export default function Header() {
           </button>
 
           <div className="flex items-center gap-1 rounded-full border border-border/60 bg-background/70 px-1.5 py-1 shadow-sm sm:gap-2 sm:px-2">
+            {showViewToggle && (
+              <>
+                <ViewModeToggle />
+                <div className="mx-0.5 h-4 w-px bg-border/60" />
+              </>
+            )}
             <VisitStats />
             <ChatToggle />
             <ThemeToggle />

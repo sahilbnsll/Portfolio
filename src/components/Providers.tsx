@@ -1,6 +1,7 @@
 "use client";
 
 import { ChatProvider } from "@/contexts/ChatContext";
+import { ViewModeProvider } from "@/contexts/ViewModeContext";
 import { ThemeProvider, useTheme } from "next-themes";
 import React, { useEffect } from "react";
 import { Toaster } from "sonner";
@@ -18,7 +19,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       {/* <ThemeColorUpdater /> */}
       <ErrorBoundary>
         <ChatProvider>
+          <ViewModeProvider>
           {children}
+          </ViewModeProvider>
           <ClientOnly> {/* Wrap Chat with ClientOnly */}
             <Chat />
           </ClientOnly>

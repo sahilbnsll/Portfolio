@@ -35,6 +35,8 @@ const OUTPUTS: Record<string, { lines: string[]; tip?: string }> = {
       "  contact               Reach Sahil directly",
       "  open <project-slug>  Open a project case study",
       "  cat skills            Skills details (with %)",
+      "  cat cost-optimization.md   AWS cost savings breakdown",
+      "  cat incident-01.log        Production post-mortem",
       "  clear                 Reset output",
       "",
     ],
@@ -268,7 +270,15 @@ function getResponseForCmd(cmd: string): { lines: string[]; tip?: string } {
     const topic = cmd.replace(/^cat\s+/, "").trim();
     if (!topic) {
       return {
-        lines: ["Usage:", "  cat skills", "  cat experience", "  cat projects", "  cat certifications"],
+        lines: [
+          "Usage:",
+          "  cat skills",
+          "  cat experience",
+          "  cat projects",
+          "  cat certifications",
+          "  cat cost-optimization.md",
+          "  cat incident-01.log",
+        ],
         tip: "Use `ls` first to see available sections.",
       };
     }
@@ -335,6 +345,75 @@ function getResponseForCmd(cmd: string): { lines: string[]; tip?: string } {
           }),
         ],
         tip: "Use: open <project-slug>",
+      };
+    }
+
+    if (topic === "cost-optimization.md") {
+      return {
+        lines: [
+          "# Cost Optimization: Buyogo AG AWS Infrastructure",
+          "",
+          "## Problem",
+          "NAT Gateway processing ~2TB/month of S3-bound traffic at $0.045/GB.",
+          "Untracked resources from manual ClickOps provisioning inflating spend.",
+          "",
+          "## Actions Taken",
+          "1. Replaced NAT Gateway with S3 Gateway VPC Endpoint (free) for internal traffic",
+          "2. Migrated all infra to Terraform — identified and removed orphaned resources",
+          "3. Implemented Karpenter for right-sized node autoscaling (spot + reserved mix)",
+          "4. Added cost allocation tags via Terraform for per-team tracking",
+          "",
+          "## Results",
+          "- $40k/year total AWS cost reduction",
+          "- $12k/year saved on data transfer alone (VPC endpoints)",
+          "- NAT Gateway throughput freed up for actual internet-bound traffic",
+          "- Every resource now tagged and auditable",
+          "",
+          "## Lesson",
+          "Most cloud cost savings come from routing optimization and resource hygiene,",
+          "not from negotiating reserved instance pricing.",
+        ],
+        tip: "Run `open merchant-platform` to see the full case study.",
+      };
+    }
+
+    if (topic === "incident-01.log") {
+      return {
+        lines: [
+          "=====================================",
+          "INCIDENT REPORT #001 — API Latency Spike",
+          "=====================================",
+          "",
+          "Severity:    P1 (customer-facing)",
+          "Duration:    ~45 minutes",
+          "Detected:    Prometheus alert — p99 latency > 500ms",
+          "",
+          "## What Broke",
+          "API latency spiked from 120ms → 900ms during peak merchant onboarding.",
+          "SFTP file ingestion backed up. Workers stalled waiting on DB connections.",
+          "",
+          "## Root Cause",
+          "N+1 query in the tenant lookup service — each file upload triggered",
+          "a separate DB query per merchant config field instead of a single JOIN.",
+          "Combined with no connection pooling: 500 merchants = 500 concurrent",
+          "connections exhausting the RDS connection limit.",
+          "",
+          "## Fix Applied",
+          "1. Rewrote query: single JOIN replacing N+1 lookups",
+          "2. Added PgBouncer for connection pooling (max 50 pooled connections)",
+          "3. Created composite index on (tenant_id, config_key)",
+          "4. Added query duration metrics to Prometheus",
+          "",
+          "## Result",
+          "Latency: 900ms → 120ms (p99)",
+          "DB connections: 500 → 50 (pooled)",
+          "Added alerting: query duration > 200ms triggers warning",
+          "",
+          "## Prevention",
+          "- Mandatory EXPLAIN ANALYZE for queries touching tenant tables",
+          "- Load testing with 500+ concurrent tenant simulations before deploy",
+        ],
+        tip: "Production debugging starts with metrics, not logs. Check dashboards first.",
       };
     }
   }

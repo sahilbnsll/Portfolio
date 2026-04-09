@@ -24,6 +24,10 @@ export type IconLink = z.infer<typeof iconLink>;
 
 const projectDetail = z.object({
   overview: z.string().optional(),
+  problem: z.string().optional(),
+  solution: z.string().optional(),
+  tradeoffs: z.string().optional(),
+  results: z.array(z.string()).optional(),
   architectureMermaid: z.string().optional(),
   beforeAfter: z
     .array(
@@ -35,6 +39,27 @@ const projectDetail = z.object({
     )
     .optional(),
   stackHighlights: z.array(z.string()).optional(),
+  architecture: z.array(z.object({
+    title: z.string(),
+    component: z.string(),
+    detail: z.string(),
+  })).optional(),
+  decisions: z.array(z.object({
+    title: z.string(),
+    context: z.string(),
+    decision: z.string(),
+  })).optional(),
+  pipeline: z.array(z.object({
+    stage: z.string(),
+    tool: z.string(),
+    detail: z.string(),
+  })).optional(),
+  incidents: z.array(z.object({
+    title: z.string(),
+    severity: z.string(),
+    resolution: z.string(),
+    lesson: z.string(),
+  })).optional(),
 });
 
 const project = z.object({

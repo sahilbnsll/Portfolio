@@ -22,6 +22,23 @@
 .claude
 .cursor
 
+# IDE/editor directories
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+
+# Temp files
+*.tmp
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -39,3 +56,4 @@ next-env.d.ts
 
 # output files
 output/
+features.md

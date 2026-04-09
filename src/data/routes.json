@@ -25,6 +25,12 @@
       "showInNav": true
     },
     {
+      "path": "/resume",
+      "name": "resume",
+      "description": "Interactive resume with skills filter",
+      "showInNav": false
+    },
+    {
       "path": "/privacy",
       "name": "privacy",
       "description": "Privacy policy",
@@ -32,7 +38,7 @@
     },
     {
       "path": "/Sahil_Bansal_Resume.pdf",
-      "name": "resume",
+      "name": "resume-pdf",
       "description": "Sahil's resume CV in pdf format",
       "showInNav": false
     }

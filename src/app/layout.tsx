@@ -23,10 +23,47 @@ const calistoga = Calistoga({
 });
 
 export const metadata: Metadata = {
-  title: "Sahil Bansal - DevOps Engineer",
+  metadataBase: new URL("https://sahilbansal.dev"),
+  title: {
+    default: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
+    template: "%s | Sahil Bansal",
+  },
   description:
-    "DevOps & cloud infrastructure engineer: AWS, Terraform, CI/CD, observability, and data platforms. Building reliable systems at Buyogo; workflow automation & AI integrations.",
+    "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://sahilbansal.dev",
+    siteName: "Sahil Bansal",
+    title: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
+    description:
+      "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Sahil Bansal — DevOps Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
+    description:
+      "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
 };
 
 export const viewport: Viewport = {

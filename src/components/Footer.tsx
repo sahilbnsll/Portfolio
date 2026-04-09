@@ -1,11 +1,12 @@
 import Socials from "./Socials";
+import SystemStatus from "./SystemStatus";
 
 export default function Footer() {
   return (
     <footer className="mt-auto border-t border-border/40">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-4 px-4 py-8 text-center sm:flex-row-reverse sm:justify-between sm:px-6 sm:py-10 sm:text-left md:px-8 lg:px-10">
         <Socials />
-        <section>
+        <section className="flex flex-col gap-2">
           <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()}{" "}
             <a className="link font-medium" href="/">
@@ -16,6 +17,7 @@ export default function Footer() {
               privacy?
             </a>
           </p>
+          <SystemStatus />
         </section>
       </div>
     </footer>

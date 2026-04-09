@@ -91,7 +91,7 @@ export default function CoreSkillsExpertiseSection({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-30px" }}
                   transition={{ duration: 0.35, delay: idx * 0.04 }}
-                  className="group relative rounded-xl border border-border/50 bg-card/60 p-4 cursor-pointer"
+                  className="group relative rounded-xl border border-border/50 bg-card/60 p-3.5 cursor-pointer"
                   whileHover={{ scale: 1.02 }}
                   type="button"
                   aria-label={`Show skills: ${item.name}`}
@@ -101,8 +101,8 @@ export default function CoreSkillsExpertiseSection({
                     } as CSSProperties
                   }
                 >
-                  <div className="flex flex-col gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-[color:var(--skill-color)]/30 bg-background/30 transition-all duration-300 group-hover:bg-[color:var(--skill-color)]/20 group-hover:border-[color:var(--skill-color)]/60">
+                  <div className="flex flex-col gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[color:var(--skill-color)]/30 bg-background/30 transition-all duration-300 group-hover:bg-[color:var(--skill-color)]/20 group-hover:border-[color:var(--skill-color)]/60">
                       <Icon
                         style={{ color: "var(--skill-color)" }}
                         className="size-5 opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_14px_rgba(255,255,255,0.22)] group-hover:scale-110"

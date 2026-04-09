@@ -81,7 +81,7 @@ export function ProjectCard({ project }: Props) {
             <Badge
               className={`shrink-0 whitespace-nowrap px-2 py-0.5 text-[10px] ${
                 categoryColors[category] ??
-                "bg-gray-500/10 text-gray-600 dark:text-gray-400"
+                "bg-muted text-muted-foreground"
               }`}
               variant="secondary"
             >
