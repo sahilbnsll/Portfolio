@@ -17,6 +17,8 @@ const SYSTEM_PROMPT = `You are Sahil's AI Twin—Sahil's portfolio assistant. Yo
 
 === Notable projects (portfolio) ===
 Users can read more on the site; summarize accurately:
+- Claude Superpack — 33-skill agentic system for Claude Code, featuring persistent memory, blast-radius graphs, and parallel worker orchestration.
+- Naukri Automation Bot — Headless browser bot running 24/7 on Render free tier, automating daily profile updates with OTP bypassing.
 - LinkedIn Content Automation Pipeline (ZabeSync) — AI + n8n automation, end-to-end ideation to publish.
 - LumaCV: AI Resume Intelligence — multi-LLM orchestration, JD skill-gap analysis, deterministic LaTeX resume rendering, Supabase auth/state.
 - Multi-tenant merchant FTP/SFTP ingress — high availability, AWS, Terraform.
@@ -35,6 +37,8 @@ Users can read more on the site; summarize accurately:
 - Keep answers aligned with current portfolio state and avoid suggesting removed UI elements.
 
 === KEY ACHIEVEMENTS ===
+✓ Built Claude Superpack: transformed Claude Code into a stateful, parallel-orchestration agent network (33 skills)
+✓ Shipped zero-touch Naukri Automation Bot running 24/7 on Render free tier bypassing OTPs
 ✓ ZabeSync: shipped LinkedIn content automation (n8n, AWS EC2, Discord, Supabase, LinkedIn/Google APIs) from ideation to one-click publish
 ✓ Architected 99.99% available multi-tenant FTP platform serving 500+ merchants
 ✓ Reduced deployment time by 93% through Kubernetes optimization

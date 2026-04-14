@@ -517,6 +517,33 @@ function getResponseForCmd(cmd: string): { lines: string[]; tip?: string } {
   if (cmd.startsWith("cd "))
     return { lines: [`Moved to ${cmd.replace("cd ", "")} (preview)`], tip: "Use `cd -` to return to the previous directory." };
 
+  // Claude Superpack quick guidance.
+  if (cmd.startsWith("claude-superpack")) {
+    return {
+      lines: [
+        "claude-superpack preview:",
+        "• `claude-superpack status` - Check overall status of all 33 skills",
+        "• `claude-superpack memory` - View token and context stats",
+        "• `claude-superpack graph` - See codebase blast-radius info",
+        "• `claude-superpack install` - Reinstall skills into Claude context",
+      ],
+      tip: "Superpack converts Claude Code into a stateful, orchestrating agent network.",
+    };
+  }
+
+  // Naukri Bot quick guidance.
+  if (cmd.includes("export_cookies.py") || cmd.includes("debug_local.py") || cmd.startsWith("python3 naukri_bot.py")) {
+    return {
+      lines: [
+        "naukri-bot preview:",
+        "• Launching visible browser context to solve OTP...",
+        "• Extracting persistent session cookies...",
+        "• ✓ Session exported. Paste base64 string into Render environment.",
+      ],
+      tip: "Session persistence bypassing OTP is crucial for 24/7 headless automation reliability.",
+    };
+  }
+
   // Fallback: always respond with something useful.
   return {
     lines: [

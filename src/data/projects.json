@@ -1,6 +1,222 @@
 {
   "projects": [
     {
+      "name": "Claude Superpack",
+      "slug": "claude-superpack",
+      "description": "**Problem:** Claude Code starts from scratch every time, losing context, reinventing wheels, and requiring constant hand-holding for complex tasks.\n**Solution:** Built a 33-skill agentic orchestration system for Claude Code featuring persistent memory, blast-radius-aware codebase graphs, parallel worker coordination, and self-improving behavior.\n**Impact:** Transformed a single-shot assistant into an autonomous, stateful agent that safely orchestrates complex tasks with zero external dependencies.",
+      "summary": "33-skill agentic system for Claude Code featuring orchestration, persistent memory, and structural codebase graphs.",
+      "image": "/img/claude-superpack.png",
+      "category": "Automation & AI",
+      "metrics": [
+        "33 specialized skills",
+        "87% lower token usage per review",
+        "Zero external dependencies"
+      ],
+      "tags": [
+        "Claude Code",
+        "AI Agents",
+        "Orchestration",
+        "TypeScript",
+        "Node.js",
+        "Bash"
+      ],
+      "href": "/projects/claude-superpack",
+      "links": [
+        {
+          "name": "GitHub",
+          "href": "https://github.com/sahilbnsll/claude-superpack",
+          "icon": "github"
+        }
+      ],
+      "detail": {
+        "overview": "Claude Superpack transforms Claude Code from a single-shot assistant into a persistent, self-improving agent that remembers across sessions, maps your codebase structurally, scans for security issues, and orchestrates complex tasks across parallel workers.",
+        "stackHighlights": [
+          "Node.js & Bash",
+          "Agentic Orchestration",
+          "Markdown Memory System",
+          "File-based JSON Knowledge Graphs"
+        ],
+        "architecture": [
+          {
+            "title": "Agentic Orchestration",
+            "component": "Task Decomposer & Workers",
+            "detail": "Routes requests intelligently. Complex tasks are decomposed into DAGs and executed by parallel agents orchestrated through safe-summon."
+          },
+          {
+            "title": "Persistent Memory",
+            "component": "Markdown Storage",
+            "detail": "Zero-dependency memory system using local Markdown files for recent sessions, long-term patterns, and project context."
+          },
+          {
+            "title": "Knowledge Graph",
+            "component": "Graph Builder",
+            "detail": "Structural codebase mapping using Glob/Grep/Read. Allows blast-radius-aware code reviews saving up to 87% token usage."
+          }
+        ],
+        "beforeAfter": [
+          {
+            "label": "Task Execution",
+            "before": "Manual step-by-step sequential guidance",
+            "after": "Autonomous multi-agent parallel orchestration"
+          },
+          {
+            "label": "Context Awareness",
+            "before": "Started entirely fresh every session",
+            "after": "Persistent memory and preferences across sessions"
+          }
+        ],
+        "architectureMermaid": "flowchart TD\n  U[User Request] --> R[auto-router]\n  R --> |Direct| D[direct answer]\n  R --> |Orchestrate| O[parallel-orchestrator]\n  O --> W1[Worker 1]\n  O --> W2[Worker 2]\n  W1 --> M[merge-coordinator]\n  W2 --> M\n  M --> P[post-review]",
+        "decisions": [
+          {
+            "title": "Zero external dependencies",
+            "context": "Adding databases like SQLite or ChromaDB creates friction for local agent workflows",
+            "decision": "Used pure markdown for memory and JSON for graphs, enabling instant adoption without complex installation requirements"
+          },
+          {
+            "title": "Token compaction protocol",
+            "context": "Large codebases quickly exhaust the LLM context budget during complex tasks",
+            "decision": "Implemented running estimates with an active compaction protocol where structured summaries replace raw data after each phase"
+          }
+        ],
+        "pipeline": [
+          {
+            "stage": "Analyze",
+            "tool": "auto-router",
+            "detail": "Classifies complexity and routes to the appropriate execution tier"
+          },
+          {
+            "stage": "Map",
+            "tool": "graph-builder",
+            "detail": "Constructs structural map of codebase lazily over time"
+          },
+          {
+            "stage": "Execute",
+            "tool": "parallel-orchestrator",
+            "detail": "Spawns isolated workers for decoupled parallel tasks"
+          },
+          {
+            "stage": "Verify",
+            "tool": "security-scanner",
+            "detail": "Checks for OWASP top 10 patterns and hardcoded secrets before commit"
+          }
+        ],
+        "incidents": [
+          {
+            "title": "Context budget exhaustion on large codebase reviews",
+            "severity": "P2",
+            "resolution": "Implemented graph-aware smart discovery and blast-radius filtering, dropping token usage by ~87%",
+            "lesson": "Blindly sending raw code to LLMs scales poorly\u2014pre-process and map dependencies to only pass relevant file slices"
+          },
+          {
+            "title": "Agents getting stuck in conflicting execution loops",
+            "severity": "P3",
+            "resolution": "Built a conflict-detector to map write surfaces beforehand and orchestrate workers sequentially if overlap is detected",
+            "lesson": "Parallel AI workers need strict concurrency boundries and conflict detection to avoid un-mergeable chaos"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Naukri Automation Bot",
+      "slug": "naukri-bot",
+      "description": "**Problem:** Keeping a Naukri profile active requires daily manual resume uploads, taking time and easily forgotten.\n**Solution:** Developed an automated Python bot that runs 24/7 on Render's free tier, performing headless browser automation to update the resume on a scheduled basis.\n**Impact:** Zero-touch profile refreshing ensures continuous recruiter visibility with 100% automation and bypasses OTPs via session persistence.",
+      "summary": "Headless Python automation on Render that uploads resumes to Naukri.com daily to maximize recruiter visibility.",
+      "image": "/img/naukri-bot.png",
+      "category": "Automation & AI",
+      "metrics": [
+        "100% automated profile updates",
+        "Zero cold starts on Render free tier",
+        "Bypasses OTP with session reuse"
+      ],
+      "tags": [
+        "Python",
+        "Selenium/Playwright",
+        "Docker",
+        "Render",
+        "Cron Integration"
+      ],
+      "href": "/projects/naukri-bot",
+      "links": [],
+      "detail": {
+        "overview": "A reliable automation tool running on Render's free tier that ensures a job seeker's Naukri profile remains consistently active by uploading a timestamped resume twice a day.",
+        "stackHighlights": [
+          "Python 3.11+",
+          "Headless Web Automation",
+          "Render Free Tier",
+          "Docker Containerization",
+          "cron-job.org Integrations"
+        ],
+        "architecture": [
+          {
+            "title": "Automation Engine",
+            "component": "Python Headless Browser",
+            "detail": "Navigates Naukri.com, handles authentication via restored base64 cookies to bypass OTPs, and executes file uploads."
+          },
+          {
+            "title": "Always-on Mechanism",
+            "component": "Background HTTP Daemon",
+            "detail": "Runs a secondary HTTP thread alongside the main polling thread to receive external pings, defeating Render's idle spin-down."
+          }
+        ],
+        "beforeAfter": [
+          {
+            "label": "Profile Refreshing",
+            "before": "Manual daily logins and PDF uploads",
+            "after": "Fully automated 2x daily uploads"
+          },
+          {
+            "label": "Session Handling",
+            "before": "Failing due to unexpected OTP challenges",
+            "after": "Reliable bypassing using B64-encoded saved cookies"
+          }
+        ],
+        "architectureMermaid": "flowchart TD\n  C[cron-job.org] -->|Ping every 5m| H[HTTP Daemon]\n  H --> R[Render Free Tier]\n  P[Main Poller] -->|Scheduled Time| A[Headless Browser]\n  A --> L[Restore Session Cookies]\n  L --> U[Upload Resume to Naukri]",
+        "decisions": [
+          {
+            "title": "Running on Render Free Tier",
+            "context": "Needed a consistently running script without incurring recurring cloud computing costs",
+            "decision": "Combined a background HTTP server and an external cron-job.org ping to prevent the free instance from sleeping"
+          },
+          {
+            "title": "Cookie-based Session Persistence",
+            "context": "Naukri frequently prompts automated browsers with OTP challenges block the pipeline",
+            "decision": "Exported established session cookies to an environment variable, bypassing future login screens entirely"
+          }
+        ],
+        "pipeline": [
+          {
+            "stage": "Deploy",
+            "tool": "Docker & Render",
+            "detail": "Containerized application deployed seamlessly on push to repository"
+          },
+          {
+            "stage": "Execution",
+            "tool": "Python Threads",
+            "detail": "Main thread polls for scheduled time windows, handling retries on transient errors via exponential backoff"
+          },
+          {
+            "stage": "Keep-alive",
+            "tool": "cron-job.org",
+            "detail": "External monitor pings the HTTP thread every 5 minutes to prevent cold starts"
+          }
+        ],
+        "incidents": [
+          {
+            "title": "Chrome WebDriver crashing with Out-Of-Memory (OOM)",
+            "severity": "P2",
+            "resolution": "Configured memory-saving Chrome flags and added exponential backoff on transient failures to respect Render's 512MB RAM cap",
+            "lesson": "Headless browsers are highly memory-intensive\u2014catch driver exceptions gracefully and optimize flags in constrained cloud instances"
+          },
+          {
+            "title": "Job uploads failing due to unexpected OTP prompts",
+            "severity": "P2",
+            "resolution": "Engineered session extraction via export_cookies.py and added base64 cookie injection to bypass authentication flows smoothly",
+            "lesson": "Repeated automated logins inevitably face bot detection\u2014session persistence is mandatory for reliable long-term headless tasks"
+          }
+        ]
+      }
+    },
+    {
       "name": "LumaCV: AI Resume Intelligence",
       "slug": "lumacv",
       "description": "**Problem:** Resume tailoring is a manual, error-prone process that often fails ATS screening due to poor keyword alignment and inconsistent formatting. \n**Solution:** Built an AI-first resume intelligence platform using multi-LLM orchestration to parse resumes, analyze job descriptions, and generate tailored, ATS-optimized resumes with deterministic LaTeX rendering. \n**Impact:** Reduced resume tailoring time from ~30 minutes to under 60 seconds while ensuring consistent formatting, improved keyword coverage, and higher ATS compatibility.",
@@ -45,7 +261,7 @@
           {
             "title": "Resume Builder Client",
             "component": "Next.js 14 App Router + Zustand",
-            "detail": "Multi-step wizard (Upload PDF + JD → Edit Details → AI Processing → Preview + Score) with persistent client state."
+            "detail": "Multi-step wizard (Upload PDF + JD \u2192 Edit Details \u2192 AI Processing \u2192 Preview + Score) with persistent client state."
           },
           {
             "title": "AI Orchestration Layer",
@@ -55,7 +271,7 @@
           {
             "title": "PDF Compilation",
             "component": "External LaTeX API",
-            "detail": "Serverless-compatible PDF rendering—Vercel Hobby tier can't fit LaTeX engines, so compilation is offloaded to external REST API."
+            "detail": "Serverless-compatible PDF rendering\u2014Vercel Hobby tier can't fit LaTeX engines, so compilation is offloaded to external REST API."
           }
         ],
         "beforeAfter": [
@@ -77,19 +293,58 @@
         ],
         "architectureMermaid": "flowchart LR\n  subgraph Input\n    U[User Resume / JD]\n  end\n  subgraph AI\n    P[LLM Parser]\n    A[JD Analyzer]\n    T[Tailoring Engine]\n  end\n  subgraph Infra\n    S[(Supabase Auth)]\n    Z[Zustand State]\n    R[Rate Limiter]\n  end\n  subgraph Output\n    L[LaTeX Engine]\n    PDF[Final Resume]\n  end\n  U --> P --> A --> T\n  T --> L --> PDF\n  S <--> T\n  Z <--> U\n  R --> T",
         "decisions": [
-          {"title": "External LaTeX service over local compilation", "context": "Vercel Hobby tier can't fit LaTeX engines due to size constraints", "decision": "Offload PDF compilation to external REST API to stay on free tier without sacrificing output quality"},
-          {"title": "Multi-LLM failover", "context": "Single provider downtime blocks users and creates bad experience", "decision": "OpenRouter routing with automatic fallback across 4 providers (GPT-4o Mini, Llama, Gemini, Claude)"},
-          {"title": "Client-side PDF parsing", "context": "Serverless functions have payload limits and adding file upload handling increases complexity", "decision": "Use pdfjs-dist in browser to extract text before sending to APIs, keeping server routes lightweight"}
+          {
+            "title": "External LaTeX service over local compilation",
+            "context": "Vercel Hobby tier can't fit LaTeX engines due to size constraints",
+            "decision": "Offload PDF compilation to external REST API to stay on free tier without sacrificing output quality"
+          },
+          {
+            "title": "Multi-LLM failover",
+            "context": "Single provider downtime blocks users and creates bad experience",
+            "decision": "OpenRouter routing with automatic fallback across 4 providers (GPT-4o Mini, Llama, Gemini, Claude)"
+          },
+          {
+            "title": "Client-side PDF parsing",
+            "context": "Serverless functions have payload limits and adding file upload handling increases complexity",
+            "decision": "Use pdfjs-dist in browser to extract text before sending to APIs, keeping server routes lightweight"
+          }
         ],
         "pipeline": [
-          {"stage": "Build", "tool": "Vercel", "detail": "Auto-deploy from GitHub, Next.js detected and optimized"},
-          {"stage": "Rate Limiting", "tool": "Upstash Redis", "detail": "Prevent API abuse on LLM endpoints with Redis-backed rate limiting"},
-          {"stage": "Deploy", "tool": "Vercel Edge", "detail": "maxDuration: 60 for LLM routes, Edge runtime for scoring endpoints"}
+          {
+            "stage": "Build",
+            "tool": "Vercel",
+            "detail": "Auto-deploy from GitHub, Next.js detected and optimized"
+          },
+          {
+            "stage": "Rate Limiting",
+            "tool": "Upstash Redis",
+            "detail": "Prevent API abuse on LLM endpoints with Redis-backed rate limiting"
+          },
+          {
+            "stage": "Deploy",
+            "tool": "Vercel Edge",
+            "detail": "maxDuration: 60 for LLM routes, Edge runtime for scoring endpoints"
+          }
         ],
         "incidents": [
-          {"title": "Vercel 10s function timeout on large resumes", "severity": "P2", "resolution": "Increased maxDuration to 60s and implemented client-side PDF parsing to reduce payload size", "lesson": "Serverless timeouts are hard limits—offload heavy work to client or external services"},
-          {"title": "LaTeX compiler rendering inconsistencies", "severity": "P3", "resolution": "Standardized on single external LaTeX service with deterministic templates", "lesson": "Browser PDF generation is inconsistent—deterministic LaTeX pipelines ensure predictable output"},
-          {"title": "Live editing box performance issues", "severity": "P3", "resolution": "Debounced input handling and virtualized large text areas for smooth real-time preview", "lesson": "Live preview features need debouncing and virtualization to handle large documents smoothly"}
+          {
+            "title": "Vercel 10s function timeout on large resumes",
+            "severity": "P2",
+            "resolution": "Increased maxDuration to 60s and implemented client-side PDF parsing to reduce payload size",
+            "lesson": "Serverless timeouts are hard limits\u2014offload heavy work to client or external services"
+          },
+          {
+            "title": "LaTeX compiler rendering inconsistencies",
+            "severity": "P3",
+            "resolution": "Standardized on single external LaTeX service with deterministic templates",
+            "lesson": "Browser PDF generation is inconsistent\u2014deterministic LaTeX pipelines ensure predictable output"
+          },
+          {
+            "title": "Live editing box performance issues",
+            "severity": "P3",
+            "resolution": "Debounced input handling and virtualized large text areas for smooth real-time preview",
+            "lesson": "Live preview features need debouncing and virtualization to handle large documents smoothly"
+          }
         ]
       }
     },
@@ -101,7 +356,7 @@
       "image": "/img/zabesync.png",
       "category": "Automation & AI",
       "metrics": [
-        "Hours → seconds per content cycle",
+        "Hours \u2192 seconds per content cycle",
         "Multi-API orchestration (Discord, Drive, LinkedIn)",
         "Stateful dedup via Supabase"
       ],
@@ -121,11 +376,22 @@
       "links": [],
       "detail": {
         "overview": "End-to-end automation from research and ideation to drafted posts and one-click publish, with human-in-the-loop via Discord and durable state for deduplication.",
-        "problem": "LinkedIn content creation was manual and inconsistent. Hours spent on research, drafting, and scheduling with no deduplication — leading to repeated topics and missed posting windows.",
+        "problem": "LinkedIn content creation was manual and inconsistent. Hours spent on research, drafting, and scheduling with no deduplication \u2014 leading to repeated topics and missed posting windows.",
         "solution": "Built an n8n automation pipeline on AWS EC2 with Discord as the trigger interface. LLM-powered research and drafting with Supabase for stateful deduplication. Google Drive for asset management, LinkedIn API for direct publishing.",
-        "tradeoffs": "Dependency on multiple external APIs (Discord, LinkedIn, Google Drive) creates fragility. LLM output quality varies — requires human-in-the-loop review. Self-hosted n8n on EC2 means managing infra for a content tool.",
-        "results": ["Hours to seconds per content cycle", "Zero duplicate topics via Supabase state tracking", "5-API orchestration (Discord, Drive, LinkedIn, Supabase, LLM)", "Consistent posting cadence with minimal manual effort"],
-        "stackHighlights": ["AWS EC2 + Docker", "n8n workflows", "Supabase", "LLM + web research", "LinkedIn & Google APIs"],
+        "tradeoffs": "Dependency on multiple external APIs (Discord, LinkedIn, Google Drive) creates fragility. LLM output quality varies \u2014 requires human-in-the-loop review. Self-hosted n8n on EC2 means managing infra for a content tool.",
+        "results": [
+          "Hours to seconds per content cycle",
+          "Zero duplicate topics via Supabase state tracking",
+          "5-API orchestration (Discord, Drive, LinkedIn, Supabase, LLM)",
+          "Consistent posting cadence with minimal manual effort"
+        ],
+        "stackHighlights": [
+          "AWS EC2 + Docker",
+          "n8n workflows",
+          "Supabase",
+          "LLM + web research",
+          "LinkedIn & Google APIs"
+        ],
         "architecture": [
           {
             "title": "AI Content Engine",
@@ -135,7 +401,7 @@
           {
             "title": "State Management",
             "component": "Supabase",
-            "detail": "Stores idea deduplication state, user preferences, and tracks which ideas have been pitched—prevents topic repetition across campaigns."
+            "detail": "Stores idea deduplication state, user preferences, and tracks which ideas have been pitched\u2014prevents topic repetition across campaigns."
           },
           {
             "title": "Control Interface",
@@ -157,23 +423,78 @@
         ],
         "architectureMermaid": "flowchart LR\n  subgraph ingest [Trigger & control]\n    D[Discord]\n  end\n  subgraph compute [Automation]\n    N[n8n on EC2]\n    L[LLM + research]\n  end\n  subgraph data [State & assets]\n    S[(Supabase)]\n    G[Google Drive]\n  end\n  subgraph publish [Outbound]\n    LI[LinkedIn API]\n  end\n  D --> N\n  N --> L\n  N --> S\n  N --> G\n  N --> LI\n  S --> N",
         "decisions": [
-          {"title": "n8n over custom code", "context": "Needed rapid workflow iteration without deployments for a content automation tool", "decision": "Chose n8n visual workflow builder for AI-powered pipelines—allowed iterating on LLM prompts and API integrations without code changes"},
-          {"title": "Discord as control plane", "context": "Team already used Discord for daily communication", "decision": "Made Discord the single interface for triggering, reviewing, and publishing—no separate dashboard needed, minimal context switching"}
+          {
+            "title": "n8n over custom code",
+            "context": "Needed rapid workflow iteration without deployments for a content automation tool",
+            "decision": "Chose n8n visual workflow builder for AI-powered pipelines\u2014allowed iterating on LLM prompts and API integrations without code changes"
+          },
+          {
+            "title": "Discord as control plane",
+            "context": "Team already used Discord for daily communication",
+            "decision": "Made Discord the single interface for triggering, reviewing, and publishing\u2014no separate dashboard needed, minimal context switching"
+          }
         ],
         "pipeline": [
-          {"stage": "Trigger", "tool": "Discord Bot", "detail": "Interactive buttons for /generate-ideas action"},
-          {"stage": "Research", "tool": "Web scraping + LLM", "detail": "Live web research and idea generation with deduplication"},
-          {"stage": "Drafting", "tool": "n8n workflow", "detail": "AI-powered post drafting with image generation"},
-          {"stage": "Review", "tool": "Discord Bot", "detail": "Interactive buttons for select ideas with dropdown action"},
-          {"stage": "Approval", "tool": "Discord Bot", "detail": "Interactive buttons for approve/reject actions"},
-          {"stage": "Processing", "tool": "n8n on AWS EC2", "detail": "3 interconnected workflows handle ideation → drafting → publishing with LLM reasoning"},
-          {"stage": "Storage", "tool": "Supabase + Google Drive", "detail": "State management and deduplication in Supabase, AI-generated images stored in Drive"},
-          {"stage": "Publish", "tool": "LinkedIn API", "detail": "One-click automated posting after Discord approval"}
+          {
+            "stage": "Trigger",
+            "tool": "Discord Bot",
+            "detail": "Interactive buttons for /generate-ideas action"
+          },
+          {
+            "stage": "Research",
+            "tool": "Web scraping + LLM",
+            "detail": "Live web research and idea generation with deduplication"
+          },
+          {
+            "stage": "Drafting",
+            "tool": "n8n workflow",
+            "detail": "AI-powered post drafting with image generation"
+          },
+          {
+            "stage": "Review",
+            "tool": "Discord Bot",
+            "detail": "Interactive buttons for select ideas with dropdown action"
+          },
+          {
+            "stage": "Approval",
+            "tool": "Discord Bot",
+            "detail": "Interactive buttons for approve/reject actions"
+          },
+          {
+            "stage": "Processing",
+            "tool": "n8n on AWS EC2",
+            "detail": "3 interconnected workflows handle ideation \u2192 drafting \u2192 publishing with LLM reasoning"
+          },
+          {
+            "stage": "Storage",
+            "tool": "Supabase + Google Drive",
+            "detail": "State management and deduplication in Supabase, AI-generated images stored in Drive"
+          },
+          {
+            "stage": "Publish",
+            "tool": "LinkedIn API",
+            "detail": "One-click automated posting after Discord approval"
+          }
         ],
         "incidents": [
-          {"title": "Free tier API limits causing workflow failures", "severity": "P2", "resolution": "Implemented multi-AI fallback mechanism and concise prompt engineering to reduce token usage", "lesson": "Free tiers have hard limits—design fallback chains and optimize prompts for cost efficiency"},
-          {"title": "Discord bot webhook connectivity issues", "severity": "P3", "resolution": "Configured n8n webhook node with retry logic and proper Discord bot token management", "lesson": "Webhook integrations need retry logic and proper authentication handling"},
-          {"title": "Web search API rate limiting", "severity": "P3", "resolution": "Cached research results and batched searches to minimize API calls", "lesson": "Research APIs are expensive—cache aggressively and batch requests"}
+          {
+            "title": "Free tier API limits causing workflow failures",
+            "severity": "P2",
+            "resolution": "Implemented multi-AI fallback mechanism and concise prompt engineering to reduce token usage",
+            "lesson": "Free tiers have hard limits\u2014design fallback chains and optimize prompts for cost efficiency"
+          },
+          {
+            "title": "Discord bot webhook connectivity issues",
+            "severity": "P3",
+            "resolution": "Configured n8n webhook node with retry logic and proper Discord bot token management",
+            "lesson": "Webhook integrations need retry logic and proper authentication handling"
+          },
+          {
+            "title": "Web search API rate limiting",
+            "severity": "P3",
+            "resolution": "Cached research results and batched searches to minimize API calls",
+            "lesson": "Research APIs are expensive\u2014cache aggressively and batch requests"
+          }
         ]
       }
     },
@@ -189,26 +510,42 @@
         "500+ merchants served",
         "Zero unplanned downtime target"
       ],
-      "tags": ["AWS", "SFTP", "Terraform", "High Availability", "Multi-Tenant"],
+      "tags": [
+        "AWS",
+        "SFTP",
+        "Terraform",
+        "High Availability",
+        "Multi-Tenant"
+      ],
       "href": "/projects/merchant-platform",
       "links": [],
       "detail": {
         "overview": "Multi-tenant SFTP ingress with automated provisioning and strong isolation so merchant onboarding doesn't compromise reliability.",
         "problem": "FTP ingress was a single point of failure. Frequent downtime during peak merchant onboarding. AWS costs inflated by NAT Gateway overuse and unoptimized data transfer paths.",
         "solution": "Built a multi-tenant SFTP gateway with automated AWS provisioning via Terraform. Replaced NAT Gateway with VPC endpoints for S3 traffic. Implemented connection pooling and tenant isolation at the network level.",
-        "tradeoffs": "Higher operational complexity from multi-tenant isolation. Terraform state management overhead. Chose availability over simplicity — accepted more moving parts for 99.99% uptime.",
-        "results": ["99.99% platform availability", "$40k/year AWS cost reduction", "500+ merchants with zero unplanned downtime", "Automated tenant provisioning in <5 minutes"],
-        "stackHighlights": ["AWS", "Terraform", "SFTP gateway", "HA design"],
+        "tradeoffs": "Higher operational complexity from multi-tenant isolation. Terraform state management overhead. Chose availability over simplicity \u2014 accepted more moving parts for 99.99% uptime.",
+        "results": [
+          "99.99% platform availability",
+          "$40k/year AWS cost reduction",
+          "500+ merchants with zero unplanned downtime",
+          "Automated tenant provisioning in <5 minutes"
+        ],
+        "stackHighlights": [
+          "AWS",
+          "Terraform",
+          "SFTP gateway",
+          "HA design"
+        ],
         "architecture": [
           {
             "title": "FTP Gateway",
             "component": "AWS EC2 SFTP Server",
-            "detail": "Self-managed SFTP on EC2 with chroot jail isolation—merchants and suppliers connect to shared infrastructure with strict boundaries."
+            "detail": "Self-managed SFTP on EC2 with chroot jail isolation\u2014merchants and suppliers connect to shared infrastructure with strict boundaries."
           },
           {
             "title": "Tenant Isolation",
             "component": "chroot + chmod",
-            "detail": "Linux-level chroot jails enforce directory boundaries—merchants cannot escape their dedicated folders, access controlled at OS level."
+            "detail": "Linux-level chroot jails enforce directory boundaries\u2014merchants cannot escape their dedicated folders, access controlled at OS level."
           },
           {
             "title": "Credential Management",
@@ -230,29 +567,70 @@
         ],
         "architectureMermaid": "flowchart TB\n  M[Merchants] --> SFTP[SFTP gateway tier]\n  SFTP --> S3[(Object storage)]\n  SFTP --> MET[Metadata & routing]\n  MET --> AUTO[Terraform-managed infra]",
         "decisions": [
-          {"title": "EC2 over managed SFTP", "context": "AWS Transfer Family was expensive for multi-tenant use case with many users", "decision": "Self-managed SFTP on EC2 with custom user isolation logic using chroot—significantly lower cost for high user count"},
-          {"title": "chroot over containerization", "context": "Needed lightweight isolation without Docker overhead on a single EC2 instance", "decision": "Linux-level chroot jails with chmod for directory restrictions—simpler, lower resource footprint than containers"}
+          {
+            "title": "EC2 over managed SFTP",
+            "context": "AWS Transfer Family was expensive for multi-tenant use case with many users",
+            "decision": "Self-managed SFTP on EC2 with custom user isolation logic using chroot\u2014significantly lower cost for high user count"
+          },
+          {
+            "title": "chroot over containerization",
+            "context": "Needed lightweight isolation without Docker overhead on a single EC2 instance",
+            "decision": "Linux-level chroot jails with chmod for directory restrictions\u2014simpler, lower resource footprint than containers"
+          }
         ],
         "pipeline": [
-          {"stage": "Provision", "tool": "Custom script", "detail": "Auto-create user, password, and chroot environment per tenant with proper permissions"},
-          {"stage": "Deploy", "tool": "AWS EC2", "detail": "Single instance serving all tenants with resource monitoring and SSH access for management"},
-          {"stage": "Access Control", "tool": "Linux ACLs", "detail": "chmod/chroot enforce boundaries at OS level—merchants cannot access other directories"}
+          {
+            "stage": "Provision",
+            "tool": "Custom script",
+            "detail": "Auto-create user, password, and chroot environment per tenant with proper permissions"
+          },
+          {
+            "stage": "Deploy",
+            "tool": "AWS EC2",
+            "detail": "Single instance serving all tenants with resource monitoring and SSH access for management"
+          },
+          {
+            "stage": "Access Control",
+            "tool": "Linux ACLs",
+            "detail": "chmod/chroot enforce boundaries at OS level\u2014merchants cannot access other directories"
+          }
         ],
         "incidents": [
-          {"title": "API endpoints exposed without authentication", "severity": "P1", "resolution": "Implemented private API authentication and integrated with backend for proper access control", "lesson": "All APIs must be authenticated by default—never assume internal-only access is safe"},
-          {"title": "Backend integration breaking on user creation", "severity": "P2", "resolution": "Standardized API contracts and added validation for supplier-merchant relationship creation", "lesson": "Multi-tenant systems need strict relationship validation between entities"}
+          {
+            "title": "API endpoints exposed without authentication",
+            "severity": "P1",
+            "resolution": "Implemented private API authentication and integrated with backend for proper access control",
+            "lesson": "All APIs must be authenticated by default\u2014never assume internal-only access is safe"
+          },
+          {
+            "title": "Backend integration breaking on user creation",
+            "severity": "P2",
+            "resolution": "Standardized API contracts and added validation for supplier-merchant relationship creation",
+            "lesson": "Multi-tenant systems need strict relationship validation between entities"
+          }
         ]
       }
     },
     {
       "name": "Real-Time Data Pipeline",
       "slug": "data-pipeline",
-      "description": "**Problem:** Analytics queries took minutes to return, blocking decision-making.\n**Solution:** Architected a real-time ELT pipeline using Dagster, DLT, and ClickHouse.\n**Impact:** Query latency reduced from 5–10 minutes to under 100ms, enabling real-time dashboards.",
+      "description": "**Problem:** Analytics queries took minutes to return, blocking decision-making.\n**Solution:** Architected a real-time ELT pipeline using Dagster, DLT, and ClickHouse.\n**Impact:** Query latency reduced from 5\u201310 minutes to under 100ms, enabling real-time dashboards.",
       "summary": "Real-time ELT stack with Dagster and ClickHouse that turns minute-long analytics waits into sub-100ms dashboards.",
       "image": "/img/data_pipeline.png",
       "category": "Data & Analytics",
-      "metrics": ["Minutes → sub-100ms queries", "Real-time dashboards", "ELT with Dagster + DLT"],
-      "tags": ["Dagster", "DLT", "ClickHouse", "ELT", "Data Engineering", "Python"],
+      "metrics": [
+        "Minutes \u2192 sub-100ms queries",
+        "Real-time dashboards",
+        "ELT with Dagster + DLT"
+      ],
+      "tags": [
+        "Dagster",
+        "DLT",
+        "ClickHouse",
+        "ELT",
+        "Data Engineering",
+        "Python"
+      ],
       "href": "/projects/data-pipeline",
       "links": [],
       "detail": {
@@ -266,7 +644,7 @@
           {
             "title": "Orchestration",
             "component": "Dagster Cloud",
-            "detail": "Manages job dependencies, schedules, and asset-based lineage—runs in serverless mode with proper dependency graphs."
+            "detail": "Manages job dependencies, schedules, and asset-based lineage\u2014runs in serverless mode with proper dependency graphs."
           },
           {
             "title": "Transform",
@@ -279,42 +657,98 @@
             "detail": "Raw data lands in ClickHouse (tables prefixed: buyogo_mysql_*, dlt_new_mongo_*), business users query via Metabase dashboards."
           }
         ],
-        "stackHighlights": ["Dagster", "DLT", "ClickHouse", "Python"],
+        "stackHighlights": [
+          "Dagster",
+          "DLT",
+          "ClickHouse",
+          "Python"
+        ],
         "beforeAfter": [
           {
             "label": "Query latency",
-            "before": "5–10 minute waits",
+            "before": "5\u201310 minute waits",
             "after": "Sub-100ms for core dashboards"
           }
         ],
         "architectureMermaid": "flowchart LR\n  SRC[Sources] --> DLT[DLT ingest]\n  DLT --> CH[(ClickHouse)]\n  D[Dagster orchestration] --> DLT\n  D --> CH\n  CH --> BI[Dashboards]",
         "decisions": [
-          {"title": "Sling for MySQL, DLT for MongoDB", "context": "Different data patterns—MySQL needed incremental sync, MongoDB full replace", "decision": "Best-of-breed tools per source rather than one-size-fits-all: Sling for incremental MySQL, DLT for MongoDB collections"},
-          {"title": "Dagster over Airflow", "context": "Needed modern orchestration with asset-based lineage and better observability", "decision": "Dagster Cloud for serverless deployment—explicit dependency graphs and software-defined assets"},
-          {"title": "ClickHouse over PostgreSQL", "context": "Analytical queries on large datasets were slow in row-based stores", "decision": "Columnar ClickHouse Cloud for 10x query performance—sub-100ms dashboards instead of 5-10 minute waits"}
+          {
+            "title": "Sling for MySQL, DLT for MongoDB",
+            "context": "Different data patterns\u2014MySQL needed incremental sync, MongoDB full replace",
+            "decision": "Best-of-breed tools per source rather than one-size-fits-all: Sling for incremental MySQL, DLT for MongoDB collections"
+          },
+          {
+            "title": "Dagster over Airflow",
+            "context": "Needed modern orchestration with asset-based lineage and better observability",
+            "decision": "Dagster Cloud for serverless deployment\u2014explicit dependency graphs and software-defined assets"
+          },
+          {
+            "title": "ClickHouse over PostgreSQL",
+            "context": "Analytical queries on large datasets were slow in row-based stores",
+            "decision": "Columnar ClickHouse Cloud for 10x query performance\u2014sub-100ms dashboards instead of 5-10 minute waits"
+          }
         ],
         "pipeline": [
-          {"stage": "Extract", "tool": "Sling + DLT", "detail": "MySQL incremental every 6h via Sling, MongoDB full sync via DLT"},
-          {"stage": "Load", "tool": "ClickHouse", "detail": "Raw data lands in prefixed tables: buyogo_mysql_*, dlt_new_mongo_*"},
-          {"stage": "Transform", "tool": "DBT Core", "detail": "Creates orders_data and product_data views with business logic"},
-          {"stage": "Orchestrate", "tool": "Dagster Cloud", "detail": "Manages dependencies, retries, scheduling via GitHub Actions deployment"},
-          {"stage": "Deploy", "tool": "GitHub Actions", "detail": "Branch-based: main→prod, staging→staging, test→testing environments"},
-          {"stage": "Monitor", "tool": "Metabase", "detail": "Dashboards for processed data with better visuals"}
+          {
+            "stage": "Extract",
+            "tool": "Sling + DLT",
+            "detail": "MySQL incremental every 6h via Sling, MongoDB full sync via DLT"
+          },
+          {
+            "stage": "Load",
+            "tool": "ClickHouse",
+            "detail": "Raw data lands in prefixed tables: buyogo_mysql_*, dlt_new_mongo_*"
+          },
+          {
+            "stage": "Transform",
+            "tool": "DBT Core",
+            "detail": "Creates orders_data and product_data views with business logic"
+          },
+          {
+            "stage": "Orchestrate",
+            "tool": "Dagster Cloud",
+            "detail": "Manages dependencies, retries, scheduling via GitHub Actions deployment"
+          },
+          {
+            "stage": "Deploy",
+            "tool": "GitHub Actions",
+            "detail": "Branch-based: main\u2192prod, staging\u2192staging, test\u2192testing environments"
+          },
+          {
+            "stage": "Monitor",
+            "tool": "Metabase",
+            "detail": "Dashboards for processed data with better visuals"
+          }
         ],
         "incidents": [
-          {"title": "DBT temp table conflicts in shared ClickHouse", "severity": "P2", "resolution": "Added cleanup query to pipeline—DBT temp tables now cleaned between runs", "lesson": "Shared ClickHouse schema needs explicit cleanup between runs; don't assume automatic cleanup"}
+          {
+            "title": "DBT temp table conflicts in shared ClickHouse",
+            "severity": "P2",
+            "resolution": "Added cleanup query to pipeline\u2014DBT temp tables now cleaned between runs",
+            "lesson": "Shared ClickHouse schema needs explicit cleanup between runs; don't assume automatic cleanup"
+          }
         ]
       }
     },
     {
       "name": "Infrastructure as Code Migration",
       "slug": "iac-migration",
-      "description": "**Problem:** Manual infrastructure changes led to drift, inconsistency, and slow recovery. \n**Solution:** Led comprehensive ClickOps→Terraform migration for all AWS assets with full audit trail. \n**Impact:** MTTR down 40%, infrastructure versioned, repeatability guaranteed.",
+      "description": "**Problem:** Manual infrastructure changes led to drift, inconsistency, and slow recovery. \n**Solution:** Led comprehensive ClickOps\u2192Terraform migration for all AWS assets with full audit trail. \n**Impact:** MTTR down 40%, infrastructure versioned, repeatability guaranteed.",
       "summary": "End-to-end AWS ClickOps to Terraform migration that cut MTTR by 40% and made every infra change reviewable.",
       "image": "/img/IAC_migration.png",
       "category": "Infrastructure & DevOps",
-      "metrics": ["40% lower MTTR", "Full AWS coverage in Terraform", "Auditable change trail"],
-      "tags": ["Terraform", "AWS", "IaC", "CloudFormation", "DevOps"],
+      "metrics": [
+        "40% lower MTTR",
+        "Full AWS coverage in Terraform",
+        "Auditable change trail"
+      ],
+      "tags": [
+        "Terraform",
+        "AWS",
+        "IaC",
+        "CloudFormation",
+        "DevOps"
+      ],
       "href": "/projects/iac-migration",
       "links": [],
       "detail": {
@@ -323,12 +757,12 @@
           {
             "title": "State Management",
             "component": "Terraform Cloud",
-            "detail": "Remote state with workspace isolation per environment—state locking prevents concurrent modifications."
+            "detail": "Remote state with workspace isolation per environment\u2014state locking prevents concurrent modifications."
           },
           {
             "title": "Legacy Migration",
             "component": "CloudFormation to Terraform",
-            "detail": "Imported existing CloudFormation stacks to Terraform using terraform import workflows—gradual, not big-bang."
+            "detail": "Imported existing CloudFormation stacks to Terraform using terraform import workflows\u2014gradual, not big-bang."
           },
           {
             "title": "Validation",
@@ -344,18 +778,52 @@
           }
         ],
         "decisions": [
-          {"title": "Terraform over CloudFormation", "context": "ClickOps was error-prone and unreviewable—console changes had no audit trail", "decision": "Terraform for version-controlled, reviewable infrastructure—all changes go through PR review"},
-          {"title": "Gradual migration over big-bang", "context": "Critical services couldn't have downtime during migration", "decision": "Import existing resources incrementally using terraform import rather than recreating infrastructure"},
-          {"title": "Terraform Cloud over local state", "context": "Team needed collaboration and state locking for concurrent changes", "decision": "Remote state with CI/CD integration—prevents state conflicts and enables team-wide visibility"}
+          {
+            "title": "Terraform over CloudFormation",
+            "context": "ClickOps was error-prone and unreviewable\u2014console changes had no audit trail",
+            "decision": "Terraform for version-controlled, reviewable infrastructure\u2014all changes go through PR review"
+          },
+          {
+            "title": "Gradual migration over big-bang",
+            "context": "Critical services couldn't have downtime during migration",
+            "decision": "Import existing resources incrementally using terraform import rather than recreating infrastructure"
+          },
+          {
+            "title": "Terraform Cloud over local state",
+            "context": "Team needed collaboration and state locking for concurrent changes",
+            "decision": "Remote state with CI/CD integration\u2014prevents state conflicts and enables team-wide visibility"
+          }
         ],
         "pipeline": [
-          {"stage": "Validate", "tool": "Terraform", "detail": "terraform fmt, validate, and plan on every PR"},
-          {"stage": "Plan Review", "tool": "GitHub PR", "detail": "Infrastructure changes require human approval before production apply"},
-          {"stage": "Apply", "tool": "Terraform Cloud", "detail": "Automated apply after merge with state locking and audit trail"}
+          {
+            "stage": "Validate",
+            "tool": "Terraform",
+            "detail": "terraform fmt, validate, and plan on every PR"
+          },
+          {
+            "stage": "Plan Review",
+            "tool": "GitHub PR",
+            "detail": "Infrastructure changes require human approval before production apply"
+          },
+          {
+            "stage": "Apply",
+            "tool": "Terraform Cloud",
+            "detail": "Automated apply after merge with state locking and audit trail"
+          }
         ],
         "incidents": [
-          {"title": "Generic resource names causing import conflicts", "severity": "P3", "resolution": "Established naming conventions with environment prefixes and resource types before importing", "lesson": "Use descriptive, consistent naming schemes—generic names like 'instance-1' cause confusion and import errors"},
-          {"title": "Terraform import state drift", "severity": "P2", "resolution": "Imported existing CloudFormation resources with terraform import and immediately ran terraform plan to reconcile state", "lesson": "Import then immediately plan to catch drift between actual infrastructure and desired state"}
+          {
+            "title": "Generic resource names causing import conflicts",
+            "severity": "P3",
+            "resolution": "Established naming conventions with environment prefixes and resource types before importing",
+            "lesson": "Use descriptive, consistent naming schemes\u2014generic names like 'instance-1' cause confusion and import errors"
+          },
+          {
+            "title": "Terraform import state drift",
+            "severity": "P2",
+            "resolution": "Imported existing CloudFormation resources with terraform import and immediately ran terraform plan to reconcile state",
+            "lesson": "Import then immediately plan to catch drift between actual infrastructure and desired state"
+          }
         ]
       }
     },
@@ -366,32 +834,42 @@
       "summary": "Rebuilt GitHub Actions pipelines to ship daily with ~30% faster, better-cached deployments.",
       "image": "/img/cicd_optimize.png",
       "category": "CI/CD",
-      "metrics": ["30% faster deployments", "Releases: weekly → daily", "Semantic versioning + parallel tests"],
-      "tags": ["GitHub Actions", "CI/CD", "DevOps", "Automation", "Testing"],
+      "metrics": [
+        "30% faster deployments",
+        "Releases: weekly \u2192 daily",
+        "Semantic versioning + parallel tests"
+      ],
+      "tags": [
+        "GitHub Actions",
+        "CI/CD",
+        "DevOps",
+        "Automation",
+        "Testing"
+      ],
       "href": "/projects/cicd-optimization",
       "links": [],
       "detail": {
-        "overview": "Engineering velocity through parallel jobs, better caching, and release discipline—not by skipping quality gates.",
+        "overview": "Engineering velocity through parallel jobs, better caching, and release discipline\u2014not by skipping quality gates.",
         "architecture": [
           {
             "title": "Workflow Engine",
             "component": "GitHub Actions with Matrix Strategy",
-            "detail": "Parallel job execution with matrix—unit tests, smoke tests, and Terraform validation run simultaneously instead of sequentially."
+            "detail": "Parallel job execution with matrix\u2014unit tests, smoke tests, and Terraform validation run simultaneously instead of sequentially."
           },
           {
             "title": "Quality Gates",
             "component": "Multi-stage Checks",
-            "detail": "Unit tests → smoke tests → Terraform plan/validation → PR merge gate. All must pass before merge is allowed."
+            "detail": "Unit tests \u2192 smoke tests \u2192 Terraform plan/validation \u2192 PR merge gate. All must pass before merge is allowed."
           },
           {
             "title": "Artifact Optimization",
             "component": "Shared Build Artifacts",
-            "detail": "Shared build artifacts across jobs eliminate redundant downloads—cache dependencies once, reuse in all downstream jobs."
+            "detail": "Shared build artifacts across jobs eliminate redundant downloads\u2014cache dependencies once, reuse in all downstream jobs."
           },
           {
             "title": "Branch Protection",
             "component": "GitHub Required Checks",
-            "detail": "PR must pass all checks (tests, Terraform validation, smoke tests) before merge to main is permitted—devs cannot bypass."
+            "detail": "PR must pass all checks (tests, Terraform validation, smoke tests) before merge to main is permitted\u2014devs cannot bypass."
           }
         ],
         "beforeAfter": [
@@ -402,20 +880,63 @@
           }
         ],
         "decisions": [
-          {"title": "Matrix strategy over sequential", "context": "Pipeline was taking too long with serialized test phases—mostly waiting, not computing", "decision": "Parallel job execution with matrix for faster feedback—unit tests, smoke tests, and Terraform validation run together"},
-          {"title": "PR-blocking gates", "context": "Broken code was merging to main and causing production issues", "decision": "Required checks (tests, Terraform validation, smoke tests) must pass before merge allowed—no exceptions"},
-          {"title": "Artifact caching", "context": "Re-downloading dependencies on every job was slow and wasteful", "decision": "Shared artifact storage between workflow steps—cache once, reuse everywhere, significantly reduced PR-to-merge time"}
+          {
+            "title": "Matrix strategy over sequential",
+            "context": "Pipeline was taking too long with serialized test phases\u2014mostly waiting, not computing",
+            "decision": "Parallel job execution with matrix for faster feedback\u2014unit tests, smoke tests, and Terraform validation run together"
+          },
+          {
+            "title": "PR-blocking gates",
+            "context": "Broken code was merging to main and causing production issues",
+            "decision": "Required checks (tests, Terraform validation, smoke tests) must pass before merge allowed\u2014no exceptions"
+          },
+          {
+            "title": "Artifact caching",
+            "context": "Re-downloading dependencies on every job was slow and wasteful",
+            "decision": "Shared artifact storage between workflow steps\u2014cache once, reuse everywhere, significantly reduced PR-to-merge time"
+          }
         ],
         "pipeline": [
-          {"stage": "Build", "tool": "GitHub Actions", "detail": "Matrix parallel execution, artifact caching for dependencies"},
-          {"stage": "Test", "tool": "Jest/Playwright + Terraform", "detail": "Unit tests + smoke tests + Terraform unit tests + Terraform plan/validation"},
-          {"stage": "Validate", "tool": "GitHub Branch Protection", "detail": "All checks must pass—no merge until tests, Terraform validation, and smoke tests complete"},
-          {"stage": "Report", "tool": "Sunfire", "detail": "Test results published for visibility and historical tracking"}
+          {
+            "stage": "Build",
+            "tool": "GitHub Actions",
+            "detail": "Matrix parallel execution, artifact caching for dependencies"
+          },
+          {
+            "stage": "Test",
+            "tool": "Jest/Playwright + Terraform",
+            "detail": "Unit tests + smoke tests + Terraform unit tests + Terraform plan/validation"
+          },
+          {
+            "stage": "Validate",
+            "tool": "GitHub Branch Protection",
+            "detail": "All checks must pass\u2014no merge until tests, Terraform validation, and smoke tests complete"
+          },
+          {
+            "stage": "Report",
+            "tool": "Sunfire",
+            "detail": "Test results published for visibility and historical tracking"
+          }
         ],
         "incidents": [
-          {"title": "Long PR-to-merge time blocking velocity", "severity": "P3", "resolution": "Matrix parallelization and artifact caching reduced time—sequential pipelines don't scale", "lesson": "Sequential pipelines become bottlenecks as team grows—parallelize early and cache aggressively"},
-          {"title": "Artifacts being re-downloaded on every job", "severity": "P3", "resolution": "Implemented shared artifact storage between workflow steps—dependencies cached once and reused", "lesson": "Cache at the right granularity—per-workflow caches beat per-job downloads"},
-          {"title": "Matrix jobs not waiting for completion", "severity": "P2", "resolution": "Configured needs dependency to ensure all matrix jobs complete before starting dependent stages", "lesson": "Explicitly declare job dependencies—parallel jobs need coordination points"}
+          {
+            "title": "Long PR-to-merge time blocking velocity",
+            "severity": "P3",
+            "resolution": "Matrix parallelization and artifact caching reduced time\u2014sequential pipelines don't scale",
+            "lesson": "Sequential pipelines become bottlenecks as team grows\u2014parallelize early and cache aggressively"
+          },
+          {
+            "title": "Artifacts being re-downloaded on every job",
+            "severity": "P3",
+            "resolution": "Implemented shared artifact storage between workflow steps\u2014dependencies cached once and reused",
+            "lesson": "Cache at the right granularity\u2014per-workflow caches beat per-job downloads"
+          },
+          {
+            "title": "Matrix jobs not waiting for completion",
+            "severity": "P2",
+            "resolution": "Configured needs dependency to ensure all matrix jobs complete before starting dependent stages",
+            "lesson": "Explicitly declare job dependencies\u2014parallel jobs need coordination points"
+          }
         ]
       }
     },
@@ -426,12 +947,22 @@
       "summary": "Service-level observability platform with Prometheus and Grafana that shrinks incident detection time by 60%.",
       "image": "/img/monitoring.png",
       "category": "Infrastructure & DevOps",
-      "metrics": ["60% lower MTTD", "Unified SLIs", "Prometheus + Grafana"],
-      "tags": ["Prometheus", "Grafana", "Monitoring", "Alerting", "SLI"],
+      "metrics": [
+        "60% lower MTTD",
+        "Unified SLIs",
+        "Prometheus + Grafana"
+      ],
+      "tags": [
+        "Prometheus",
+        "Grafana",
+        "Monitoring",
+        "Alerting",
+        "SLI"
+      ],
       "href": "/projects/observability-platform",
       "links": [],
       "detail": {
-        "overview": "Service-level golden signals and dashboards that match how engineers actually triage—not vanity charts.",
+        "overview": "Service-level golden signals and dashboards that match how engineers actually triage\u2014not vanity charts.",
         "architecture": [
           {
             "title": "Metrics Collection",
@@ -441,17 +972,17 @@
           {
             "title": "Visualization",
             "component": "Grafana Dashboards",
-            "detail": "Service-level views tied to SLOs—latency, traffic, errors, saturation—for faster triage and diagnosis."
+            "detail": "Service-level views tied to SLOs\u2014latency, traffic, errors, saturation\u2014for faster triage and diagnosis."
           },
           {
             "title": "Log Aggregation",
             "component": "CloudWatch Logs",
-            "detail": "Centralized logging for AWS services and application logs—correlates with metrics for root cause analysis."
+            "detail": "Centralized logging for AWS services and application logs\u2014correlates with metrics for root cause analysis."
           },
           {
             "title": "Alert Routing",
             "component": "Alertmanager",
-            "detail": "Multi-channel alerts: Teams/Slack for standard alerts, Email for critical—routes based on severity with context."
+            "detail": "Multi-channel alerts: Teams/Slack for standard alerts, Email for critical\u2014routes based on severity with context."
           }
         ],
         "beforeAfter": [
@@ -463,19 +994,58 @@
         ],
         "architectureMermaid": "flowchart TB\n  SRV[Services] --> PROM[Prometheus]\n  PROM --> GRAF[Grafana]\n  PROM --> AM[Alertmanager]\n  AM --> ON[On-call]",
         "decisions": [
-          {"title": "Prometheus + Grafana over CloudWatch alone", "context": "CloudWatch dashboards were limited and expensive for custom metrics", "decision": "Self-managed observability stack with better visualization and lower cost for high-cardinality metrics"},
-          {"title": "Tiered alerting", "context": "Alert fatigue from non-critical notifications going to same channel as incidents", "decision": "Route standard alerts to Teams/Slack, critical alerts to Email—context-aware routing reduces noise"}
+          {
+            "title": "Prometheus + Grafana over CloudWatch alone",
+            "context": "CloudWatch dashboards were limited and expensive for custom metrics",
+            "decision": "Self-managed observability stack with better visualization and lower cost for high-cardinality metrics"
+          },
+          {
+            "title": "Tiered alerting",
+            "context": "Alert fatigue from non-critical notifications going to same channel as incidents",
+            "decision": "Route standard alerts to Teams/Slack, critical alerts to Email\u2014context-aware routing reduces noise"
+          }
         ],
         "pipeline": [
-          {"stage": "Collect", "tool": "Prometheus", "detail": "Metric scraping from services and infrastructure into time-series database"},
-          {"stage": "Store", "tool": "Prometheus TSDB", "detail": "Time-series data storage with retention policies for historical analysis"},
-          {"stage": "Visualize", "tool": "Grafana", "detail": "Dashboards and exploration for latency, traffic, errors, saturation metrics"},
-          {"stage": "Alert", "tool": "Alertmanager", "detail": "Multi-channel routing based on severity—Teams/Slack for standard, Email for critical"}
+          {
+            "stage": "Collect",
+            "tool": "Prometheus",
+            "detail": "Metric scraping from services and infrastructure into time-series database"
+          },
+          {
+            "stage": "Store",
+            "tool": "Prometheus TSDB",
+            "detail": "Time-series data storage with retention policies for historical analysis"
+          },
+          {
+            "stage": "Visualize",
+            "tool": "Grafana",
+            "detail": "Dashboards and exploration for latency, traffic, errors, saturation metrics"
+          },
+          {
+            "stage": "Alert",
+            "tool": "Alertmanager",
+            "detail": "Multi-channel routing based on severity\u2014Teams/Slack for standard, Email for critical"
+          }
         ],
         "incidents": [
-          {"title": "Prometheus scrape targets flapping", "severity": "P3", "resolution": "Increased scrape timeout and implemented service discovery health checks", "lesson": "Default timeouts don't work for all services—tune scrape intervals per target"},
-          {"title": "Grafana dashboard permissions too broad", "severity": "P2", "resolution": "Implemented role-based access control with team-specific folder permissions", "lesson": "Dashboard access should follow least privilege—not everyone needs edit access"},
-          {"title": "Alertmanager routing misconfiguration", "severity": "P2", "resolution": "Fixed routing tree configuration to ensure critical alerts reach email while standard alerts go to Slack", "lesson": "Test alert routing with simulated alerts—misconfigurations silence critical notifications"}
+          {
+            "title": "Prometheus scrape targets flapping",
+            "severity": "P3",
+            "resolution": "Increased scrape timeout and implemented service discovery health checks",
+            "lesson": "Default timeouts don't work for all services\u2014tune scrape intervals per target"
+          },
+          {
+            "title": "Grafana dashboard permissions too broad",
+            "severity": "P2",
+            "resolution": "Implemented role-based access control with team-specific folder permissions",
+            "lesson": "Dashboard access should follow least privilege\u2014not everyone needs edit access"
+          },
+          {
+            "title": "Alertmanager routing misconfiguration",
+            "severity": "P2",
+            "resolution": "Fixed routing tree configuration to ensure critical alerts reach email while standard alerts go to Slack",
+            "lesson": "Test alert routing with simulated alerts\u2014misconfigurations silence critical notifications"
+          }
         ]
       }
     },
@@ -486,8 +1056,18 @@
       "summary": "Zero-downtime Auth0 migration for 1,000+ users, aligned with least-privilege IAM and AWS SSO.",
       "image": "/img/auth0_tenant.png",
       "category": "Security",
-      "metrics": ["1,000+ users migrated", "Zero-downtime cutover", "AWS SSO + least privilege"],
-      "tags": ["Auth0", "AWS SSO", "IAM", "Security", "Zero Downtime"],
+      "metrics": [
+        "1,000+ users migrated",
+        "Zero-downtime cutover",
+        "AWS SSO + least privilege"
+      ],
+      "tags": [
+        "Auth0",
+        "AWS SSO",
+        "IAM",
+        "Security",
+        "Zero Downtime"
+      ],
       "href": "/projects/auth0-migration",
       "links": [],
       "detail": {
@@ -506,12 +1086,12 @@
           {
             "title": "Target System",
             "component": "New Auth0 Tenant (Rivafy)",
-            "detail": "Seamless user migration without password reset prompts—users never experienced disruption or incorrect password messages."
+            "detail": "Seamless user migration without password reset prompts\u2014users never experienced disruption or incorrect password messages."
           },
           {
             "title": "Cost Optimization",
             "component": "Post-Migration AWS Review",
-            "detail": "Discovered Auth0 was fetching from Cognito for legacy users—migrated Cognito users directly to Auth0, eliminating $15k/year intermediate layer."
+            "detail": "Discovered Auth0 was fetching from Cognito for legacy users\u2014migrated Cognito users directly to Auth0, eliminating $15k/year intermediate layer."
           }
         ],
         "beforeAfter": [
@@ -522,19 +1102,57 @@
           }
         ],
         "decisions": [
-          {"title": "Password hash export over force-reset", "context": "Forcing password resets would damage brand reputation and create support burden—users would see 'incorrect password' errors", "decision": "Worked with Auth0 executives to obtain password hashes for seamless migration—no user disruption, no password reset prompts"},
-          {"title": "Board-level escalation", "context": "Password hash export requires executive approval due to sensitive credential data handling", "decision": "Engaged board members to secure necessary permissions—owned end-to-end from discovery through execution"},
-          {"title": "Post-migration architecture review", "context": "After Auth0 migration, noticed unexplained AWS Cognito API calls in billing", "decision": "Deep dive revealed Auth0 was proxying to Cognito for legacy users—migrated them directly to Auth0, cut $15k/year"}
+          {
+            "title": "Password hash export over force-reset",
+            "context": "Forcing password resets would damage brand reputation and create support burden\u2014users would see 'incorrect password' errors",
+            "decision": "Worked with Auth0 executives to obtain password hashes for seamless migration\u2014no user disruption, no password reset prompts"
+          },
+          {
+            "title": "Board-level escalation",
+            "context": "Password hash export requires executive approval due to sensitive credential data handling",
+            "decision": "Engaged board members to secure necessary permissions\u2014owned end-to-end from discovery through execution"
+          },
+          {
+            "title": "Post-migration architecture review",
+            "context": "After Auth0 migration, noticed unexplained AWS Cognito API calls in billing",
+            "decision": "Deep dive revealed Auth0 was proxying to Cognito for legacy users\u2014migrated them directly to Auth0, cut $15k/year"
+          }
         ],
         "pipeline": [
-          {"stage": "Discovery", "tool": "Manual audit", "detail": "Identified split tenant situation—legacy users on Lynks Auth0, new users on Rivafy Auth0"},
-          {"stage": "Negotiation", "tool": "Auth0 executive calls", "detail": "Secured password hash export approval—required board-level sign-off for sensitive credential data"},
-          {"stage": "Migration", "tool": "Custom scripts", "detail": "User data migration without password reset prompts—seamless auth continuity"},
-          {"stage": "Cost Review", "tool": "AWS Cost Explorer", "detail": "Discovered hidden Cognito costs, migrated legacy Cognito users—saved $15k/year alone"}
+          {
+            "stage": "Discovery",
+            "tool": "Manual audit",
+            "detail": "Identified split tenant situation\u2014legacy users on Lynks Auth0, new users on Rivafy Auth0"
+          },
+          {
+            "stage": "Negotiation",
+            "tool": "Auth0 executive calls",
+            "detail": "Secured password hash export approval\u2014required board-level sign-off for sensitive credential data"
+          },
+          {
+            "stage": "Migration",
+            "tool": "Custom scripts",
+            "detail": "User data migration without password reset prompts\u2014seamless auth continuity"
+          },
+          {
+            "stage": "Cost Review",
+            "tool": "AWS Cost Explorer",
+            "detail": "Discovered hidden Cognito costs, migrated legacy Cognito users\u2014saved $15k/year alone"
+          }
         ],
         "incidents": [
-          {"title": "Split tenant discovery during rebranding", "severity": "P1", "resolution": "End-to-end ownership including Auth0 executive calls and board escalation—password hash export approved and executed", "lesson": "User-facing auth changes require executive-level coordination to avoid brand damage—don't force password resets on rebrand"},
-          {"title": "Hidden Cognito proxy costs", "severity": "P2", "resolution": "Migrated legacy Cognito users directly to Auth0, eliminated intermediate layer", "lesson": "$15k/year savings from post-migration architecture review—always audit costs after major infrastructure changes"}
+          {
+            "title": "Split tenant discovery during rebranding",
+            "severity": "P1",
+            "resolution": "End-to-end ownership including Auth0 executive calls and board escalation\u2014password hash export approved and executed",
+            "lesson": "User-facing auth changes require executive-level coordination to avoid brand damage\u2014don't force password resets on rebrand"
+          },
+          {
+            "title": "Hidden Cognito proxy costs",
+            "severity": "P2",
+            "resolution": "Migrated legacy Cognito users directly to Auth0, eliminated intermediate layer",
+            "lesson": "$15k/year savings from post-migration architecture review\u2014always audit costs after major infrastructure changes"
+          }
         ]
       }
     }
