@@ -1162,7 +1162,7 @@
       "description": "**Problem:** Tracking workouts and nutrition usually requires heavy apps with accounts, ads, and cloud dependencies.\n**Solution:** Built a professional-grade, zero-dependency PWA fitness dashboard that works entirely offline using localStorage.\n**Impact:** 100% private, instant-load fitness tracking with comprehensive analytics, diet plans, and progressive overload tracking.",
       "summary": "A professional-grade, zero-dependency PWA fitness dashboard built for serious athletes. One HTML file. No accounts. No cloud.",
       "image": "/img/fitpal.png",
-      "category": "Web Apps",
+      "category": "Automation & AI",
       "metrics": [
         "100% private local storage",
         "Zero dependencies",
