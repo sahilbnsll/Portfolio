@@ -1155,6 +1155,102 @@
           }
         ]
       }
+    },
+    {
+      "name": "FitPal — Offline Fitness Tracker",
+      "slug": "fitpal",
+      "description": "**Problem:** Tracking workouts and nutrition usually requires heavy apps with accounts, ads, and cloud dependencies.\n**Solution:** Built a professional-grade, zero-dependency PWA fitness dashboard that works entirely offline using localStorage.\n**Impact:** 100% private, instant-load fitness tracking with comprehensive analytics, diet plans, and progressive overload tracking.",
+      "summary": "A professional-grade, zero-dependency PWA fitness dashboard built for serious athletes. One HTML file. No accounts. No cloud.",
+      "image": "/img/fitpal.png",
+      "category": "Web Apps",
+      "metrics": [
+        "100% private local storage",
+        "Zero dependencies",
+        "Installable PWA"
+      ],
+      "tags": [
+        "HTML5",
+        "Vanilla JS",
+        "CSS3",
+        "PWA",
+        "Service Worker",
+        "localStorage"
+      ],
+      "href": "/projects/fitpal",
+      "links": [
+        {
+          "name": "Live",
+          "href": "https://myfitpal.netlify.app/",
+          "icon": "external-link"
+        },
+        {
+          "name": "GitHub",
+          "href": "https://github.com/sahilbnsll/fitness-app",
+          "icon": "github"
+        }
+      ],
+      "detail": {
+        "overview": "FitPal is a professional-grade, zero-dependency PWA fitness dashboard built for serious athletes. It is contained entirely within a single HTML file, requiring no accounts, no cloud, and loading instantly. It supports 6-day PPL splits, drop sets, analytics heatmaps, nutrition tracking, and full data export/import via JSON.",
+        "stackHighlights": [
+          "Vanilla JavaScript (ES2022)",
+          "CSS3 (Custom Properties, Grid, Flexbox)",
+          "PWA (Service Worker, Manifest)",
+          "Netlify Deployment with strict security headers"
+        ],
+        "architecture": [
+          {
+            "title": "Frontend & Persistence",
+            "component": "Vanilla JS & localStorage",
+            "detail": "100% private, local-only data persistence with no cloud dependencies or accounts."
+          },
+          {
+            "title": "Offline Capability",
+            "component": "Service Worker",
+            "detail": "Network-first for navigation, cache-first for assets, providing robust offline fallback."
+          },
+          {
+            "title": "Security & Deployment",
+            "component": "Netlify & Security Headers",
+            "detail": "Strict-Transport-Security, Content-Security-Policy, and X-Frame-Options configured via netlify.toml."
+          }
+        ],
+        "beforeAfter": [
+          {
+            "label": "Data Privacy",
+            "before": "Data stored on external servers with required accounts",
+            "after": "100% private, local-only storage via localStorage"
+          },
+          {
+            "label": "App Loading",
+            "before": "Network dependent loading times",
+            "after": "Instant load with offline-first caching via Service Worker"
+          }
+        ],
+        "decisions": [
+          {
+            "title": "Zero-dependency single file",
+            "context": "Wanted maximum simplicity, performance, and portability.",
+            "decision": "Built the entire application in vanilla HTML/CSS/JS without frameworks to ensure instant load and easy maintenance."
+          },
+          {
+            "title": "localStorage for persistence",
+            "context": "Privacy and offline usage were top priorities.",
+            "decision": "Avoided any backend database or accounts, storing all workout and nutrition data strictly in the browser's localStorage."
+          }
+        ],
+        "pipeline": [
+          {
+            "stage": "Development",
+            "tool": "Vanilla Stack",
+            "detail": "No build step required, direct HTML/JS/CSS editing."
+          },
+          {
+            "stage": "Deployment",
+            "tool": "Netlify",
+            "detail": "Auto-deploy from main branch with strict security headers."
+          }
+        ]
+      }
     }
   ]
 }
