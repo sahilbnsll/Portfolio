@@ -45,7 +45,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
@@ -54,6 +59,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# output files
+# output files & scratch
 output/
 features.md
+temp-*.json
+verified-*.json
+test-*.mjs
+test-*.ts
+test-*.js
+
+# AI & Editor tools
+.gemini/
+.antigravity/
+.agents/
+.windsurf/

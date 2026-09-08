@@ -4,7 +4,7 @@ export default function JsonLd() {
     "@type": "Person",
     name: "Sahil Bansal",
     jobTitle: "DevOps & Cloud Infrastructure Engineer",
-    url: "https://sahilbansal.dev",
+    url: "https://sahilbansal.net",
     sameAs: [
       "https://linkedin.com/in/sahilbansal17",
       "https://github.com/sahilb2",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import HomePageClient from "@/components/HomePageClient";
 
-const portfolioUrl = "https://sahilbansal.dev";
+const portfolioUrl = "https://sahilbansal.net";
 const pageTitle = "Sahil Bansal | DevOps & Cloud Infrastructure Engineer";
 const pageDescription =
   "DevOps and cloud infrastructure engineer focused on AWS, Terraform, Kubernetes, CI/CD automation, observability, and cost-efficient production systems.";

@@ -2,7 +2,7 @@
 
 Production portfolio for Sahil Bansal, a DevOps and cloud infrastructure engineer focused on AWS, Terraform, CI/CD, observability, automation, and reliability engineering.
 
-Live site: `https://sahilbansal.dev`
+Live site: `https://sahilbansal.net`
 
 ## Product Positioning
 
@@ -22,7 +22,7 @@ This project is not a static profile page. It is a portfolio application designe
 - Interactive resume with search, skill filters, experience timeline, education, and linked project highlights.
 - **Recruiter/Engineer view modes** for tailored presentation of content.
 - **System status indicators** for operational visibility.
-- Embedded AI assistant backed by Groq.
+- Embedded AI assistant backed by a multi-provider failover cascade (Google Gemini, Mistral AI, OpenRouter, Groq, and GitHub Models).
 - Visitor statistics modal backed by Vercel Analytics.
 - Contact form wired to Formspree.
 - Privacy page and blog support.
@@ -64,8 +64,13 @@ The site is primarily JSON-driven:
 
 ### API surfaces
 
-- `src/app/api/chat/route.ts`: AI assistant endpoint using Groq streaming.
-- `src/app/api/stats/route.ts`: visitor and pageview stats endpoint using Vercel Analytics APIs.
+- `src/app/api/chat/route.ts`: AI assistant endpoint with prioritized multi-provider cascade and model failover:
+  1. Google Gemini (`gemini-2.5-flash`, `gemini-flash-latest`)
+  2. Mistral AI (`codestral-latest`, `ministral-8b-latest`, `ministral-14b-latest`, `ministral-3b-latest`, `open-mistral-nemo`)
+  3. OpenRouter Free (`nvidia/nemotron-3.5-lightning:free`, `nvidia/nemotron-3-super-120b-a12b:free`, `poolside/laguna-s-2.1:free`)
+  4. Groq (`groq/compound-mini`, `groq/compound`, `qwen/qwen3.8-27b`, `qwen/qwen3.6-27b`, `allam-2-7b`, `openai/gpt-oss-120b`)
+  5. GitHub Models (`gpt-4o-mini`, `Meta-Llama-3.1-8B-Instruct`, `Phi-3.5-mini-instruct`)
+- `src/app/api/stats/route.ts`: visitor and pageview stats endpoint using official Vercel Web Analytics aggregate API (`/v1/query/web-analytics/visits/aggregate`).
 
 ## Tech Stack
 
@@ -75,7 +80,7 @@ The site is primarily JSON-driven:
 | Styling | Tailwind CSS, custom UI primitives |
 | Motion | Framer Motion |
 | Validation | Zod, React Hook Form |
-| AI | Groq SDK, Vercel AI streaming response format |
+| AI | `@google/generative-ai`, `groq-sdk`, `openai` (Mistral/OpenRouter/GitHub), Vercel AI streaming response format |
 | Markdown | react-markdown |
 | Analytics | Vercel Analytics, Vercel Speed Insights |
 | Forms | Formspree |
@@ -99,19 +104,27 @@ cp .env.example .env.local
 
 ### Environment Variables
 
-Set the following in `.env.local`:
+Configure `.env.local` with one or more of the following keys:
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `GROQ_API_KEY` | Yes | Enables the AI assistant in `src/app/api/chat/route.ts` |
+| `GEMINI_API_KEY` | Recommended | Primary AI provider using Google Gemini (`gemini-2.5-flash`) |
+| `MISTRAL_API_KEY` | Optional | Secondary AI failover using Mistral AI |
+| `OPENROUTER_API_KEY` | Optional | Tertiary AI failover using verified free models |
+| `GROQ_API_KEY` | Optional | High-speed AI failover using Groq |
+| `GITHUB_MODELS_TOKEN` | Optional | Standby AI failover using GitHub Models |
 | `VERCEL_API_TOKEN` | Optional | Enables visitor statistics in `src/app/api/stats/route.ts` |
-| `VERCEL_PROJECT_ID` | Optional | Required with `VERCEL_API_TOKEN` for stats |
+| `VERCEL_PROJECT_ID` | Optional | Required with `VERCEL_API_TOKEN` for analytics querying |
 | `VERCEL_TEAM_ID` | Optional | Required only if the Vercel project belongs to a team |
+| `REVALIDATE_SECRET` | Optional | Secret token for on-demand ISR revalidation endpoints |
+
+Optional Model Overrides:
+You can also set `GEMINI_MODEL`, `MISTRAL_MODEL`, `OPENROUTER_MODEL`, `GROQ_MODEL`, or `GITHUB_MODEL` to pin a specific model without editing code.
 
 Notes:
 
-- If the Vercel analytics variables are missing, the stats widget will not have live data.
-- The contact form uses a hardcoded Formspree endpoint today, so no mail env var is required for local development.
+- If none of the AI keys are configured, the chat route gracefully degrades to a helpful portfolio introduction instead of crashing with HTTP 500.
+- If Vercel analytics variables are missing, the stats widget safely falls back to a clean baseline.
 
 ### Local Development
 
@@ -258,8 +271,8 @@ Each company entry supports one or more positions with:
 
 ## Reliability Notes
 
-- The chat endpoint depends on `GROQ_API_KEY`.
-- The stats endpoint depends on Vercel Analytics credentials.
+- The chat endpoint implements a resilient two-tier cascade across 5 providers (Gemini, Mistral, OpenRouter, Groq, GitHub Models) with automatic model failover and helpful portfolio fallback responses.
+- The stats endpoint queries Vercel Web Analytics aggregate endpoint with schema normalization and zero-baseline degradation.
 - The contact form depends on Formspree availability.
 - All project data is parsed through Zod at runtime before project grids and case-study pages render.
 

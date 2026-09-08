@@ -23,7 +23,7 @@ const calistoga = Calistoga({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sahilbansal.dev"),
+  metadataBase: new URL("https://sahilbansal.net"),
   title: {
     default: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
     template: "%s | Sahil Bansal",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sahilbansal.dev",
+    url: "https://sahilbansal.net",
     siteName: "Sahil Bansal",
     title: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
     description:

@@ -4,19 +4,31 @@ export const revalidate = 0;
 
 const NO_STORE_CACHE_CONTROL = "no-store, no-cache, max-age=0, must-revalidate";
 
-interface VercelTimeSeriesEntry {
+interface UnifiedTimeSeriesEntry {
   key: string;
-  total?: number;
-  devices?: number;
-  bounceRate?: number;
+  visitors: number;
+  pageviews: number;
 }
 
-interface VercelAnalyticsResponse {
-  data: {
-    groups: {
-      all: VercelTimeSeriesEntry[];
-    };
-    groupCount: number;
+function createEmptyStats() {
+  return {
+    today: 0,
+    week: 0,
+    month: 0,
+    pageViews: {
+      today: 0,
+      week: 0,
+      month: 0,
+    },
+    todayDelta: 0,
+    weekDelta: 0,
+    monthDelta: 0,
+    todayTrend: [0],
+    todayPageviewTrend: [0],
+    weekTrend: [0],
+    weekPageviewTrend: [0],
+    monthTrend: [0],
+    monthPageviewTrend: [0],
   };
 }
 
@@ -27,145 +39,132 @@ export async function GET(request: NextRequest) {
     const teamId = process.env.VERCEL_TEAM_ID;
 
     if (!apiToken || !projectId) {
-      console.error("Missing environment variables:", {
-        apiToken: !!apiToken,
-        projectId: !!projectId,
-        teamId: !!teamId,
+      console.warn("[Stats API] Missing VERCEL_API_TOKEN or VERCEL_PROJECT_ID. Returning default zeroed stats.");
+      return NextResponse.json(createEmptyStats(), {
+        headers: { "Cache-Control": NO_STORE_CACHE_CONTROL },
       });
-      return NextResponse.json(
-        { error: "Missing VERCEL_API_TOKEN or VERCEL_PROJECT_ID" },
-        { status: 400 }
-      );
     }
 
     const headers = {
       Authorization: `Bearer ${apiToken}`,
     };
 
-    // Calculate date ranges
+    // Calculate date ranges (last 30 days)
     const now = new Date();
     const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const fromDate = last30Days.toISOString().split("T")[0];
+    const toDate = now.toISOString().split("T")[0];
 
-    const fromDate = last30Days.toISOString();
-    const toDate = now.toISOString();
+    // Primary target: official Vercel Web Analytics visits aggregate endpoint
+    const aggregateUrl = new URL("https://api.vercel.com/v1/query/web-analytics/visits/aggregate");
+    aggregateUrl.searchParams.set("projectId", projectId);
+    if (teamId) aggregateUrl.searchParams.set("teamId", teamId);
+    aggregateUrl.searchParams.set("since", fromDate);
+    aggregateUrl.searchParams.set("until", toDate);
+    aggregateUrl.searchParams.set("by", "day");
 
-    console.log("Fetching Vercel analytics:", {
-      projectId,
-      teamId,
-      from: fromDate,
-      to: toDate,
-      tokenProvided: !!apiToken,
-    });
-
-    // Build URL
-    const timeseriesUrl = new URL("https://vercel.com/api/web-analytics/timeseries");
-    timeseriesUrl.searchParams.set("projectId", projectId);
-    if (teamId) {
-      timeseriesUrl.searchParams.set("teamId", teamId);
-    }
-    timeseriesUrl.searchParams.set("from", fromDate);
-    timeseriesUrl.searchParams.set("to", toDate);
-    timeseriesUrl.searchParams.set("environment", "production");
-    timeseriesUrl.searchParams.set("filter", "{}");
-    timeseriesUrl.searchParams.set("tz", "Asia/Calcutta"); // Add timezone parameter
-
-    console.log("Request URL:", timeseriesUrl.toString());
-
-    // Fetch data
-    const response = await fetch(timeseriesUrl.toString(), {
+    let response = await fetch(aggregateUrl.toString(), {
       headers,
       cache: "no-store",
     });
 
-    console.log("Response status:", response.status);
+    // If aggregate endpoint returns 404, attempt fallback to legacy api.vercel.com endpoint
+    if (!response.ok && response.status === 404) {
+      console.warn("[Stats API] v1/query endpoint returned 404, trying timeseries fallback...");
+      const fallbackUrl = new URL("https://api.vercel.com/v1/web-analytics/timeseries");
+      fallbackUrl.searchParams.set("projectId", projectId);
+      if (teamId) fallbackUrl.searchParams.set("teamId", teamId);
+      fallbackUrl.searchParams.set("from", last30Days.toISOString());
+      fallbackUrl.searchParams.set("to", now.toISOString());
+      fallbackUrl.searchParams.set("environment", "production");
+      fallbackUrl.searchParams.set("tz", "Asia/Calcutta");
+
+      const fallbackRes = await fetch(fallbackUrl.toString(), {
+        headers,
+        cache: "no-store",
+      });
+
+      if (fallbackRes.ok) {
+        response = fallbackRes;
+      }
+    }
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("API error:", {
-        status: response.status,
-        body: errorText.substring(0, 500),
+      const errorText = await response.text().catch(() => "");
+      console.error(`[Stats API] Vercel API returned status ${response.status}: ${errorText.slice(0, 300)}`);
+      // Return safe defaults so client UI doesn't crash
+      return NextResponse.json(createEmptyStats(), {
+        headers: { "Cache-Control": NO_STORE_CACHE_CONTROL },
       });
-      throw new Error(`Vercel API error: ${response.status} - ${errorText}`);
     }
 
-    const data = (await response.json()) as VercelAnalyticsResponse;
-    console.log("API response received:", JSON.stringify(data, null, 2).substring(0, 1000));
+    const json = await response.json();
+    const entries: UnifiedTimeSeriesEntry[] = [];
 
-    // Parse entries - with careful null checking
-    let entries: VercelTimeSeriesEntry[] = [];
-    
-    if (data?.data?.groups?.all && Array.isArray(data.data.groups.all)) {
-      entries = data.data.groups.all;
+    // Parse format 1: { data: [ { timestamp, pageviews, visitors } ] }
+    if (Array.isArray(json?.data)) {
+      for (const item of json.data) {
+        const rawDate = item.timestamp || item.date || item.key || "";
+        const key = rawDate.includes("T") ? rawDate.split("T")[0] : rawDate;
+        entries.push({
+          key,
+          visitors: Number(item.visitors || item.devices || 0),
+          pageviews: Number(item.pageviews || item.total || 0),
+        });
+      }
+    }
+    // Parse format 2: { data: { groups: { all: [ { key, devices, total } ] } } }
+    else if (Array.isArray(json?.data?.groups?.all)) {
+      for (const item of json.data.groups.all) {
+        entries.push({
+          key: String(item.key || ""),
+          visitors: Number(item.devices || item.visitors || 0),
+          pageviews: Number(item.total || item.pageviews || 0),
+        });
+      }
     }
 
-    console.log("Total entries parsed:", entries.length);
-    if (entries.length > 0) {
-      console.log("First entry:", JSON.stringify(entries[0]));
-      console.log("Last entry:", JSON.stringify(entries[entries.length - 1]));
-      console.log("Last 5 entries:", JSON.stringify(entries.slice(-5), null, 2));
-    }
+    // Sort entries chronologically by date
+    entries.sort((a, b) => a.key.localeCompare(b.key));
 
-    // Get today's date string in YYYY-MM-DD format
-    const todayDate = new Date();
-    const todayStr = todayDate.toISOString().split("T")[0];
-
-    console.log("Today date string:", todayStr);
-    console.log("All entries:", JSON.stringify(entries.map((e) => ({ key: e.key, devices: e.devices, total: e.total })), null, 2));
-
-    // Find today's exact entry
+    const todayStr = now.toISOString().split("T")[0];
     const todayEntry = entries.find((e) => e.key === todayStr);
-    
-    const visitorsToday = todayEntry?.devices || 0;
-    const pageViewsToday = todayEntry?.total || 0;
 
-    console.log("Today entry found:", { key: todayEntry?.key, devices: visitorsToday, total: pageViewsToday });
+    const visitorsToday = todayEntry?.visitors || 0;
+    const pageViewsToday = todayEntry?.pageviews || 0;
 
-    // Get week data (last 7)
+    // Week metrics (last 7 entries)
     const weekEntries = entries.slice(-7);
-    const visitorsWeek = weekEntries.reduce((sum, entry) => sum + (entry.devices || 0), 0);
-    const pageViewsWeek = weekEntries.reduce((sum, entry) => sum + (entry.total || 0), 0);
+    const visitorsWeek = weekEntries.reduce((sum, e) => sum + e.visitors, 0);
+    const pageViewsWeek = weekEntries.reduce((sum, e) => sum + e.pageviews, 0);
 
-    console.log("Week entries:", weekEntries.length, "Visitors week:", visitorsWeek, "Page views week:", pageViewsWeek);
+    // Month metrics (all entries)
+    const visitorsMonth = entries.reduce((sum, e) => sum + e.visitors, 0);
+    const pageViewsMonth = entries.reduce((sum, e) => sum + e.pageviews, 0);
 
-    // Get month data (all)
-    const visitorsMonth = entries.reduce((sum, entry) => sum + (entry.devices || 0), 0);
-    const pageViewsMonth = entries.reduce((sum, entry) => sum + (entry.total || 0), 0);
-
-    console.log("Calculated totals:", {
-      today: visitorsToday,
-      todayPageViews: pageViewsToday,
-      week: visitorsWeek,
-      weekPageViews: pageViewsWeek,
-      month: visitorsMonth,
-      monthPageViews: pageViewsMonth,
-    });
-
-    // Create trends
+    // Trends
     const todayTrend = [visitorsToday];
     const todayPageviewTrend = [pageViewsToday];
-    const weekTrend = weekEntries.map((e) => e.devices || 0);
-    const weekPageviewTrend = weekEntries.map((e) => e.total || 0);
-    const monthTrend = entries.map((e) => e.devices || 0);
-    const monthPageviewTrend = entries.map((e) => e.total || 0);
+    const weekTrend = weekEntries.map((e) => e.visitors);
+    const weekPageviewTrend = weekEntries.map((e) => e.pageviews);
+    const monthTrend = entries.map((e) => e.visitors);
+    const monthPageviewTrend = entries.map((e) => e.pageviews);
 
-    // Calculate delta
-    const previousEntry = weekEntries.length > 1 ? weekEntries[weekEntries.length - 2] : null;
-    const previousDevices = previousEntry?.devices || 0;
+    // Delta calculation
+    const previousDayEntry = weekEntries.length > 1 ? weekEntries[weekEntries.length - 2] : null;
+    const prevDayVisitors = previousDayEntry?.visitors || 0;
     const todayDelta =
-      previousDevices > 0
-        ? Math.round(
-            (((visitorsToday - previousDevices) / previousDevices) * 100)
-          )
+      prevDayVisitors > 0
+        ? Math.round(((visitorsToday - prevDayVisitors) / prevDayVisitors) * 100)
         : 0;
 
-    // Calculate weekDelta safely
-    const previousWeekEntry = weekEntries.length > 1 ? weekEntries[weekEntries.length - 2] : null;
-    const previousWeekDevices = previousWeekEntry?.devices || 0;
+    const previousWeekVisitors =
+      entries.length >= 14
+        ? entries.slice(-14, -7).reduce((sum, e) => sum + e.visitors, 0)
+        : 0;
     const weekDelta =
-      previousWeekDevices > 0
-        ? Math.round(
-            (((visitorsToday - previousWeekDevices) / previousWeekDevices) * 100)
-          )
+      previousWeekVisitors > 0
+        ? Math.round(((visitorsWeek - previousWeekVisitors) / previousWeekVisitors) * 100)
         : 0;
 
     const stats = {
@@ -194,22 +193,14 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error fetching stats:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : String(error);
-    console.error("Error details:", errorMessage);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("[Stats API Error]:", errorMessage);
 
-    return NextResponse.json(
-      {
-        error: "Failed to fetch statistics",
-        details: errorMessage,
+    // Return safe zeroed stats rather than throwing 500 error to keep the dashboard intact
+    return NextResponse.json(createEmptyStats(), {
+      headers: {
+        "Cache-Control": NO_STORE_CACHE_CONTROL,
       },
-      {
-        status: 500,
-        headers: {
-          "Cache-Control": NO_STORE_CACHE_CONTROL,
-        },
-      }
-    );
+    });
   }
 }
