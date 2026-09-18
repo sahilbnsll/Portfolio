@@ -6,12 +6,15 @@ interface ChatPromptsProps {
 }
 
 const allPrompts = [
+  "I want to hire Sahil for a DevOps role",
+  "Show me Sahil's Terraform & AWS case studies",
+  "How can I download his resume?",
+  "What results did Sahil achieve at Buyogo AG?",
   "Tell me about Sahil's experience",
   "What projects has Sahil worked on?",
   "What technologies does Sahil use?",
   "What is Sahil's current role?",
   "Tell me about Sahil's skills",
-  "What companies has Sahil worked at?",
   "What is ZabeSync and what did Sahil build there?",
   "How does Sahil approach reliability and on-call pain?",
 

@@ -99,24 +99,47 @@ export default function ChatPanel({ isExpanded }: ChatPanelProps) {
     setMessages,
     isLoading,
     error,
+    append,
   } = useChat({ fetch: chatFetch });
 
+  // Restore previous messages from localStorage on initial load
   useEffect(() => {
-    // Cleanup on unmount - only clear chat ID when expanding/collapsing
-    return () => {
-      if (!isExpanded) {
-        chatIdRef.current = null;
+    try {
+      const stored = localStorage.getItem("portfolio_chat_messages");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+        }
       }
-    };
-  }, [isExpanded]);
+    } catch (err) {
+      console.warn("[ChatPanel] Failed to restore messages from localStorage", err);
+    }
+  }, [setMessages]);
+
+  // Sync active messages to localStorage
+  useEffect(() => {
+    if (messages.length > 0) {
+      try {
+        localStorage.setItem("portfolio_chat_messages", JSON.stringify(messages.slice(-16)));
+      } catch (err) {
+        console.warn("[ChatPanel] Failed to save messages to localStorage", err);
+      }
+    }
+  }, [messages]);
 
   const handleClearChat = () => {
     chatIdRef.current = null;
+    try {
+      localStorage.removeItem("portfolio_chat_messages");
+    } catch (err) {
+      console.warn("[ChatPanel] Failed to clear messages from localStorage", err);
+    }
   };
 
-  if (!isExpanded) {
-    return null;
-  }
+  const handlePromptClick = (prompt: string) => {
+    append({ role: "user", content: prompt });
+  };
 
   return (
     <>
@@ -124,11 +147,7 @@ export default function ChatPanel({ isExpanded }: ChatPanelProps) {
         messages={messages}
         error={error}
         isLoading={isLoading}
-        onPromptClick={(prompt) =>
-          handleInputChange({
-            target: { value: prompt },
-          } as ChangeEvent<HTMLInputElement>)
-        }
+        onPromptClick={handlePromptClick}
       />
       <ChatInput
         input={input}

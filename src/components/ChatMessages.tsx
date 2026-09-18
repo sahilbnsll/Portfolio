@@ -35,24 +35,31 @@ export default memo(function ChatMessages({
       ref={scrollRef}
     >
       <ul>
-        {messages.map((msg) => (
+        {messages.map((msg, idx) => (
           <li key={msg.id}>
-            <ChatMessage message={msg} />
+            <ChatMessage message={msg} isLatest={idx === messages.length - 1} />
           </li>
         ))}
       </ul>
 
       {/* empty */}
-      {!error && messages.length === 0 && <WelcomeMessage />}
+      {!error && messages.length === 0 && (
+        <div className="flex flex-col items-center pb-2">
+          <WelcomeMessage />
+          {onPromptClick && <ChatPrompts onPromptClick={onPromptClick} />}
+        </div>
+      )}
 
       {/* loading */}
       {isLoading && isLastMessageUser && <TypingIndicator />}
 
       {/* error */}
       {error && (
-        <p className="text-center text-xs text-rose-500">
-          Something went wrong. Please try again! {error.message}
-        </p>
+        <div className="px-3 py-2 text-center text-xs text-rose-500 bg-rose-500/10 rounded-md my-2 border border-rose-500/20">
+          {error.message && !error.message.includes("<") && error.message.length < 120
+            ? error.message
+            : "The AI assistant encountered a temporary connection issue. Please try asking again!"}
+        </div>
       )}
     </div>
   );

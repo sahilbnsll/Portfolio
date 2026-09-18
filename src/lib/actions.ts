@@ -9,14 +9,16 @@ export async function sendEmail(data: ContactFormInputs) {
   const result = ContactFormSchema.safeParse(data);
 
   if (result.error) {
-    return { error: result.error.format() };
+    const firstIssue = result.error.issues[0]?.message || "Invalid input data.";
+    return { error: firstIssue };
   }
 
   try {
     const { name, email, message } = result.data;
 
     // Formspree endpoint
-    const response = await fetch("https://formspree.io/f/mreegklb", {
+    const formId = process.env.FORMSPREE_FORM_ID || "mreegklb";
+    const response = await fetch(`https://formspree.io/f/${formId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

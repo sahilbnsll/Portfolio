@@ -4,13 +4,27 @@ import data from "@/data/projects.json";
 import { projectSchema } from "@/lib/schemas";
 import { ProjectCard } from "./ProjectCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 
 interface Props {
   limit?: number;
   showFilters?: boolean;
   compact?: boolean;
+}
+
+function SearchParamSync({ onCategorySelect }: { onCategorySelect: (cat: string) => void }) {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams?.get("category");
+
+  useEffect(() => {
+    if (categoryParam) {
+      onCategorySelect(categoryParam);
+    }
+  }, [categoryParam, onCategorySelect]);
+
+  return null;
 }
 
 export default function Projects({ limit, showFilters = true, compact = false }: Props) {
@@ -43,6 +57,12 @@ export default function Projects({ limit, showFilters = true, compact = false }:
     setSelectedCategory(cat);
   };
 
+  const handleCategoryParam = useCallback((param: string) => {
+    if (categories.includes(param)) {
+      setSelectedCategory(param);
+    }
+  }, [categories]);
+
   if (!mounted) {
     return (
       <div className="flex flex-col gap-6">
@@ -74,6 +94,10 @@ export default function Projects({ limit, showFilters = true, compact = false }:
 
   return (
     <div className="flex flex-col gap-6">
+      <Suspense fallback={null}>
+        <SearchParamSync onCategorySelect={handleCategoryParam} />
+      </Suspense>
+
       {/* Filter Buttons */}
       {showFilters && (
         <div className="flex flex-wrap items-center gap-2 md:gap-3">

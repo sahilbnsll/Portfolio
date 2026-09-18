@@ -17,6 +17,17 @@ import StatsOverview from "@/components/StatsOverview";
 import CoreSkillsExpertiseSection from "@/components/CoreSkillsExpertiseSection";
 import InteractiveResume from "@/components/InteractiveResume";
 import { Button } from "@/components/ui/Button";
+import dynamic from "next/dynamic";
+
+const LocationMap = dynamic(
+  () => import("@/components/ui/expand-map").then((mod) => mod.LocationMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-48 sm:h-56 md:h-60 w-full animate-pulse rounded-2xl border border-border/60 bg-muted/20" />
+    ),
+  }
+);
 import {
   FileDown,
   Box,
@@ -66,6 +77,20 @@ export default function HomePageClient() {
     setCurrentAge(age);
   }, []);
 
+  // Handle direct navigation to hash anchors (e.g. /#experience, /#skills)
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hash = window.location.hash.replace("#", "");
+      const timer = setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   if (isRecruiter) {
     return (
       <div className="pb-16 pt-8">
@@ -86,49 +111,56 @@ export default function HomePageClient() {
   }
 
   return (
-    <article className="mt-6 flex flex-col gap-12 pb-14 sm:mt-8 sm:gap-16 sm:pb-16">
+    <article className="mt-4 flex flex-col gap-10 pb-14 sm:mt-6 sm:gap-12 sm:pb-16">
+      {/* Location Map Banner at Hero Top (OpenFreeMap Gurugram, India) */}
+      <div className="w-full">
+        <LocationMap location="Gurugram" />
+      </div>
+
       <section
         id="top"
-        className="relative flex flex-col items-center gap-10 md:flex-row-reverse md:items-center md:justify-between md:gap-12"
+        className="relative -mt-6 sm:-mt-8 flex flex-col items-center gap-8 md:flex-row-reverse md:items-start md:justify-between md:gap-12"
       >
-        <div className="animate-fade-in-up relative z-10 mx-auto w-full max-w-[220px] self-center sm:max-w-[240px] md:mx-0 md:w-auto md:max-w-none">
+        <div className="animate-fade-in-up relative z-10 mx-auto w-full max-w-[220px] self-center sm:max-w-[240px] md:mx-0 md:w-auto md:max-w-none md:pt-4">
           <SwipeCards className="mx-auto md:mr-2 lg:mr-8" />
         </div>
 
         <div className="animate-fade-in-up-d1 relative z-10 flex w-full max-w-2xl flex-col items-center text-center opacity-0 md:max-w-[32rem] md:items-start md:text-left">
-          <h1 className="title text-balance text-[2.65rem] leading-[0.94] sm:text-5xl">
-            <CharacterReveal text="hi, sahil here. " delay={0.1} />
-            <motion.span
-              className="ml-2 inline-block origin-[70%_70%] cursor-pointer"
-              initial={{ rotate: 0 }}
-              animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
-                delay: 0.5,
-              }}
-              whileHover={{
-                rotate: [0, 14, -8, 14, -4, 10, 0],
-                transition: {
+          <div className="mb-3 flex flex-col items-center gap-2 sm:items-start">
+            <h1 className="title text-balance text-[2.4rem] leading-[1] sm:text-4xl lg:text-5xl">
+              <CharacterReveal text="hi, sahil here. " delay={0.1} />
+              <motion.span
+                className="ml-2 inline-block origin-[70%_70%] cursor-pointer"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
+                transition={{
                   duration: 2,
                   ease: "easeInOut",
-                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1],
-                },
-              }}
-            >
-              👋
-            </motion.span>
-          </h1>
+                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+                  delay: 0.5,
+                }}
+                whileHover={{
+                  rotate: [0, 14, -8, 14, -4, 10, 0],
+                  transition: {
+                    duration: 2,
+                    ease: "easeInOut",
+                    times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1],
+                  },
+                }}
+              >
+                👋
+              </motion.span>
+            </h1>
 
-          <p className="mt-2.5 text-sm font-medium text-muted-foreground sm:mt-3 sm:text-base">
+            <div className="mt-2 flex items-center justify-center sm:justify-start">
+              <AvailableForWorkBadge />
+            </div>
+          </div>
+
+          <p className="mt-1.5 text-sm font-medium text-muted-foreground sm:text-base">
             {currentAge !== null && <AnimatedNumber target={currentAge} />}
             yo DevOps engineer from India 🇮🇳
           </p>
-
-          <div className="mt-3">
-            <AvailableForWorkBadge />
-          </div>
 
           <p className="mt-3.5 max-w-xl text-balance text-sm leading-7 text-muted-foreground sm:mt-4 sm:text-base sm:leading-relaxed">
             {homeContent.introduction.description}
@@ -167,11 +199,11 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      <motion.div {...sectionAnim} className="scroll-mt-28">
+      <motion.div {...sectionAnim} id="skills" className="scroll-mt-28">
         <SkillsSection />
       </motion.div>
 
-      <section id="lab" className="scroll-mt-28">
+      <section id="terminal" className="scroll-mt-28">
         <div className="relative rounded-2xl border border-border/40 bg-card/30 p-3 pb-4 backdrop-blur-sm sm:p-6">
           <div className="relative z-10 flex flex-col gap-4">
             <div className="min-w-0 flex-1">
@@ -183,6 +215,7 @@ export default function HomePageClient() {
 
       <motion.section
         {...sectionAnim}
+        id="about"
         className="scroll-mt-28 space-y-6 sm:space-y-8"
       >
         <AboutMe />
@@ -192,7 +225,7 @@ export default function HomePageClient() {
 
       <motion.section
         {...sectionAnim}
-        id="projects-preview"
+        id="projects"
         className="scroll-mt-28"
       >
         <div className="flex flex-col gap-4">
@@ -212,23 +245,23 @@ export default function HomePageClient() {
         </div>
       </motion.section>
 
-      <motion.div {...sectionAnim}>
+      <motion.div {...sectionAnim} id="experience" className="scroll-mt-28">
         <Experience />
       </motion.div>
 
-      <motion.div {...sectionAnim}>
+      <motion.div {...sectionAnim} id="graph" className="scroll-mt-28">
         <SkillDependenciesGraph />
       </motion.div>
 
-      <motion.div {...sectionAnim}>
+      <motion.div {...sectionAnim} id="certifications" className="scroll-mt-28">
         <CertificationsSection />
       </motion.div>
 
-      <motion.div {...sectionAnim}>
+      <motion.div {...sectionAnim} id="testimonials" className="scroll-mt-28">
         <TestimonialsSection />
       </motion.div>
 
-      <motion.section {...sectionAnim} className="scroll-mt-28">
+      <motion.section {...sectionAnim} id="philosophy" className="scroll-mt-28">
         <h2 className="title text-2xl sm:text-3xl">engineering philosophy</h2>
         <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
           Defaults I reach for until the problem demands otherwise.
@@ -275,7 +308,7 @@ export default function HomePageClient() {
       </motion.section>
 
       {blogPosts.length > 0 && (
-        <motion.section {...sectionAnim} className="scroll-mt-28">
+        <motion.section {...sectionAnim} id="posts" className="scroll-mt-28">
           <h2 className="title text-2xl sm:text-3xl">recent posts</h2>
           <ul className="mt-4 flex flex-col gap-0">
             {blogPosts.slice(0, 2).map((post) => (

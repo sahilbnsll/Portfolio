@@ -234,7 +234,7 @@ function getResponseForCmd(cmd: string): { lines: string[]; tip?: string } {
   if (cmd === "contact") {
     return {
       lines: section("Contact", [
-        "Email: sahilbansal.sb24@gmail.com",
+        "Email: connect@sahilbansal.net",
         "Portfolio: /contact",
         "LinkedIn: linkedin.com/in/sahilbansal24",
       ]),

@@ -104,8 +104,12 @@ export default function Chat() {
             forceMount={hasOpened ? true : undefined}
             className="p-0"
           >
-            {hasOpened && isExpanded && (
-              <div className="flex max-h-[400px] min-h-[380px] flex-col justify-between rounded-b-lg">
+            {hasOpened && (
+              <div
+                className={`flex max-h-[400px] min-h-[380px] flex-col justify-between rounded-b-lg ${
+                  !isExpanded ? "hidden" : ""
+                }`}
+              >
                 <Suspense fallback={<ChatPanelFallback />}>
                   <ChatPanel isExpanded={isExpanded} />
                 </Suspense>

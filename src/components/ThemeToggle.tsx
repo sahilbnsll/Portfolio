@@ -23,15 +23,17 @@ export default function ThemeToggle() {
     <Button
       size="icon"
       variant="ghost"
+      title={resolvedTheme === "dark" ? "Dark mode (click for light mode)" : "Light mode (click for dark mode)"}
+      aria-label={resolvedTheme === "dark" ? "Dark mode (click for light mode)" : "Light mode (click for dark mode)"}
       onClick={() => {
         playClick();
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
       }}
     >
       {resolvedTheme === "dark" ? (
-        <SunIcon className="size-4 text-orange-300" />
+        <MoonIcon className="size-4 text-indigo-400" />
       ) : (
-        <MoonIcon className="size-4 text-indigo-500" />
+        <SunIcon className="size-4 text-amber-500" />
       )}
       <span className="sr-only">Theme Toggle</span>
     </Button>

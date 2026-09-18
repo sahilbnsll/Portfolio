@@ -20,11 +20,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <ErrorBoundary>
         <ChatProvider>
           <ViewModeProvider>
-          {children}
+            {children}
+            <ClientOnly>
+              <Chat />
+            </ClientOnly>
           </ViewModeProvider>
-          <ClientOnly> {/* Wrap Chat with ClientOnly */}
-            <Chat />
-          </ClientOnly>
         </ChatProvider>
       </ErrorBoundary>
       <ToastProvider />
