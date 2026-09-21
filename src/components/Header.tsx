@@ -121,10 +121,10 @@ export default function Header() {
 
           <div className="flex items-center gap-1 rounded-full border border-border/60 bg-background/70 px-1.5 py-1 shadow-sm sm:gap-2 sm:px-2">
             {showViewToggle && (
-              <>
+              <div className="hidden min-[380px]:flex items-center">
                 <ViewModeToggle />
-                <div className="mx-0.5 h-4 w-px bg-border/60" />
-              </>
+                <div className="mx-1 h-4 w-px bg-border/60" />
+              </div>
             )}
             <VisitStats />
             <ChatToggle />

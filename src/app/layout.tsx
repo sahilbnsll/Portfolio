@@ -2,14 +2,17 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Providers from "@/components/Providers";
 import ScrollToTop from "@/components/ScrollToTop";
+import PageTransition from "@/components/PageTransition";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import "maplibre-gl/dist/maplibre-gl.css";
 import MainContentProvider from "@/components/MainContentProvider";
 import ParticleBackground from "@/components/ParticleBackground";
+import FloatingPathsBackground from "@/components/ui/floating-paths";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,8 +35,12 @@ export const metadata: Metadata = {
     "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icon.png",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/icon.png?v=5", type: "image/png" },
+      { url: "/favicon.ico?v=5", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico?v=5",
+    apple: "/apple-touch-icon.png?v=5",
   },
   openGraph: {
     type: "website",
@@ -86,11 +93,20 @@ export default function RootLayout({
         )}
       >
         <Providers>
+          {/* Full-canvas kinetic floating paths backdrop across all pages */}
+          <div
+            className="fixed inset-0 pointer-events-none -z-20 overflow-hidden select-none"
+            aria-hidden="true"
+          >
+            <FloatingPathsBackground className="h-full w-full" />
+          </div>
           <ParticleBackground />
-          <div className="flex min-h-screen flex-col">
+          <div className="relative z-0 flex min-h-screen flex-col">
             <Header />
             <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 sm:px-6 md:px-8 lg:px-10">
-              <MainContentProvider>{children}</MainContentProvider>
+              <MainContentProvider>
+                <PageTransition>{children}</PageTransition>
+              </MainContentProvider>
             </div>
             <Footer />
           </div>

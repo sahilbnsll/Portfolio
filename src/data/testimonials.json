@@ -1,25 +1,36 @@
 {
   "testimonials": [
     {
+      "name": "Yash Garg",
+      "title": "Founder @ Zabe.in",
+      "quote": "Sahil is a sharp, highly effective Automation Engineer whose work with n8n has been instrumental in streamlining our operations at Zabe. He possesses a deep understanding of complex workflow logic, API integrations, and data routing, transforming manual, time-consuming bottlenecks into reliable, automated pipelines.\n\nBeyond his technical command of n8n, Sahil approaches architecture with scalability and error-handling in mind—ensuring critical synchronization flows run smoothly under pressure. He is proactive, quick to troubleshoot edge cases, and consistently delivers solutions that save engineering hours and operational overhead.\n\nSahil would be an outstanding asset to any team looking for a dependable engineer to build robust, scalable integrations and workflow infrastructure.",
+      "avatar": "YG",
+      "rating": 5,
+      "linkedInUrl": "https://www.linkedin.com/in/ygarg465/"
+    },
+    {
       "name": "Manhal Rahman",
       "title": "DevOps Engineer at Buyogo AG",
       "quote": "I worked with Sahil at Buyogo. He is an exceptional engineer who takes the lead of delivering features and owning them at an exceptional quality, along with his versatility of helping across the engineering org. He is well talented with Java, Terraform and AWS.",
       "avatar": "MR",
-      "rating": 5
+      "rating": 5,
+      "linkedInUrl": "https://www.linkedin.com/in/manhal-rahman-2993241a0/"
     },
     {
       "name": "Taylan Kutay",
       "title": "CEO at previous startup",
-      "quote": "I’ve worked closely with Sahil and found him to be a reliable, impact-driven DevOps engineer. He took strong ownership of cloud and infrastructure challenges, improved system reliability, and drove meaningful automation and cost optimizations in AWS. Sahil’s technical depth and proactive mindset made him someone I could trust with critical systems.",
+      "quote": "I've worked closely with Sahil and found him to be a reliable, impact-driven DevOps engineer. He took strong ownership of cloud and infrastructure challenges, improved system reliability, and drove meaningful automation and cost optimizations in AWS. Sahil's technical depth and proactive mindset made him someone I could trust with critical systems.",
       "avatar": "TK",
-      "rating": 5
+      "rating": 5,
+      "linkedInUrl": "https://www.linkedin.com/in/taylankutay/"
     },
     {
       "name": "Arshaque Mohammed",
       "title": "Senior Software Engineer at Buyogo AG",
-      "quote": "I worked with Sahil as a Devops Engineer and had a good experience collaborating with him. He handled day-to-day tasks well, supported deployments, and optimised the architecture to reduce cost without reducing the throughput and availability of the system. He was dependable, easy to work with and responsive whenever issues came up. His practical approach and willingness to help the team was top notch. His ownership over the infrastructure of the project helped keep things running smoothly. I’d recommend him as a reliable Devops Engineer and teammate.",
+      "quote": "I worked with Sahil as a Devops Engineer and had a good experience collaborating with him. He handled day-to-day tasks well, supported deployments, and optimised the architecture to reduce cost without reducing the throughput and availability of the system. He was dependable, easy to work with and responsive whenever issues came up. His practical approach and willingness to help the team was top notch. His ownership over the infrastructure of the project helped keep things running smoothly. I'd recommend him as a reliable Devops Engineer and teammate.",
       "avatar": "AM",
-      "rating": 5
+      "rating": 5,
+      "linkedInUrl": "https://www.linkedin.com/in/arshaque/"
     }
   ]
 }

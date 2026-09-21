@@ -1,9 +1,8 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/Button";
+import Switch from "./ui/sky-toggle";
 import { useSound } from "@/hooks/useSound";
 
 export default function ThemeToggle() {
@@ -16,26 +15,43 @@ export default function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return null;
+    return (
+      <div
+        aria-hidden="true"
+        className="inline-flex h-[22px] w-[38px] rounded-full bg-muted/50"
+      />
+    );
   }
 
+  const isDark = resolvedTheme === "dark";
+
+  const handleToggle = (checked: boolean) => {
+    playClick();
+
+    const targetTheme = checked ? "dark" : "light";
+    if (typeof document !== "undefined" && "startViewTransition" in document) {
+      (document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(() => {
+        const root = document.documentElement;
+        if (targetTheme === "dark") {
+          root.classList.add("dark");
+        } else {
+          root.classList.remove("dark");
+        }
+        setTheme(targetTheme);
+      });
+    } else {
+      setTheme(targetTheme);
+    }
+  };
+
   return (
-    <Button
-      size="icon"
-      variant="ghost"
-      title={resolvedTheme === "dark" ? "Dark mode (click for light mode)" : "Light mode (click for dark mode)"}
-      aria-label={resolvedTheme === "dark" ? "Dark mode (click for light mode)" : "Light mode (click for dark mode)"}
-      onClick={() => {
-        playClick();
-        setTheme(resolvedTheme === "dark" ? "light" : "dark");
-      }}
-    >
-      {resolvedTheme === "dark" ? (
-        <MoonIcon className="size-4 text-indigo-400" />
-      ) : (
-        <SunIcon className="size-4 text-amber-500" />
-      )}
-      <span className="sr-only">Theme Toggle</span>
-    </Button>
+    <div className="flex h-7 items-center justify-center">
+      <Switch
+        checked={isDark}
+        onChange={(e) => handleToggle(e.target.checked)}
+        size="7px"
+        aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      />
+    </div>
   );
 }

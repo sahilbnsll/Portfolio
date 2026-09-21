@@ -75,8 +75,8 @@ export default function Chat() {
       >
         <AccordionItem
           value="item-1"
-          className={`fixed bottom-4 right-4 overflow-hidden transition-all duration-500 ease-in-out
-            state-open:w-96 state-open:rounded-2xl state-open:border state-open:border-border state-open:bg-background state-open:opacity-100 
+          className={`fixed bottom-4 right-4 z-50 overflow-hidden transition-all duration-500 ease-in-out
+            state-open:w-[420px] max-[460px]:state-open:w-[calc(100vw-2rem)] state-open:rounded-2xl state-open:border state-open:border-border state-open:bg-background state-open:opacity-100 state-open:shadow-2xl
             state-closed:w-16 state-closed:h-16 state-closed:rounded-full state-closed:border state-closed:border-border/50 state-closed:bg-background/50 state-closed:hover:bg-accent/10 state-closed:hover:shadow-lg state-closed:cursor-pointer
             animate-in state-open:fade-in state-open:zoom-in-95
             animate-out state-closed:fade-out state-closed:zoom-out-95
@@ -106,7 +106,7 @@ export default function Chat() {
           >
             {hasOpened && (
               <div
-                className={`flex max-h-[400px] min-h-[380px] flex-col justify-between rounded-b-lg ${
+                className={`flex max-h-[540px] min-h-[440px] flex-col justify-between rounded-b-lg ${
                   !isExpanded ? "hidden" : ""
                 }`}
               >

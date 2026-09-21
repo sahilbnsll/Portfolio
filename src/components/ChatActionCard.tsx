@@ -16,10 +16,25 @@ import {
   Sparkles,
   ArrowDownCircle,
   Zap,
+  Calendar,
+  Clock,
+  Send,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 export interface ActionDirective {
-  type: "navigate" | "scroll_to" | "view_mode" | "download_resume" | "hire_inquiry" | "filter_projects" | "send_lead";
+  type:
+    | "navigate"
+    | "scroll_to"
+    | "view_mode"
+    | "download_resume"
+    | "hire_inquiry"
+    | "filter_projects"
+    | "send_lead"
+    | "book_call"
+    | "send_email"
+    | "compose_email";
   path?: string;
   target?: string;
   label?: string;
@@ -30,6 +45,8 @@ export interface ActionDirective {
   name?: string;
   email?: string;
   message?: string;
+  calLink?: string;
+  subject?: string;
 }
 
 interface Props {
@@ -67,6 +84,16 @@ function normalizeTarget(raw: string): string {
     graph: "graph",
     "skills-graph": "graph",
     "skill-graph": "graph",
+    architecture: "architecture",
+    "cloud-architecture": "architecture",
+    "architecture-diagram": "architecture",
+    "architecture-diagrams": "architecture",
+    diagram: "architecture",
+    diagrams: "architecture",
+    system: "architecture",
+    systems: "architecture",
+    topography: "architecture",
+    pipeline: "architecture",
   };
   return aliasMap[clean] || clean || "top";
 }
@@ -276,6 +303,49 @@ export default function ChatActionCard({ actions, isLatest = false }: Props) {
               </span>
               <ExternalLink className="size-3 shrink-0 opacity-70 transition-transform group-hover:scale-110" />
             </a>
+          );
+        }
+
+        if (act.type === "book_call") {
+          return (
+            <CalBookingCard
+              key={i}
+              calLink={act.calLink || act.path}
+              label={act.label}
+            />
+          );
+        }
+
+        if (act.type === "send_email") {
+          if (act.email && act.email.includes("@")) {
+            return (
+              <AutoSendLeadCard
+                key={i}
+                name={act.name}
+                email={act.email}
+                message={act.message}
+                isLatest={isLatest}
+              />
+            );
+          }
+          return (
+            <ComposeEmailCard
+              key={i}
+              defaultName={act.name}
+              defaultEmail={act.email}
+              defaultMessage={act.message}
+            />
+          );
+        }
+
+        if (act.type === "compose_email") {
+          return (
+            <ComposeEmailCard
+              key={i}
+              defaultName={act.name}
+              defaultEmail={act.email}
+              defaultMessage={act.message}
+            />
           );
         }
 
@@ -565,6 +635,241 @@ function RecruiterLeadCard({
           </button>
         </form>
       )}
+    </div>
+  );
+}
+
+function CalBookingCard({
+  calLink = "sahilbansal/quick-chat-with-sahil",
+  label = "Quick Chat with Sahil (30 min)",
+}: {
+  calLink?: string;
+  label?: string;
+}) {
+  const [showEmbed, setShowEmbed] = useState(false);
+  const cleanLink = (calLink || "sahilbansal/quick-chat-with-sahil").replace(
+    /^https?:\/\/cal\.com\//,
+    ""
+  );
+  const fullUrl = `https://cal.com/${cleanLink}`;
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-primary/35 bg-card/90 p-3.5 shadow-md backdrop-blur-sm transition-all hover:border-primary/50">
+      <div className="flex items-start gap-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <Calendar className="size-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-xs font-bold text-foreground">{label}</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+              <Clock className="size-2.5" /> 30 min
+            </span>
+          </div>
+          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+            Schedule a 1-on-1 strategy call, architecture discussion, or consultation directly with Sahil on Cal.com.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setShowEmbed((prev) => !prev)}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90"
+        >
+          <Calendar className="size-3.5" />
+          <span>{showEmbed ? "Hide Calendar" : "Pick Date & Time in Chat"}</span>
+          {showEmbed ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+        </button>
+
+        <a
+          href={fullUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/80 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+        >
+          <span>Open on Cal.com</span>
+          <ExternalLink className="size-3 text-muted-foreground" />
+        </a>
+      </div>
+
+      {showEmbed && (
+        <div className="mt-3 overflow-hidden rounded-xl border border-border/60 bg-background/95 shadow-inner">
+          <iframe
+            src={`https://cal.com/${cleanLink}?embed=true`}
+            title="Book a chat with Sahil"
+            className="h-[460px] w-full border-0"
+            loading="lazy"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ComposeEmailCard({
+  defaultName = "",
+  defaultEmail = "",
+  defaultMessage = "",
+}: {
+  defaultName?: string;
+  defaultEmail?: string;
+  defaultMessage?: string;
+}) {
+  const [name, setName] = useState(defaultName);
+  const [email, setEmail] = useState(defaultEmail);
+  const [message, setMessage] = useState(defaultMessage);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedMessage = message.trim();
+
+    if (trimmedName.length < 2) {
+      toast.error("Please provide your name (at least 2 characters).");
+      return;
+    }
+    if (!trimmedEmail.includes("@") || !trimmedEmail.includes(".")) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    if (!trimmedMessage) {
+      toast.error("Please enter your message.");
+      return;
+    }
+
+    setStatus("sending");
+    setErrorMsg("");
+
+    try {
+      const res = await sendEmail({
+        name: trimmedName,
+        email: trimmedEmail,
+        message: trimmedMessage,
+      });
+
+      if (res.error) {
+        setStatus("error");
+        setErrorMsg(typeof res.error === "string" ? res.error : "Failed to deliver email.");
+        toast.error("Failed to send message to Sahil.");
+      } else {
+        setStatus("sent");
+        toast.success("Message delivered to Sahil at connect@sahilbansal.net!");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMsg("Network error. Please try again or email directly.");
+    }
+  };
+
+  if (status === "sent") {
+    return (
+      <div className="flex flex-col gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 text-xs text-emerald-300">
+        <div className="flex items-start gap-2.5">
+          <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-400" />
+          <div>
+            <p className="font-semibold text-emerald-300">Email Delivered to Sahil&apos;s Inbox!</p>
+            <p className="mt-0.5 text-[11px] leading-relaxed text-emerald-400/90">
+              Message dispatched to <span className="font-mono underline">connect@sahilbansal.net</span>. Sahil will reply directly to <span className="font-mono font-semibold">{email}</span> within 24 hours.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setStatus("idle")}
+          className="self-start text-[11px] text-emerald-400 underline hover:text-emerald-300"
+        >
+          Send another message
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-primary/35 bg-card/90 p-3.5 shadow-md backdrop-blur-sm">
+      <div className="flex items-center gap-2">
+        <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <Mail className="size-3.5" />
+        </div>
+        <div>
+          <h4 className="text-xs font-bold text-foreground">Send Email to Sahil</h4>
+          <p className="text-[10px] text-muted-foreground">
+            Delivers straight to <span className="font-mono text-primary">connect@sahilbansal.net</span>
+          </p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2.5">
+        <div>
+          <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Your Name
+          </label>
+          <input
+            type="text"
+            required
+            placeholder="e.g. Alex Rivera"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="mt-0.5 w-full rounded border border-border/60 bg-background/80 px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Your Email
+          </label>
+          <input
+            type="email"
+            required
+            placeholder="alex@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mt-0.5 w-full rounded border border-border/60 bg-background/80 px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Message
+          </label>
+          <textarea
+            required
+            rows={3}
+            placeholder="Hi Sahil, I'd like to discuss..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="mt-0.5 w-full rounded border border-border/60 bg-background/80 px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+          />
+        </div>
+
+        {status === "error" && (
+          <p className="text-[11px] text-rose-400">
+            {errorMsg || "Failed to send message. Please try again."}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg bg-primary py-2 text-xs font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90 disabled:opacity-50"
+        >
+          {status === "sending" ? (
+            <>
+              <Loader2 className="size-3.5 animate-spin" />
+              <span>Sending to Sahil...</span>
+            </>
+          ) : (
+            <>
+              <Send className="size-3.5" />
+              <span>Send Email to Sahil</span>
+            </>
+          )}
+        </button>
+      </form>
     </div>
   );
 }

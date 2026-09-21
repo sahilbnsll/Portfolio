@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { MapCloudscape } from "@/components/ui/cloudscape";
 
 export interface LocationMapProps {
@@ -79,15 +78,10 @@ export function LocationMap({ className = "" }: LocationMapProps) {
 
       /* Sector 24 marker */
       const el = document.createElement("div");
-      el.style.cssText = "display:flex;flex-direction:column;align-items:center;cursor:pointer;";
+      el.style.cssText = "position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;";
       el.innerHTML = `
-        <div style="position:relative;display:flex;align-items:center;justify-content:center;">
-          <span class="map-ping-ring"></span>
-          <span style="position:relative;width:11px;height:11px;border-radius:50%;background:#0ea5e9;border:2.5px solid white;box-shadow:0 2px 10px rgba(14,165,233,0.6);"></span>
-        </div>
-        <span style="margin-top:5px;font-size:11px;font-weight:700;color:#0f172a;background:rgba(255,255,255,0.88);backdrop-filter:blur(4px);padding:1px 6px;border-radius:4px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.15);letter-spacing:0.01em;font-family:system-ui,sans-serif;">
-          Gurugram
-        </span>
+        <span class="map-ping-ring"></span>
+        <span style="position:relative;width:11px;height:11px;border-radius:50%;background:#0ea5e9;border:2.5px solid white;box-shadow:0 2px 10px rgba(14,165,233,0.6);"></span>
       `;
 
       new mgl.Marker({ element: el }).setLngLat(SECTOR24_COORDS).addTo(map);

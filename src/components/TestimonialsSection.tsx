@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Linkedin } from "lucide-react";
 import testimonialsData from "@/data/testimonials.json";
 import { useEffect, useMemo, useState } from "react";
 import SectionHeader from "./SectionHeader";
@@ -124,9 +124,21 @@ export default function TestimonialsSection() {
                         </div>
                       </div>
                     </div>
+                    {/* LinkedIn verification link */}
+                    {(testimonial as typeof testimonial & { linkedInUrl?: string }).linkedInUrl && (
+                      <a
+                        href={(testimonial as typeof testimonial & { linkedInUrl?: string }).linkedInUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`View ${testimonial.name} on LinkedIn`}
+                        className="shrink-0 rounded-lg p-1.5 text-muted-foreground/60 transition-colors hover:bg-[#0077b5]/10 hover:text-[#0077b5]"
+                      >
+                        <Linkedin className="size-4" aria-hidden />
+                      </a>
+                    )}
                   </div>
 
-                  <p className="text-sm leading-7 text-foreground/90 sm:min-h-[104px] sm:leading-relaxed">
+                  <p className="whitespace-pre-line text-sm leading-7 text-foreground/90 sm:min-h-[104px] sm:leading-relaxed">
                     {testimonial.quote}
                   </p>
                 </motion.article>

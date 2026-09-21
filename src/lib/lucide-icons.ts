@@ -1,17 +1,21 @@
-import dynamicIconImports from "lucide-react/dynamicIconImports";
+import * as LucideIcons from "lucide-react";
 
-const iconAliases = {
-  externalLink: "external-link",
-} as const;
+export function toPascalCase(str: string): string {
+  return str
+    .replace(/[-_]([a-z0-9])/gi, (_, c) => c.toUpperCase())
+    .replace(/^[a-z]/, (c) => c.toUpperCase());
+}
 
-export type DynamicIconName = keyof typeof dynamicIconImports;
+export function resolveIconName(name: string): string | null {
+  if (!name) return null;
+  const aliasMap: Record<string, string> = {
+    externalLink: "ExternalLink",
+    "external-link": "ExternalLink",
+  };
 
-export function resolveIconName(name: string): DynamicIconName | null {
-  const aliasMap = iconAliases as Record<string, DynamicIconName>;
-  const resolved = aliasMap[name] ?? name;
-
-  if (resolved in dynamicIconImports) {
-    return resolved as DynamicIconName;
+  const resolved = aliasMap[name] || toPascalCase(name);
+  if (resolved in LucideIcons && typeof (LucideIcons as Record<string, unknown>)[resolved] !== "undefined") {
+    return resolved;
   }
 
   return null;
