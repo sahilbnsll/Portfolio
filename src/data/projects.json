@@ -1,138 +1,6 @@
 {
   "projects": [
     {
-      "name": "LumaCV: AI Resume Intelligence",
-      "slug": "lumacv",
-      "description": "**Problem:** Resume tailoring is a manual, error-prone process that often fails ATS screening due to poor keyword alignment and inconsistent formatting. \n**Solution:** Built an AI-first resume intelligence platform using multi-LLM orchestration to parse resumes, analyze job descriptions, and generate tailored, ATS-optimized resumes with deterministic LaTeX rendering. \n**Impact:** Reduced resume tailoring time from ~30 minutes to under 60 seconds while ensuring consistent formatting, improved keyword coverage, and higher ATS compatibility.",
-      "summary": "AI-powered resume intelligence platform that automates ATS-optimized resume generation using multi-LLM failover and deterministic LaTeX rendering.",
-      "image": "/img/lumacv.png",
-      "category": "Automation & AI",
-      "metrics": [
-        "30 min -> <60 sec automation",
-        "Multi-LLM failover (Gemini, Claude, Llama)",
-        "Deterministic LaTeX PDF pipeline",
-        "Real-time JD skill gap analysis"
-      ],
-      "tags": [
-        "Next.js",
-        "TypeScript",
-        "AI/LLM",
-        "Supabase",
-        "LaTeX",
-        "State Management",
-        "Rate Limiting",
-        "Vercel"
-      ],
-      "href": "/projects/lumacv",
-      "links": [
-        {
-          "name": "Live",
-          "href": "https://luma-cv.vercel.app/",
-          "icon": "external-link"
-        }
-      ],
-      "detail": {
-        "overview": "LumaCV is a full-stack AI system designed to automate resume tailoring at scale. It combines LLM-based parsing, semantic job description analysis, and deterministic LaTeX rendering to produce production-grade resumes with minimal user input. The system is built with reliability in mind, incorporating model failover, rate limiting, and state persistence.",
-        "stackHighlights": [
-          "Next.js App Router with Server Actions",
-          "Multi-provider LLM orchestration via OpenRouter",
-          "Supabase Auth and session management",
-          "Zustand for persistent client state",
-          "Upstash-based rate limiting and request control",
-          "Remote LaTeX compilation service"
-        ],
-        "architecture": [
-          {
-            "title": "Resume Builder Client",
-            "component": "Next.js 14 App Router + Zustand",
-            "detail": "Multi-step wizard (Upload PDF + JD \u2192 Edit Details \u2192 AI Processing \u2192 Preview + Score) with persistent client state."
-          },
-          {
-            "title": "AI Orchestration Layer",
-            "component": "Gemini + OpenRouter",
-            "detail": "Multi-provider failover across GPT-4o Mini, Llama 3.3, Gemini Flash, and Claude 3.5 so degraded vendors don't block resume generation."
-          },
-          {
-            "title": "PDF Compilation",
-            "component": "External LaTeX API",
-            "detail": "Serverless-compatible PDF rendering\u2014Vercel Hobby tier can't fit LaTeX engines, so compilation is offloaded to external REST API."
-          }
-        ],
-        "beforeAfter": [
-          {
-            "label": "Resume Tailoring",
-            "before": "Manual rewriting + keyword guessing",
-            "after": "Automated semantic alignment with JD"
-          },
-          {
-            "label": "Formatting",
-            "before": "Inconsistent Word/Docs formatting",
-            "after": "Deterministic LaTeX-generated PDFs"
-          },
-          {
-            "label": "Time to Output",
-            "before": "20-30 minutes",
-            "after": "<60 seconds"
-          }
-        ],
-        "architectureMermaid": "flowchart LR\n  subgraph Input\n    U[User Resume / JD]\n  end\n  subgraph AI\n    P[LLM Parser]\n    A[JD Analyzer]\n    T[Tailoring Engine]\n  end\n  subgraph Infra\n    S[(Supabase Auth)]\n    Z[Zustand State]\n    R[Rate Limiter]\n  end\n  subgraph Output\n    L[LaTeX Engine]\n    PDF[Final Resume]\n  end\n  U --> P --> A --> T\n  T --> L --> PDF\n  S <--> T\n  Z <--> U\n  R --> T",
-        "decisions": [
-          {
-            "title": "External LaTeX service over local compilation",
-            "context": "Vercel Hobby tier can't fit LaTeX engines due to size constraints",
-            "decision": "Offload PDF compilation to external REST API to stay on free tier without sacrificing output quality"
-          },
-          {
-            "title": "Multi-LLM failover",
-            "context": "Single provider downtime blocks users and creates bad experience",
-            "decision": "OpenRouter routing with automatic fallback across 4 providers (GPT-4o Mini, Llama, Gemini, Claude)"
-          },
-          {
-            "title": "Client-side PDF parsing",
-            "context": "Serverless functions have payload limits and adding file upload handling increases complexity",
-            "decision": "Use pdfjs-dist in browser to extract text before sending to APIs, keeping server routes lightweight"
-          }
-        ],
-        "pipeline": [
-          {
-            "stage": "Build",
-            "tool": "Vercel",
-            "detail": "Auto-deploy from GitHub, Next.js detected and optimized"
-          },
-          {
-            "stage": "Rate Limiting",
-            "tool": "Upstash Redis",
-            "detail": "Prevent API abuse on LLM endpoints with Redis-backed rate limiting"
-          },
-          {
-            "stage": "Deploy",
-            "tool": "Vercel Edge",
-            "detail": "maxDuration: 60 for LLM routes, Edge runtime for scoring endpoints"
-          }
-        ],
-        "incidents": [
-          {
-            "title": "Vercel 10s function timeout on large resumes",
-            "severity": "P2",
-            "resolution": "Increased maxDuration to 60s and implemented client-side PDF parsing to reduce payload size",
-            "lesson": "Serverless timeouts are hard limits\u2014offload heavy work to client or external services"
-          },
-          {
-            "title": "LaTeX compiler rendering inconsistencies",
-            "severity": "P3",
-            "resolution": "Standardized on single external LaTeX service with deterministic templates",
-            "lesson": "Browser PDF generation is inconsistent\u2014deterministic LaTeX pipelines ensure predictable output"
-          },
-          {
-            "title": "Live editing box performance issues",
-            "severity": "P3",
-            "resolution": "Debounced input handling and virtualized large text areas for smooth real-time preview",
-            "lesson": "Live preview features need debouncing and virtualization to handle large documents smoothly"
-          }
-        ]
-      }
-    },
-    {
       "name": "Claude Superpack",
       "slug": "claude-superpack",
       "description": "**Problem:** Claude Code starts from scratch every time, losing context, reinventing wheels, and requiring constant hand-holding for complex tasks.\n**Solution:** Built a 33-skill agentic orchestration system for Claude Code featuring persistent memory, blast-radius-aware codebase graphs, parallel worker coordination, and self-improving behavior.\n**Impact:** Transformed a single-shot assistant into an autonomous, stateful agent that safely orchestrates complex tasks with zero external dependencies.",
@@ -344,6 +212,138 @@
             "severity": "P2",
             "resolution": "Engineered session extraction via export_cookies.py and added base64 cookie injection to bypass authentication flows smoothly",
             "lesson": "Repeated automated logins inevitably face bot detection\u2014session persistence is mandatory for reliable long-term headless tasks"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LumaCV: AI Resume Intelligence",
+      "slug": "lumacv",
+      "description": "**Problem:** Resume tailoring is a manual, error-prone process that often fails ATS screening due to poor keyword alignment and inconsistent formatting. \n**Solution:** Built an AI-first resume intelligence platform using multi-LLM orchestration to parse resumes, analyze job descriptions, and generate tailored, ATS-optimized resumes with deterministic LaTeX rendering. \n**Impact:** Reduced resume tailoring time from ~30 minutes to under 60 seconds while ensuring consistent formatting, improved keyword coverage, and higher ATS compatibility.",
+      "summary": "AI-powered resume intelligence platform that automates ATS-optimized resume generation using multi-LLM failover and deterministic LaTeX rendering.",
+      "image": "/img/lumacv.png",
+      "category": "Automation & AI",
+      "metrics": [
+        "30 min -> <60 sec automation",
+        "Multi-LLM failover (Gemini, Claude, Llama)",
+        "Deterministic LaTeX PDF pipeline",
+        "Real-time JD skill gap analysis"
+      ],
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "AI/LLM",
+        "Supabase",
+        "LaTeX",
+        "State Management",
+        "Rate Limiting",
+        "Vercel"
+      ],
+      "href": "/projects/lumacv",
+      "links": [
+        {
+          "name": "Live",
+          "href": "https://luma-cv.vercel.app/",
+          "icon": "external-link"
+        }
+      ],
+      "detail": {
+        "overview": "LumaCV is a full-stack AI system designed to automate resume tailoring at scale. It combines LLM-based parsing, semantic job description analysis, and deterministic LaTeX rendering to produce production-grade resumes with minimal user input. The system is built with reliability in mind, incorporating model failover, rate limiting, and state persistence.",
+        "stackHighlights": [
+          "Next.js App Router with Server Actions",
+          "Multi-provider LLM orchestration via OpenRouter",
+          "Supabase Auth and session management",
+          "Zustand for persistent client state",
+          "Upstash-based rate limiting and request control",
+          "Remote LaTeX compilation service"
+        ],
+        "architecture": [
+          {
+            "title": "Resume Builder Client",
+            "component": "Next.js 14 App Router + Zustand",
+            "detail": "Multi-step wizard (Upload PDF + JD \u2192 Edit Details \u2192 AI Processing \u2192 Preview + Score) with persistent client state."
+          },
+          {
+            "title": "AI Orchestration Layer",
+            "component": "Gemini + OpenRouter",
+            "detail": "Multi-provider failover across GPT-4o Mini, Llama 3.3, Gemini Flash, and Claude 3.5 so degraded vendors don't block resume generation."
+          },
+          {
+            "title": "PDF Compilation",
+            "component": "External LaTeX API",
+            "detail": "Serverless-compatible PDF rendering\u2014Vercel Hobby tier can't fit LaTeX engines, so compilation is offloaded to external REST API."
+          }
+        ],
+        "beforeAfter": [
+          {
+            "label": "Resume Tailoring",
+            "before": "Manual rewriting + keyword guessing",
+            "after": "Automated semantic alignment with JD"
+          },
+          {
+            "label": "Formatting",
+            "before": "Inconsistent Word/Docs formatting",
+            "after": "Deterministic LaTeX-generated PDFs"
+          },
+          {
+            "label": "Time to Output",
+            "before": "20-30 minutes",
+            "after": "<60 seconds"
+          }
+        ],
+        "architectureMermaid": "flowchart LR\n  subgraph Input\n    U[User Resume / JD]\n  end\n  subgraph AI\n    P[LLM Parser]\n    A[JD Analyzer]\n    T[Tailoring Engine]\n  end\n  subgraph Infra\n    S[(Supabase Auth)]\n    Z[Zustand State]\n    R[Rate Limiter]\n  end\n  subgraph Output\n    L[LaTeX Engine]\n    PDF[Final Resume]\n  end\n  U --> P --> A --> T\n  T --> L --> PDF\n  S <--> T\n  Z <--> U\n  R --> T",
+        "decisions": [
+          {
+            "title": "External LaTeX service over local compilation",
+            "context": "Vercel Hobby tier can't fit LaTeX engines due to size constraints",
+            "decision": "Offload PDF compilation to external REST API to stay on free tier without sacrificing output quality"
+          },
+          {
+            "title": "Multi-LLM failover",
+            "context": "Single provider downtime blocks users and creates bad experience",
+            "decision": "OpenRouter routing with automatic fallback across 4 providers (GPT-4o Mini, Llama, Gemini, Claude)"
+          },
+          {
+            "title": "Client-side PDF parsing",
+            "context": "Serverless functions have payload limits and adding file upload handling increases complexity",
+            "decision": "Use pdfjs-dist in browser to extract text before sending to APIs, keeping server routes lightweight"
+          }
+        ],
+        "pipeline": [
+          {
+            "stage": "Build",
+            "tool": "Vercel",
+            "detail": "Auto-deploy from GitHub, Next.js detected and optimized"
+          },
+          {
+            "stage": "Rate Limiting",
+            "tool": "Upstash Redis",
+            "detail": "Prevent API abuse on LLM endpoints with Redis-backed rate limiting"
+          },
+          {
+            "stage": "Deploy",
+            "tool": "Vercel Edge",
+            "detail": "maxDuration: 60 for LLM routes, Edge runtime for scoring endpoints"
+          }
+        ],
+        "incidents": [
+          {
+            "title": "Vercel 10s function timeout on large resumes",
+            "severity": "P2",
+            "resolution": "Increased maxDuration to 60s and implemented client-side PDF parsing to reduce payload size",
+            "lesson": "Serverless timeouts are hard limits\u2014offload heavy work to client or external services"
+          },
+          {
+            "title": "LaTeX compiler rendering inconsistencies",
+            "severity": "P3",
+            "resolution": "Standardized on single external LaTeX service with deterministic templates",
+            "lesson": "Browser PDF generation is inconsistent\u2014deterministic LaTeX pipelines ensure predictable output"
+          },
+          {
+            "title": "Live editing box performance issues",
+            "severity": "P3",
+            "resolution": "Debounced input handling and virtualized large text areas for smooth real-time preview",
+            "lesson": "Live preview features need debouncing and virtualization to handle large documents smoothly"
           }
         ]
       }
