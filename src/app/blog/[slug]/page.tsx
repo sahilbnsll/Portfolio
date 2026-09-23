@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import blogData from "@/data/blog.json";
 import blogContentData from "@/data/blog-content.json";
 import { getBlogSlug, isExternalBlogPost } from "@/lib/blog-utils";
+import { SITE_URL, OG_IMAGE_PATH } from "@/lib/seo";
 
 type Post = {
   title: string;
@@ -37,9 +38,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = posts.find((p) => getBlogSlug(p) === slug);
   if (!post) return { title: "Blog" };
+
+  const title = `${post.title} | Blog | Sahil Bansal`;
+  const url = `${SITE_URL}/blog/${slug}`;
+
   return {
-    title: `${post.title} | Blog`,
+    title: { absolute: title },
     description: post.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url,
+      type: "article",
+      publishedTime: post.date,
+      images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: post.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [OG_IMAGE_PATH],
+    },
   };
 }
 

@@ -1,9 +1,27 @@
 import type { Metadata } from "next";
 import InteractiveResume from "@/components/InteractiveResume";
+import { SITE_URL, OG_IMAGE_PATH } from "@/lib/seo";
+
+const title = "Interactive Resume";
+const description =
+  "Filter-enabled interactive resume highlighting DevOps, cloud infrastructure, and automation experience.";
 
 export const metadata: Metadata = {
-  title: "Interactive Resume | Sahil Bansal",
-  description: "Filter-enabled interactive resume highlighting DevOps, cloud infrastructure, and automation experience.",
+  title,
+  description,
+  alternates: { canonical: `${SITE_URL}/resume` },
+  openGraph: {
+    title,
+    description,
+    url: `${SITE_URL}/resume`,
+    images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: title }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [OG_IMAGE_PATH],
+  },
 };
 
 export default function ResumePage() {

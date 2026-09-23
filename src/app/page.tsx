@@ -1,64 +1,38 @@
 import type { Metadata } from "next";
 import HomePageClient from "@/components/HomePageClient";
-
-const portfolioUrl = "https://sahilbansal.net";
-const pageTitle = "Sahil Bansal | DevOps & Cloud Infrastructure Engineer";
-const pageDescription =
-  "DevOps and cloud infrastructure engineer focused on AWS, Terraform, Kubernetes, CI/CD automation, observability, and cost-efficient production systems.";
-
-const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Sahil Bansal",
-  jobTitle: "DevOps & Cloud Infrastructure Engineer",
-  knowAbout: ["AWS", "Terraform", "Kubernetes", "CI/CD"],
-  alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "University of Petroleum and Energy Studies",
-    url: "https://www.upes.ac.in",
-  },
-  url: portfolioUrl,
-};
+import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION, SITE_NAME, OG_IMAGE_PATH } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: {
-    absolute: pageTitle,
+    absolute: SITE_TITLE,
   },
-  description: pageDescription,
+  description: SITE_DESCRIPTION,
   alternates: {
-    canonical: portfolioUrl,
+    canonical: SITE_URL,
   },
   openGraph: {
-    title: pageTitle,
-    description: pageDescription,
-    url: portfolioUrl,
-    siteName: "Sahil Bansal",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: OG_IMAGE_PATH,
         width: 1200,
         height: 630,
-        alt: pageTitle,
+        alt: SITE_TITLE,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: pageTitle,
-    description: pageDescription,
-    images: ["/og-image.png"],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE_PATH],
   },
 };
 
 export default function Home() {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-      />
-      <HomePageClient />
-    </>
-  );
+  return <HomePageClient />;
 }

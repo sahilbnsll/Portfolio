@@ -7,5 +7,9 @@ export default function MainContentProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="grow">{children}</main>;
+  return (
+    <main id="main-content" className="grow">
+      {children}
+    </main>
+  );
 }

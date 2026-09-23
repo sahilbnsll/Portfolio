@@ -7,7 +7,7 @@ import { ArrowUpRight, Globe, Github, Linkedin, Coffee } from "lucide-react";
 import SystemStatus from "./SystemStatus";
 import ReportIssueDialog from "./ReportIssueDialog";
 
-const portfolioUrl = "https://sahilbansal.net/";
+const portfolioUrl = "https://www.sahilbansal.net/";
 
 type FooterLink = {
   label: string;

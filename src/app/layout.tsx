@@ -3,7 +3,9 @@ import Header from "@/components/Header";
 import Providers from "@/components/Providers";
 import ScrollToTop from "@/components/ScrollToTop";
 import PageTransition from "@/components/PageTransition";
+import JsonLd from "@/components/JsonLd";
 import { cn } from "@/lib/utils";
+import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION, OG_IMAGE_PATH } from "@/lib/seo";
 import type { Metadata, Viewport } from "next";
 import { Calistoga, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -26,45 +28,48 @@ const calistoga = Calistoga({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sahilbansal.net"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
+    default: SITE_TITLE,
     template: "%s | Sahil Bansal",
   },
-  description:
-    "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
+  description: SITE_DESCRIPTION,
+  authors: [{ name: "Sahil Bansal", url: SITE_URL }],
+  creator: "Sahil Bansal",
   manifest: "/manifest.json",
+  alternates: {
+    canonical: SITE_URL,
+  },
   icons: {
     icon: [
-      { url: "/icon.png?v=5", type: "image/png" },
-      { url: "/favicon.ico?v=5", sizes: "any" },
+      { url: "/icon-32.png?v=6", type: "image/png", sizes: "32x32" },
+      { url: "/icon.png?v=6", type: "image/png", sizes: "512x512" },
+      { url: "/favicon.ico?v=6", sizes: "any" },
     ],
-    shortcut: "/favicon.ico?v=5",
-    apple: "/apple-touch-icon.png?v=5",
+    shortcut: "/favicon.ico?v=6",
+    apple: "/apple-touch-icon.png?v=6",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sahilbansal.net",
-    siteName: "Sahil Bansal",
-    title: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
-    description:
-      "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/og-image.png",
+        url: OG_IMAGE_PATH,
         width: 1200,
         height: 630,
-        alt: "Sahil Bansal — DevOps Engineer",
+        alt: "Sahil Bansal — DevOps & Cloud Infrastructure Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sahil Bansal | DevOps & Cloud Infrastructure Engineer",
-    description:
-      "DevOps and cloud infrastructure engineer specializing in AWS, Terraform, Kubernetes, CI/CD automation, observability, and reliable cost-efficient systems.",
-    images: ["/og-image.png"],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE_PATH],
   },
   robots: {
     index: true,
@@ -76,6 +81,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({
@@ -92,6 +101,13 @@ export default function RootLayout({
           calistoga.variable,
         )}
       >
+        <JsonLd />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-background"
+        >
+          Skip to main content
+        </a>
         <Providers>
           {/* Full-canvas kinetic floating paths backdrop across all pages */}
           <div

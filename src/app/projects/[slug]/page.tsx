@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import BrowserFrame from "@/components/BrowserFrame";
+import { SITE_URL, OG_IMAGE_PATH } from "@/lib/seo";
 
 const parsed = projectSchema.parse(data);
 
@@ -61,9 +62,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = parsed.projects.find((p) => getProjectSlug(p) === slug);
   if (!project) return { title: "Project" };
+
+  const title = project.name;
+  const description = project.description.replace(/\*\*/g, "").slice(0, 160);
+  const url = `${SITE_URL}/projects/${slug}`;
+  // Project screenshots are 16:9 and several MB — unsuitable as raw OG images
+  // (wrong aspect ratio, slow for social crawlers to fetch). Use the site's
+  // dedicated 1200x630 share image instead.
+  const ogImage = new URL(OG_IMAGE_PATH, SITE_URL).toString();
+
   return {
-    title: project.name,
-    description: project.description.replace(/\*\*/g, "").slice(0, 160),
+    title: { absolute: `${title} | Sahil Bansal` },
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${title} case study` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 
@@ -138,7 +162,7 @@ export default async function ProjectCaseStudyPage({ params }: Props) {
           <div className="relative aspect-[16/9] w-full bg-muted">
             <Image
               src={project.image}
-              alt=""
+              alt={`${project.name} project screenshot`}
               fill
               className="object-cover"
               sizes="(max-width: 896px) 100vw, 896px"
