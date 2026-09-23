@@ -1,180 +1,203 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Linkedin } from "lucide-react";
 import testimonialsData from "@/data/testimonials.json";
-import { useEffect, useMemo, useState } from "react";
 import SectionHeader from "./SectionHeader";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { cn } from "@/lib/utils";
+
+const SQRT_5000 = Math.sqrt(5000);
+
+type Testimonial = {
+  name: string;
+  title: string;
+  quote: string;
+  avatar: string;
+  rating: number;
+  linkedInUrl?: string;
+};
+
+type StaggerItem = Testimonial & { tempId: number };
+
+function TestimonialCard({
+  position,
+  testimonial,
+  handleMove,
+  cardSize,
+}: {
+  position: number;
+  testimonial: StaggerItem;
+  handleMove: (steps: number) => void;
+  cardSize: number;
+}) {
+  const isCenter = position === 0;
+
+  return (
+    <div
+      onClick={() => handleMove(position)}
+      className={cn(
+        "absolute left-1/2 top-1/2 cursor-pointer border-2 p-6 transition-all duration-500 ease-in-out sm:p-8",
+        isCenter
+          ? "z-10 border-primary bg-primary text-primary-foreground"
+          : "z-0 border-border bg-card text-card-foreground hover:border-primary/50",
+      )}
+      style={{
+        width: cardSize,
+        height: cardSize,
+        clipPath:
+          "polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)",
+        transform: `
+          translate(-50%, -50%)
+          translateX(${(cardSize / 1.5) * position}px)
+          translateY(${isCenter ? -65 : position % 2 ? 15 : -15}px)
+          rotate(${isCenter ? 0 : position % 2 ? 2.5 : -2.5}deg)
+        `,
+        boxShadow: isCenter
+          ? "0px 8px 0px 4px hsl(var(--border))"
+          : "0px 0px 0px 0px transparent",
+      }}
+    >
+      <span
+        className="absolute block origin-top-right rotate-45 bg-border"
+        style={{ right: -2, top: 48, width: SQRT_5000, height: 2 }}
+      />
+
+      <div className="mb-4 flex items-center justify-between">
+        <div
+          className={cn(
+            "flex size-12 items-center justify-center rounded-full text-sm font-semibold ring-1",
+            isCenter
+              ? "bg-primary-foreground/15 text-primary-foreground ring-primary-foreground/30"
+              : "bg-primary/10 text-primary ring-primary/20",
+          )}
+        >
+          {testimonial.avatar}
+        </div>
+        {testimonial.linkedInUrl && (
+          <a
+            href={testimonial.linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`View ${testimonial.name} on LinkedIn`}
+            className={cn(
+              "shrink-0 rounded-lg p-1.5 transition-colors",
+              isCenter
+                ? "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                : "text-muted-foreground/60 hover:bg-[#0077b5]/10 hover:text-[#0077b5]",
+            )}
+          >
+            <Linkedin className="size-4" aria-hidden />
+          </a>
+        )}
+      </div>
+
+      <h3
+        className={cn(
+          "line-clamp-5 text-sm font-medium leading-relaxed sm:text-base",
+          isCenter ? "text-primary-foreground" : "text-foreground",
+        )}
+      >
+        &ldquo;{testimonial.quote}&rdquo;
+      </h3>
+
+      <p
+        className={cn(
+          "absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8",
+          "text-sm italic",
+          isCenter ? "text-primary-foreground/80" : "text-muted-foreground",
+        )}
+      >
+        <span className="block truncate font-medium not-italic">{testimonial.name}</span>
+        <span className="block truncate text-xs">{testimonial.title}</span>
+      </p>
+    </div>
+  );
+}
 
 export default function TestimonialsSection() {
-  const testimonials = testimonialsData.testimonials;
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const [cardsPerView, setCardsPerView] = useState(2);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(true);
-  const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
+  const testimonials = testimonialsData.testimonials as Testimonial[];
+  const [cardSize, setCardSize] = useState(365);
+  const [list, setList] = useState<StaggerItem[]>(() =>
+    testimonials.map((t, i) => ({ ...t, tempId: i })),
+  );
+
+  const handleMove = (steps: number) => {
+    setList((prev) => {
+      const next = [...prev];
+      if (steps > 0) {
+        for (let i = steps; i > 0; i--) {
+          const item = next.shift();
+          if (!item) return prev;
+          next.push({ ...item, tempId: Math.random() });
+        }
+      } else {
+        for (let i = steps; i < 0; i++) {
+          const item = next.pop();
+          if (!item) return prev;
+          next.unshift({ ...item, tempId: Math.random() });
+        }
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
-    const syncCardsPerView = () => {
-      setCardsPerView(window.innerWidth < 768 ? 1 : 2);
+    const updateSize = () => {
+      const { matches } = window.matchMedia("(min-width: 640px)");
+      setCardSize(matches ? 365 : 290);
     };
 
-    syncCardsPerView();
-    window.addEventListener("resize", syncCardsPerView);
-    return () => window.removeEventListener("resize", syncCardsPerView);
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
-
-  const pages = useMemo(() => {
-    const result = [];
-
-    for (let i = 0; i < testimonials.length; i += cardsPerView) {
-      result.push(testimonials.slice(i, i + cardsPerView));
-    }
-
-    return result;
-  }, [cardsPerView, testimonials]);
-
-  useEffect(() => {
-    setPageIndex((prev) => Math.min(prev, Math.max(0, pages.length - 1)));
-  }, [pages.length]);
-
-  useEffect(() => {
-    if (!isAutoPlay || pages.length <= 1) return;
-
-    const timer = setInterval(() => {
-      setSlideDirection(1);
-      setPageIndex((prev) => (prev + 1) % pages.length);
-    }, 6000);
-
-    return () => clearInterval(timer);
-  }, [isAutoPlay, pages.length]);
-
-  const goToPrevious = () => {
-    if (pageIndex === 0) return;
-    setSlideDirection(-1);
-    setPageIndex((prev) => Math.max(0, prev - 1));
-    setIsAutoPlay(false);
-  };
-
-  const goToNext = () => {
-    if (pageIndex >= pages.length - 1) return;
-    setSlideDirection(1);
-    setPageIndex((prev) => Math.min(pages.length - 1, prev + 1));
-    setIsAutoPlay(false);
-  };
-
-  const canGoPrevious = pageIndex > 0;
-  const canGoNext = pageIndex < pages.length - 1;
-  const activePage = pages[pageIndex] ?? [];
 
   return (
     <section id="testimonials" className="scroll-mt-28 flex flex-col gap-6">
       <SectionHeader title="What People Say" description="" />
 
       <div
-        className="relative"
-        onMouseEnter={() => setIsAutoPlay(false)}
-        onMouseLeave={() => setIsAutoPlay(true)}
+        className="relative w-full overflow-hidden rounded-[28px] bg-muted/30"
+        style={{ height: 600 }}
       >
-        <div className="overflow-hidden rounded-[28px]">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={`${cardsPerView}-${pageIndex}`}
-              initial={
-                prefersReducedMotion
-                  ? { opacity: 0 }
-                  : { opacity: 0, x: slideDirection > 0 ? 56 : -56 }
-              }
-              animate={{ opacity: 1, x: 0 }}
-              exit={
-                prefersReducedMotion
-                  ? { opacity: 0 }
-                  : { opacity: 0, x: slideDirection > 0 ? -56 : 56 }
-              }
-              transition={{ duration: prefersReducedMotion ? 0.2 : 0.42, ease: "easeOut" }}
-              className={`grid grid-cols-1 gap-4 sm:gap-6 ${cardsPerView > 1 ? "md:grid-cols-2" : ""}`}
-            >
-              {activePage.map((testimonial, idx) => (
-                <motion.article
-                  key={`${testimonial.name}-${cardsPerView}-${pageIndex}`}
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.32, delay: prefersReducedMotion ? 0 : idx * 0.08 }}
-                  whileHover={cardsPerView > 1 ? { y: -4 } : undefined}
-                  className="group flex h-full flex-col gap-4 rounded-2xl border border-border/70 bg-card/85 p-5 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_0_1px_rgba(99,102,241,0.2)] sm:p-7"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="relative flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
-                        <motion.span
-                          aria-hidden
-                          className="absolute inset-0 rounded-full border border-primary/30"
-                          animate={prefersReducedMotion ? undefined : { scale: [1, 1.12, 1], opacity: [0.5, 0, 0.5] }}
-                          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-                        />
-                        <span className="text-sm font-semibold">{testimonial.avatar}</span>
-                      </div>
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-semibold text-foreground">
-                          {testimonial.name}
-                        </div>
-                        <div className="truncate text-xs text-muted-foreground">
-                          {testimonial.title}
-                        </div>
-                      </div>
-                    </div>
-                    {/* LinkedIn verification link */}
-                    {(testimonial as typeof testimonial & { linkedInUrl?: string }).linkedInUrl && (
-                      <a
-                        href={(testimonial as typeof testimonial & { linkedInUrl?: string }).linkedInUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`View ${testimonial.name} on LinkedIn`}
-                        className="shrink-0 rounded-lg p-1.5 text-muted-foreground/60 transition-colors hover:bg-[#0077b5]/10 hover:text-[#0077b5]"
-                      >
-                        <Linkedin className="size-4" aria-hidden />
-                      </a>
-                    )}
-                  </div>
+        {list.map((testimonial, index) => {
+          const position = list.length % 2
+            ? index - (list.length + 1) / 2
+            : index - list.length / 2;
+          return (
+            <TestimonialCard
+              key={testimonial.tempId}
+              testimonial={testimonial}
+              handleMove={handleMove}
+              position={position}
+              cardSize={cardSize}
+            />
+          );
+        })}
 
-                  <p className="whitespace-pre-line text-sm leading-7 text-foreground/90 sm:min-h-[104px] sm:leading-relaxed">
-                    {testimonial.quote}
-                  </p>
-                </motion.article>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-6 flex items-center justify-center gap-3 sm:mt-8 sm:gap-4">
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
           <button
-            onClick={goToPrevious}
-            disabled={!canGoPrevious}
-            className="flex size-10 items-center justify-center rounded-full border border-border/50 bg-background transition-all duration-200 text-foreground disabled:cursor-not-allowed disabled:opacity-40 hover:enabled:bg-accent/10 hover:enabled:text-accent"
+            onClick={() => handleMove(-1)}
+            className={cn(
+              "flex h-12 w-12 items-center justify-center transition-colors sm:h-14 sm:w-14",
+              "border-2 border-border bg-background hover:bg-primary hover:text-primary-foreground",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            )}
+            aria-label="Previous testimonial"
           >
-            <ChevronLeft className="size-5" />
+            <ChevronLeft />
           </button>
-          <div className="flex gap-2">
-            {pages.map((_, index) => (
-              <motion.button
-                key={index}
-                onClick={() => {
-                  setSlideDirection(index >= pageIndex ? 1 : -1);
-                  setPageIndex(index);
-                  setIsAutoPlay(false);
-                }}
-                aria-label={`Go to testimonial page ${index + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${index === pageIndex ? "w-6 bg-accent" : "w-2 bg-border/50 hover:bg-border"}`}
-              />
-            ))}
-          </div>
           <button
-            onClick={goToNext}
-            disabled={!canGoNext}
-            className="flex size-10 items-center justify-center rounded-full border border-border/50 bg-background transition-all duration-200 text-foreground disabled:cursor-not-allowed disabled:opacity-40 hover:enabled:bg-accent/10 hover:enabled:text-accent"
+            onClick={() => handleMove(1)}
+            className={cn(
+              "flex h-12 w-12 items-center justify-center transition-colors sm:h-14 sm:w-14",
+              "border-2 border-border bg-background hover:bg-primary hover:text-primary-foreground",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            )}
+            aria-label="Next testimonial"
           >
-            <ChevronRight className="size-5" />
+            <ChevronRight />
           </button>
         </div>
       </div>
