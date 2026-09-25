@@ -8,6 +8,7 @@
         {
           "title": "Software Engineer — DevOps & Cloud Infrastructure",
           "start": "Jun 2024",
+          "end": "Jun 2026",
           "description": [
             "Architected a 99.99% available multi-tenant FTP ingress platform (500+ merchants) using SFTP-gateway and automated AWS provisioning",
             "Led ClickOps → Terraform migration + CI/CD modernization (GitHub Actions, semantic versioning), reducing TTR by 40% and improving engineering velocity by 30%",

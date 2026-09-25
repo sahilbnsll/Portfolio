@@ -3,12 +3,12 @@
   {
     "title": "Currently building",
     "headline": "AI Resume Intelligence Platform",
-    "body": "Automating ATS-optimized resume generation using multi-LLM orchestration and LaTeX pipelines.",
-    "tags": ["AI", "LLMs", "Next.js", "Automation"]
+    "body": "Open-source resume builder with anti-hallucination fact validation, deterministic ATS scoring, and native Typst PDF typesetting.",
+    "tags": ["AI", "LLMs", "Next.js", "Typst"]
   },
   "introduction": {
     "greeting": "infrastructure that scales automatically.",
-    "description": "I build cloud systems that don't break at 3am. From zero-downtime migrations to cost-optimized infrastructure. I obsess over reliability, automation, and giving teams the confidence to deploy. Currently architecting scalable infrastructure at Buyogo AG.",
+    "description": "I build cloud systems that don't break at 3am. From zero-downtime migrations to cost-optimized infrastructure. I obsess over reliability, automation, and giving teams the confidence to deploy. Most recently architected scalable infrastructure at Buyogo AG through June 2026 — currently open to new opportunities.",
     "chatPrompt": "Questions about DevOps, reliability, or cloud infrastructure? Ask the chat.",
     "escalation": {
       "text": "For anything else, let's",

@@ -36,10 +36,6 @@ export function personSchema() {
       "Infrastructure as Code",
       "Cloud Architecture",
     ],
-    worksFor: {
-      "@type": "Organization",
-      name: "Buyogo AG",
-    },
     alumniOf: {
       "@type": "CollegeOrUniversity",
       name: "University of Petroleum and Energy Studies",

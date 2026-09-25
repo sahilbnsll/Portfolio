@@ -3,23 +3,23 @@
     {
       "name": "LumaCV: AI Resume Intelligence",
       "slug": "lumacv",
-      "description": "**Problem:** Resume tailoring is a manual, error-prone process that often fails ATS screening due to poor keyword alignment and inconsistent formatting. \n**Solution:** Built an AI-first resume intelligence platform using multi-LLM orchestration to parse resumes, analyze job descriptions, and generate tailored, ATS-optimized resumes with deterministic LaTeX rendering. \n**Impact:** Reduced resume tailoring time from ~30 minutes to under 60 seconds while ensuring consistent formatting, improved keyword coverage, and higher ATS compatibility.",
-      "summary": "AI-powered resume intelligence platform that automates ATS-optimized resume generation using multi-LLM failover and deterministic LaTeX rendering.",
+      "description": "**Problem:** Resume tailoring is a manual, error-prone process that often fails ATS screening due to poor keyword alignment, inconsistent formatting, and AI rewrites that quietly invent facts. \n**Solution:** Built a free, open-source resume-building platform that extracts resumes client-side, tailors bullets against a target JD across a multi-provider BYOK AI layer, fact-checks every AI edit against the source before it reaches the client, scores the result with a deterministic (non-AI) ATS algorithm, and typesets it natively with Typst. \n**Impact:** Cut resume tailoring from ~30 minutes to under 60 seconds, with a server-side anti-hallucination validator as the product's core trust guarantee and vector PDFs across 52 ATS-safe templates.",
+      "summary": "Open-source AI resume platform with anti-hallucination fact validation, deterministic ATS scoring, and native Typst PDF typesetting.",
       "image": "/img/lumacv.png",
       "category": "Automation & AI",
       "metrics": [
-        "30 min -> <60 sec automation",
-        "Multi-LLM failover (Gemini, Claude, Llama)",
-        "Deterministic LaTeX PDF pipeline",
-        "Real-time JD skill gap analysis"
+        "30 min -> <60 sec tailoring",
+        "BYOK across 4 providers + 5 system fallbacks",
+        "Deterministic ATS scoring (no AI call, <50ms)",
+        "52 Typst templates, 5 export formats"
       ],
       "tags": [
         "Next.js",
         "TypeScript",
         "AI/LLM",
         "Supabase",
-        "LaTeX",
-        "State Management",
+        "Typst",
+        "Zustand",
         "Rate Limiting",
         "Vercel"
       ],
@@ -32,42 +32,47 @@
         }
       ],
       "detail": {
-        "overview": "LumaCV is a full-stack AI system designed to automate resume tailoring at scale. It combines LLM-based parsing, semantic job description analysis, and deterministic LaTeX rendering to produce production-grade resumes with minimal user input. The system is built with reliability in mind, incorporating model failover, rate limiting, and state persistence.",
+        "overview": "LumaCV is a free, open-source resume-building SaaS (Next.js 14 App Router, TypeScript, Supabase, Typst). A user pastes or uploads an existing resume, text is extracted entirely client-side (the file never reaches the server), an LLM structures it into typed resume data, the user optionally tailors bullets against a pasted job description, a server-side fact validator strips or reverts anything the AI invented, a deterministic algorithm scores the result against the JD, and the Typst typesetting engine compiles it to a vector PDF. The product's stated design center: \"the AI can rephrase, it cannot invent.\"",
         "stackHighlights": [
-          "Next.js App Router with Server Actions",
-          "Multi-provider LLM orchestration via OpenRouter",
-          "Supabase Auth and session management",
+          "Next.js 14 App Router with a server/client component split for per-page SEO metadata",
+          "Multi-provider LLM orchestration (Gemini, Groq, Mistral, OpenRouter, GitHub Models system fallback; Gemini/OpenAI/Anthropic/Groq BYOK)",
+          "Supabase Auth, Postgres + RLS, no ORM (direct PostgREST)",
           "Zustand for persistent client state",
-          "Upstash-based rate limiting and request control",
-          "Remote LaTeX compilation service"
+          "Upstash Redis rate limiting, bypassed for BYOK callers",
+          "Native Typst CLI compilation via child_process, bundled as a platform binary"
         ],
         "architecture": [
           {
             "title": "Resume Builder Client",
             "component": "Next.js 14 App Router + Zustand",
-            "detail": "Multi-step wizard (Upload PDF + JD \u2192 Edit Details \u2192 AI Processing \u2192 Preview + Score) with persistent client state."
+            "detail": "Multi-step wizard (Upload/Paste + JD \u2192 Edit Details \u2192 AI Tailoring \u2192 Preview + Score) with persistent client state and zero-upload client-side PDF/DOCX text extraction."
           },
           {
-            "title": "AI Orchestration Layer",
-            "component": "Gemini + OpenRouter",
-            "detail": "Multi-provider failover across GPT-4o Mini, Llama 3.3, Gemini Flash, and Claude 3.5 so degraded vendors don't block resume generation."
+            "title": "AI Orchestration + Fact Validation",
+            "component": "lib/llm-client.ts + lib/fact-validator.ts",
+            "detail": "BYOK across 4 providers plus 5 system fallback providers for resilience; every tailored response is run through a server-side validator that locks employer names, dates, and credentials, and reverts any bullet containing a fabricated metric before it reaches the client."
           },
           {
             "title": "PDF Compilation",
-            "component": "External LaTeX API",
-            "detail": "Serverless-compatible PDF rendering\u2014Vercel Hobby tier can't fit LaTeX engines, so compilation is offloaded to external REST API."
+            "component": "Native Typst CLI",
+            "detail": "child_process.spawn against a bundled Typst binary\u2014typesetting itself completes in 20-45ms, producing 40-120KB vector PDFs with clean ATS-parseable text, versus rasterized HTML-to-PDF output."
           }
         ],
         "beforeAfter": [
           {
             "label": "Resume Tailoring",
             "before": "Manual rewriting + keyword guessing",
-            "after": "Automated semantic alignment with JD"
+            "after": "AI-assisted JD alignment with a fact-checked audit trail"
+          },
+          {
+            "label": "Trust",
+            "before": "Black-box AI rewrites risk inventing metrics or titles",
+            "after": "Server-side validator reverts any bullet with an unverifiable metric"
           },
           {
             "label": "Formatting",
             "before": "Inconsistent Word/Docs formatting",
-            "after": "Deterministic LaTeX-generated PDFs"
+            "after": "Deterministic, native Typst-generated vector PDFs"
           },
           {
             "label": "Time to Output",
@@ -75,59 +80,64 @@
             "after": "<60 seconds"
           }
         ],
-        "architectureMermaid": "flowchart LR\n  subgraph Input\n    U[User Resume / JD]\n  end\n  subgraph AI\n    P[LLM Parser]\n    A[JD Analyzer]\n    T[Tailoring Engine]\n  end\n  subgraph Infra\n    S[(Supabase Auth)]\n    Z[Zustand State]\n    R[Rate Limiter]\n  end\n  subgraph Output\n    L[LaTeX Engine]\n    PDF[Final Resume]\n  end\n  U --> P --> A --> T\n  T --> L --> PDF\n  S <--> T\n  Z <--> U\n  R --> T",
+        "architectureMermaid": "flowchart LR\n  subgraph Input\n    U[User Resume / JD]\n  end\n  subgraph Client\n    X[Client-side PDF/DOCX extraction]\n  end\n  subgraph AI\n    P[LLM Parser]\n    A[JD Analyzer]\n    T[Tailoring Engine]\n    F[Fact Validator]\n  end\n  subgraph Infra\n    S[(Supabase Auth + Postgres)]\n    Z[Zustand State]\n    R[Upstash Rate Limiter]\n  end\n  subgraph Output\n    SC[Deterministic ATS Scorer]\n    L[Typst Compiler]\n    PDF[Vector PDF]\n  end\n  U --> X --> P --> A --> T\n  T --> F --> Z\n  Z --> SC\n  Z --> L --> PDF\n  S <--> T\n  Z <--> U\n  R --> T",
         "decisions": [
           {
-            "title": "External LaTeX service over local compilation",
-            "context": "Vercel Hobby tier can't fit LaTeX engines due to size constraints",
-            "decision": "Offload PDF compilation to external REST API to stay on free tier without sacrificing output quality"
+            "title": "Native Typst over LaTeX or HTML-to-PDF",
+            "context": "HTML-to-PDF risks rasterized text and floating divs that ATS parsers misread; LaTeX is precise but heavyweight and slow to compile",
+            "decision": "Compile via the native Typst CLI (not WASM)\u2014pure vector glyphs, guaranteed top-down reading order, 20-45ms typesetting, at the cost of bundling a platform-specific binary and Node-only (non-Edge) compilation"
           },
           {
-            "title": "Multi-LLM failover",
-            "context": "Single provider downtime blocks users and creates bad experience",
-            "decision": "OpenRouter routing with automatic fallback across 4 providers (GPT-4o Mini, Llama, Gemini, Claude)"
+            "title": "BYOK plus system fallback, not a single provider",
+            "context": "A single AI provider outage blocks every user, and free users need a usable default without configuring anything",
+            "decision": "4 BYOK providers (Gemini, OpenAI, Anthropic, Groq) for users who bring their own key and bypass the shared rate limit, backed by 5 system fallback providers for everyone else"
           },
           {
-            "title": "Client-side PDF parsing",
-            "context": "Serverless functions have payload limits and adding file upload handling increases complexity",
-            "decision": "Use pdfjs-dist in browser to extract text before sending to APIs, keeping server routes lightweight"
+            "title": "Deterministic ATS scoring, not another AI call",
+            "context": "An LLM-scored ATS match is unverifiable and non-reproducible, undermining the product's explainability claim",
+            "decision": "Edge-rendered, sub-50ms keyword-match formula with dynamic weight renormalization across only the JD categories actually present, so an empty 'preferred skills' list can't cap a well-matched resume at 80%"
+          },
+          {
+            "title": "Server-side fact validation as a non-negotiable invariant",
+            "context": "LLMs can invent metrics, titles, or employers that a candidate never had, and prompt-level instructions alone aren't a reliable guardrail",
+            "decision": "Every tailored resume is fact-checked server-side before reaching the client; any bullet containing a metric not traceable to the source resume reverts to the original text entirely, not just the invented number"
           }
         ],
         "pipeline": [
           {
             "stage": "Build",
             "tool": "Vercel",
-            "detail": "Auto-deploy from GitHub, Next.js detected and optimized"
+            "detail": "Auto-deploy from GitHub; postinstall re-downloads/caches the native Typst binary each build"
           },
           {
             "stage": "Rate Limiting",
             "tool": "Upstash Redis",
-            "detail": "Prevent API abuse on LLM endpoints with Redis-backed rate limiting"
+            "detail": "Sliding-window rate limiting on AI endpoints, skipped entirely for BYOK callers"
           },
           {
             "stage": "Deploy",
-            "tool": "Vercel Edge",
-            "detail": "maxDuration: 60 for LLM routes, Edge runtime for scoring endpoints"
+            "tool": "Vercel (Node + Edge)",
+            "detail": "maxDuration: 60 for AI/tailor routes on Node serverless; Edge runtime for the deterministic ATS score and stats endpoints"
           }
         ],
         "incidents": [
           {
-            "title": "Vercel 10s function timeout on large resumes",
+            "title": "Export success reported on a failed compile",
+            "severity": "P1",
+            "resolution": "Traced through 4 consecutive point releases (2.15.1\u21922.16.3): removed a fake-PDF fallback string, rebuilt Word export as real OOXML, swept ~60 unguarded .trim() crashes with a safeTrim() helper, and fixed a Zod validation error being handed to the toast layer as a raw object",
+            "lesson": "A failed export must fail loudly\u2014never synthesize a fallback file to paper over a real error, and re-examine a 'fixed' bug rather than assuming the first patch found the root cause"
+          },
+          {
+            "title": "IDOR on resume and application writes",
+            "severity": "P1",
+            "resolution": "Added explicit user_id ownership checks before upsert on any client-supplied resource id",
+            "lesson": "Never trust a client-supplied id for ownership\u2014verify server-side on every write, even for authenticated users"
+          },
+          {
+            "title": "Vercel build silently missing the Typst binary in production",
             "severity": "P2",
-            "resolution": "Increased maxDuration to 60s and implemented client-side PDF parsing to reduce payload size",
-            "lesson": "Serverless timeouts are hard limits\u2014offload heavy work to client or external services"
-          },
-          {
-            "title": "LaTeX compiler rendering inconsistencies",
-            "severity": "P3",
-            "resolution": "Standardized on single external LaTeX service with deterministic templates",
-            "lesson": "Browser PDF generation is inconsistent\u2014deterministic LaTeX pipelines ensure predictable output"
-          },
-          {
-            "title": "Live editing box performance issues",
-            "severity": "P3",
-            "resolution": "Debounced input handling and virtualized large text areas for smooth real-time preview",
-            "lesson": "Live preview features need debouncing and virtualization to handle large documents smoothly"
+            "resolution": "Bundled bin/ and typst/ into every API route via outputFileTracingIncludes, since local dev reads the filesystem directly and gives zero signal that production bundling is broken",
+            "lesson": "A dev-only code path that happens to work by accident hides real production bundling regressions\u2014verify against the actual deploy artifact, not just local behavior"
           }
         ]
       }
