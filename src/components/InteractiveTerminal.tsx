@@ -522,12 +522,12 @@ function getResponseForCmd(cmd: string): { lines: string[]; tip?: string } {
     return {
       lines: [
         "claude-superpack preview:",
-        "• `claude-superpack status` - Check overall status of all 33 skills",
-        "• `claude-superpack memory` - View token and context stats",
-        "• `claude-superpack graph` - See codebase blast-radius info",
-        "• `claude-superpack install` - Reinstall skills into Claude context",
+        "• `npx @sahilbnsll/claude-superpack` - Status and always-on context cost",
+        "• `npx @sahilbnsll/claude-superpack doctor` - Check for duplicate installs and stale v4 skills",
+        "• `npx @sahilbnsll/claude-superpack install` - Install the 9 skills into ~/.claude/skills/",
+        "• `npx @sahilbnsll/claude-superpack uninstall` - Remove the skills",
       ],
-      tip: "Superpack converts Claude Code into a stateful, orchestrating agent network.",
+      tip: "Nine risk-tiered skills at ~742 tokens always-on, down 73% from the old 33-skill v4.",
     };
   }
 

@@ -145,22 +145,24 @@
     {
       "name": "Claude Superpack",
       "slug": "claude-superpack",
-      "description": "**Problem:** Claude Code starts from scratch every time, losing context, reinventing wheels, and requiring constant hand-holding for complex tasks.\n**Solution:** Built a 33-skill agentic orchestration system for Claude Code featuring persistent memory, blast-radius-aware codebase graphs, parallel worker coordination, and self-improving behavior.\n**Impact:** Transformed a single-shot assistant into an autonomous, stateful agent that safely orchestrates complex tasks with zero external dependencies.",
-      "summary": "33-skill agentic system for Claude Code featuring orchestration, persistent memory, and structural codebase graphs.",
+      "description": "**Problem:** Skill packs for Claude Code fail in one of two directions\u2014stay small and carry no real engineering judgment, or load so much always-on context that every turn pays for domain knowledge used once a month, with no mechanism to verify a claimed fix actually works.\n**Solution:** Rebuilt from a 33-skill always-loaded pack into a 9-skill risk-tiered engineering OS that sizes every task on two independent axes (scope and risk), pulls in 15 domain references only when a task needs them, and runs 4 deterministic Node scripts instead of asking the model to eyeball diffs, secrets, and build logs.\n**Impact:** Cut always-on context 73% (2,753 -> 742 tokens, cross-checked against Claude Code's own estimator) while adding capabilities v4 never had\u2014a debugging skill, an evidence gate before any completion claim, and a high-precision credential scanner\u2014then shipped it as a public npm package with GitHub Actions OIDC trusted publishing.",
+      "summary": "Risk-tiered engineering OS for Claude Code: 9 skills, 15 on-demand domain references, and deterministic verification scripts, published to npm with 73% less always-on context than its own v4.",
       "image": "/img/claude-superpack.png",
       "category": "Automation & AI",
       "metrics": [
-        "33 specialized skills",
-        "87% lower token usage per review",
-        "Zero external dependencies"
+        "9 skills, -73% always-on context (2,753 -> 742 tokens)",
+        "15 on-demand domain references, 4 deterministic scripts",
+        "148/148 structure checks, 100% routing coverage",
+        "Published to npm with GitHub Actions OIDC provenance"
       ],
       "tags": [
         "Claude Code",
         "AI Agents",
-        "Orchestration",
-        "TypeScript",
         "Node.js",
-        "Bash"
+        "npm",
+        "CLI",
+        "DevOps",
+        "Security"
       ],
       "href": "/projects/claude-superpack",
       "links": [
@@ -168,92 +170,120 @@
           "name": "GitHub",
           "href": "https://github.com/sahilbnsll/claude-superpack",
           "icon": "github"
+        },
+        {
+          "name": "npm",
+          "href": "https://www.npmjs.com/package/@sahilbnsll/claude-superpack",
+          "icon": "external-link"
         }
       ],
       "detail": {
-        "overview": "Claude Superpack transforms Claude Code from a single-shot assistant into a persistent, self-improving agent that remembers across sessions, maps your codebase structurally, scans for security issues, and orchestrates complex tasks across parallel workers.",
+        "overview": "claude-superpack is an engineering operating system for Claude Code: nine always-on skills classify every request on two independent axes\u2014scope (how much work) and risk (what happens if it's wrong)\u2014then route into fifteen domain references and four deterministic scripts that load only when the task actually needs them. One rule overrides everything else: no completion claim without evidence produced after the change. Published to npm with GitHub Actions OIDC trusted publishing so every version is verifiably built from the repository.",
         "stackHighlights": [
-          "Node.js & Bash",
-          "Agentic Orchestration",
-          "Markdown Memory System",
-          "File-based JSON Knowledge Graphs"
+          "Two-axis task sizing: Scope (S0-S3) x Risk (R0-R3) sets planning depth and gate count independently",
+          "9 skills: 4 content-activated (debugging, securing, shipping, requirements-grilling) + 5 phase-activated, reached from a core gate table",
+          "15 domain references (frontend, backend, data, ai-llm, cloud, devops, sre, security, performance, testing, architecture, quality, docs, parallel, routing), each structured Decide first / Build right / Failure modes / Evidence",
+          "4 zero-dependency Node scripts: recon.mjs, gates.mjs, diffstat.mjs, secrets.mjs",
+          "Published as @sahilbnsll/claude-superpack via GitHub Actions OIDC trusted publishing with signed provenance attestation",
+          "Three-tier benchmark suite (structure, routing vocabulary, paired live evaluation) gates every release via npm run bench"
         ],
         "architecture": [
           {
-            "title": "Agentic Orchestration",
-            "component": "Task Decomposer & Workers",
-            "detail": "Routes requests intelligently. Complex tasks are decomposed into DAGs and executed by parallel agents orchestrated through safe-summon."
+            "title": "Core Routing & Sizing",
+            "component": "superpack skill (SKILL.md + gate table)",
+            "detail": "Classifies every request on scope and risk, then routes to phase-activated skills via an explicit gate table\u2014the only way those skills can be reached, since nobody types \"I would like a blast-radius check now.\""
           },
           {
-            "title": "Persistent Memory",
-            "component": "Markdown Storage",
-            "detail": "Zero-dependency memory system using local Markdown files for recent sessions, long-term patterns, and project context."
+            "title": "Domain References",
+            "component": "15 on-demand markdown files",
+            "detail": "92KB of engineering depth that costs zero always-on tokens and loads only when the router selects it, versus being baked into an always-loaded skill description."
           },
           {
-            "title": "Knowledge Graph",
-            "component": "Graph Builder",
-            "detail": "Structural codebase mapping using Glob/Grep/Read. Allows blast-radius-aware code reviews saving up to 87% token usage."
+            "title": "Deterministic Scripts",
+            "component": "recon.mjs / gates.mjs / diffstat.mjs / secrets.mjs",
+            "detail": "Replaces model guesswork with real tool output\u2014secrets.mjs found 4 real credentials across 1,094 changed lines in 40ms with zero false positives; gates.mjs turned 15,247 bytes of build output into a 288-byte digest that preserved the evidence line."
           }
         ],
         "beforeAfter": [
           {
-            "label": "Task Execution",
-            "before": "Manual step-by-step sequential guidance",
-            "after": "Autonomous multi-agent parallel orchestration"
+            "label": "Always-on context",
+            "before": "~2,753 tokens across 33 always-loaded skills (v4)",
+            "after": "~742 tokens across 9 skills (v5), cross-checked against Claude Code's own estimator"
           },
           {
-            "label": "Context Awareness",
-            "before": "Started entirely fresh every session",
-            "after": "Persistent memory and preferences across sessions"
+            "label": "Completion claims",
+            "before": "Model asserted a fix worked based on its own read of the diff",
+            "after": "Evidence gate blocks any completion claim without tool output produced after the change"
+          },
+          {
+            "label": "Codebase awareness",
+            "before": "Persistent JSON knowledge graph under ~/.claude/graphs/, which went stale silently",
+            "after": "Blast radius computed fresh from the diff and grep every time\u2014slower per call, never confidently wrong"
+          },
+          {
+            "label": "Cross-session memory",
+            "before": "Five skills wrote to ~/.claude/memory/, duplicating dedicated memory plugins",
+            "after": "Removed entirely; defers to claude-mem or Claude Code's native memory, keeps in-task state in durable plan files"
           }
         ],
-        "architectureMermaid": "flowchart TD\n  U[User Request] --> R[auto-router]\n  R --> |Direct| D[direct answer]\n  R --> |Orchestrate| O[parallel-orchestrator]\n  O --> W1[Worker 1]\n  O --> W2[Worker 2]\n  W1 --> M[merge-coordinator]\n  W2 --> M\n  M --> P[post-review]",
+        "architectureMermaid": "flowchart TD\n  U[User request] --> C[superpack: classify scope x risk]\n  C -->|content-activated| CA[debugging-systematically / securing-changes / shipping-safely / grilling-requirements]\n  C -->|gate table| PA[codebase-recon -> planning-changes -> verifying-evidence -> reviewing-before-done]\n  PA --> DR[15 domain references, loaded on demand]\n  PA --> SC[recon.mjs / gates.mjs / diffstat.mjs / secrets.mjs]\n  SC --> EV[Evidence gate]\n  EV --> DONE[Completion claim]",
         "decisions": [
           {
-            "title": "Zero external dependencies",
-            "context": "Adding databases like SQLite or ChromaDB creates friction for local agent workflows",
-            "decision": "Used pure markdown for memory and JSON for graphs, enabling instant adoption without complex installation requirements"
+            "title": "Two independent axes instead of one A/B/C/D tier",
+            "context": "v4's single complexity tier conflated \"big\" with \"dangerous\"\u2014a 1,000-line refactor of a test helper and a one-line IAM policy change got identical treatment",
+            "decision": "Split into Scope (S0-S3, sets planning depth) and Risk (R0-R3, sets gate count), so a trivial edit gets one tool call and a production/IaC change doesn't execute until blast radius is stated out loud and confirmed"
           },
           {
-            "title": "Token compaction protocol",
-            "context": "Large codebases quickly exhaust the LLM context budget during complex tasks",
-            "decision": "Implemented running estimates with an active compaction protocol where structured summaries replace raw data after each phase"
+            "title": "Delete the persistent memory system and codebase graph",
+            "context": "v4's ~/.claude/memory/ and ~/.claude/graphs/ cost context every session, duplicated dedicated memory plugins, and depended on the model reliably self-reporting its own state\u2014a paired evaluation found that compliance happened once in eighty trials despite the instruction reaching the model every time",
+            "decision": "Removed both. Blast radius is now computed fresh from the diff and grep on every task; cross-session recall defers explicitly to claude-mem or Claude Code's native memory instead of reimplementing it"
+          },
+          {
+            "title": "npm publishing via GitHub Actions OIDC, not a stored token",
+            "context": "A long-lived npm token sitting in CI is a standing credential that can leak or go stale",
+            "decision": "Trusted publishing authenticates through GitHub Actions' OIDC identity\u2014no npm token exists to leak\u2014and every version carries a signed provenance attestation tying it to the exact workflow run that built it"
           }
         ],
         "pipeline": [
           {
-            "stage": "Analyze",
-            "tool": "auto-router",
-            "detail": "Classifies complexity and routes to the appropriate execution tier"
-          },
-          {
-            "stage": "Map",
-            "tool": "graph-builder",
-            "detail": "Constructs structural map of codebase lazily over time"
-          },
-          {
-            "stage": "Execute",
-            "tool": "parallel-orchestrator",
-            "detail": "Spawns isolated workers for decoupled parallel tasks"
-          },
-          {
             "stage": "Verify",
-            "tool": "security-scanner",
-            "detail": "Checks for OWASP top 10 patterns and hardcoded secrets before commit"
+            "tool": "npm run bench",
+            "detail": "Three-tier benchmark (148 structure checks, routing vocabulary coverage, paired live-evaluation harness) must pass before any release; prepublishOnly re-runs it with --no-write so published tarballs stay reproducible from their commit"
+          },
+          {
+            "stage": "Publish",
+            "tool": "GitHub Actions OIDC",
+            "detail": "Three independent jobs (verify, npmjs, github-packages), each skipping a version that already exists on that registry, so re-running a release is always safe"
+          },
+          {
+            "stage": "Attest",
+            "tool": "npm provenance",
+            "detail": "Every published version carries a signed attestation tying it to the workflow run that built it, verifiable via npm view @sahilbnsll/claude-superpack dist.attestations"
+          },
+          {
+            "stage": "Install",
+            "tool": "npx @sahilbnsll/claude-superpack install",
+            "detail": "No install scripts and no global install required\u2014current npm blocks postinstall scripts by default, so a global install previously downloaded the package and silently skipped installing the skills"
           }
         ],
         "incidents": [
           {
-            "title": "Context budget exhaustion on large codebase reviews",
-            "severity": "P2",
-            "resolution": "Implemented graph-aware smart discovery and blast-radius filtering, dropping token usage by ~87%",
-            "lesson": "Blindly sending raw code to LLMs scales poorly\u2014pre-process and map dependencies to only pass relevant file slices"
+            "title": "Global install silently skipped installing the skills",
+            "severity": "P1",
+            "resolution": "Removed postinstall/preuninstall entirely as a breaking change (v5.0.2); install is now an explicit `npx ... install` step that exits non-zero on failure instead of a lifecycle script that swallowed errors",
+            "lesson": "A package that writes into the user's home directory merely by being downloaded is a supply-chain smell regardless of whether it currently works\u2014npm blocking install scripts by default was the signal this needed fixing, not the cause of the bug"
           },
           {
-            "title": "Agents getting stuck in conflicting execution loops",
+            "title": "Every skill description loaded twice",
+            "severity": "P2",
+            "resolution": "v4 installed each skill both at ~/.claude/skills/<name>/ and again as a plugin-shaped copy underneath, roughly doubling always-on token cost to ~5,600 tokens/turn; the installer now installs one copy, deletes any leftover duplicate, and `claude-superpack doctor` detects the condition going forward",
+            "lesson": "An installer needs an install manifest, not an assumption that its own previous version installed cleanly"
+          },
+          {
+            "title": "Published tarballs weren't reproducible from their commit",
             "severity": "P3",
-            "resolution": "Built a conflict-detector to map write surfaces beforehand and orchestrate workers sequentially if overlap is detected",
-            "lesson": "Parallel AI workers need strict concurrency boundries and conflict detection to avoid un-mergeable chaos"
+            "resolution": "prepublishOnly ran the benchmark suite, which rewrote a results file with a fresh timestamp on every publish, so the packed tarball never matched the commit and left the working tree dirty; prepublishOnly now runs with --no-write",
+            "lesson": "A pre-publish hook that mutates the working tree undermines the exact guarantee\u2014build reproducibility\u2014that provenance attestation exists to provide"
           }
         ]
       }
