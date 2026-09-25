@@ -57,10 +57,13 @@ The site is primarily JSON-driven:
 - `src/data/skills.json`
 - `src/data/career.json`
 - `src/data/education.json`
+- `src/data/certifications.json`
 - `src/data/testimonials.json`
 - `src/data/socials.json`
+- `src/data/routes.json` (nav/route registry)
 - `src/data/blog.json`
 - `src/data/blog-content.json` (blog post content)
+- `src/data/privacy.md` (privacy page copy)
 
 ### API surfaces
 
@@ -68,7 +71,7 @@ The site is primarily JSON-driven:
   1. Google Gemini (`gemini-2.5-flash`, `gemini-flash-latest`)
   2. Mistral AI (`codestral-latest`, `ministral-8b-latest`, `ministral-14b-latest`, `ministral-3b-latest`, `open-mistral-nemo`)
   3. OpenRouter Free (`nvidia/nemotron-3.5-lightning:free`, `nvidia/nemotron-3-super-120b-a12b:free`, `poolside/laguna-s-2.1:free`)
-  4. Groq (`groq/compound-mini`, `groq/compound`, `qwen/qwen3.8-27b`, `qwen/qwen3.6-27b`, `allam-2-7b`, `openai/gpt-oss-120b`)
+  4. Groq (`groq/compound-mini`, `groq/compound`, `qwen/qwen3.8-27b`, `qwen/qwen3.6-27b`, `allam-2-7b`, `openai/gpt-oss-120b`, `openai/gpt-oss-20b`)
   5. GitHub Models (`gpt-4o-mini`, `Meta-Llama-3.1-8B-Instruct`, `Phi-3.5-mini-instruct`)
 - `src/app/api/stats/route.ts`: visitor and pageview stats endpoint using official Vercel Web Analytics aggregate API (`/v1/query/web-analytics/visits/aggregate`).
 
@@ -96,7 +99,7 @@ The site is primarily JSON-driven:
 ### Install
 
 ```bash
-git clone https://github.com/sahilb2/Portfolio.git
+git clone https://github.com/sahilbnsll/Portfolio.git
 cd Portfolio
 npm install
 cp .env.example .env.local
@@ -116,6 +119,7 @@ Configure `.env.local` with one or more of the following keys:
 | `VERCEL_API_TOKEN` | Optional | Enables visitor statistics in `src/app/api/stats/route.ts` |
 | `VERCEL_PROJECT_ID` | Optional | Required with `VERCEL_API_TOKEN` for analytics querying |
 | `VERCEL_TEAM_ID` | Optional | Required only if the Vercel project belongs to a team |
+| `FORMSPREE_FORM_ID` | Recommended | Form ID used by the contact form and recruiter intake actions |
 | `REVALIDATE_SECRET` | Optional | Secret token for on-demand ISR revalidation endpoints |
 
 Optional Model Overrides:
@@ -147,44 +151,61 @@ npm run build
 src/
   app/
     api/
-      chat/route.ts
-      stats/route.ts
+      chat/route.ts        # AI assistant streaming endpoint
+      stats/route.ts        # Vercel Analytics aggregate endpoint
+    architecture/page.tsx    # Redirects to /#architecture
     blog/
       [slug]/page.tsx
+      layout.tsx
       page.tsx
-    contact/page.tsx
-    layout.tsx
-    page.tsx
+    contact/
+      layout.tsx
+      page.tsx
     privacy/page.tsx
     projects/
       [slug]/page.tsx
+      layout.tsx
       page.tsx
     resume/page.tsx
+    error.tsx
+    global-error.tsx
+    not-found.tsx
+    robots.ts
+    sitemap.ts
+    layout.tsx
+    page.tsx
   components/
-    ui/
+    ui/                      # Shared primitives (Button, Card, Tabs, Accordion, ...)
     HomePageClient.tsx
     InteractiveResume.tsx
     InteractiveTerminal.tsx
     ViewModeToggle.tsx
     SystemStatus.tsx
     ArchitectureDiagram.tsx
+    ArchitectureShowcase.tsx
+    ArchitectureVisualization.tsx
     CICDPipeline.tsx
     CaseStudyExtras.tsx
     Projects.tsx
     ProjectCard.tsx
     Experience.tsx
+    Timeline.tsx / TimelineItem.tsx
     SkillsSection.tsx
     CoreSkillsExpertiseSection.tsx
     SkillDependenciesGraph.tsx
+    CertificationsSection.tsx
+    TestimonialsSection.tsx
+    BlogSection.tsx
+    CurrentlyBuildingSection.tsx
+    AvailableForWorkBadge.tsx
     ContactForm.tsx
-    Chat.tsx
-    ChatPanel.tsx
-    Header.tsx
-    Footer.tsx
+    Chat.tsx / ChatPanel.tsx / ChatMessages.tsx / ChatInput.tsx / ChatPrompts.tsx
+    Header.tsx / Footer.tsx
     Providers.tsx
     JsonLd.tsx
-    StatsOverview.tsx
-    AboutMe.tsx
+    StatsOverview.tsx / ViewCounter.tsx
+    AboutMe.tsx / WhatIDoGrid.tsx
+    ThemeToggle.tsx / ErrorBoundary.tsx / PageTransition.tsx
   contexts/
     ChatContext.tsx
     ViewModeContext.tsx
@@ -192,22 +213,32 @@ src/
     blog.json
     blog-content.json
     career.json
+    certifications.json
     education.json
     home.json
+    privacy.md
     projects.json
+    routes.json
     skills.json
     socials.json
     testimonials.json
   hooks/
+    usePrefersReducedMotion.ts
+    useSound.ts
   lib/
     actions.ts
+    ai-prompt.ts             # System prompt for the embedded AI assistant
     blog-utils.ts
+    lucide-icons.ts
     project-utils.ts
-    schemas.ts
+    schemas.ts                # Zod schemas for all data/*.json content
+    seo.ts                     # Person/WebSite JSON-LD + site constants
     tool-icons.ts
     utils.ts
 public/
   img/
+  icons/
+  sounds/
   Sahil_Bansal_Resume.pdf
 ```
 
@@ -252,7 +283,7 @@ Each project supports:
 
 Update `src/data/skills.json`.
 
-Each skill entry should include:
+Skills are grouped under `categories[]`; each skill entry within a category should include:
 
 - `name`
 - `level`
@@ -266,8 +297,12 @@ Each company entry supports one or more positions with:
 
 - `title`
 - `start`
-- `end`
+- `end` (omit for a current role — the timeline renders "Present" when absent)
 - `description[]`
+
+### Add or edit certifications
+
+Update `src/data/certifications.json` with `name`, `organization`, `issueDate`, `credentialId`, `credentialUrl`, and `logo`.
 
 ## Reliability Notes
 
